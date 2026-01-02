@@ -1,0 +1,95 @@
+name: Unit test and clippy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check-fmt:
+    name: Check formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+
+      - name: Check fmt
+        run: .github/scripts/check-fmt.sh
+
+  check-bin-cargo-lock:
+    name: Check bin Cargo.lock
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for unused [patch] entries
+        shell: bash
+        run: .github/scripts/check-unused-patch.sh
+
+      - name: Check for duplicate packages
+        shell: bash
+        run: |
+          .github/scripts/check-duplicate-pkg.sh \
+            --include '^(alloy|ethrex|ere|reth|revm)' \
+            --exclude '^alloy-trie$' # Crate `mpt` depends on an older `alloy-trie` but it's okay.
+
+  test:
+    name: Test and clippy crate ${{ matrix.crate }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        crate:
+          # Guest utils
+          - guest
+          # Guest libs
+          - block-encoding-length
+          - stateless-validator-ethrex
+          - stateless-validator-reth
+          # Integration tests
+          - integration-tests
+        include:
+          # ethereum_ssz is not no_std compatible
+          - crate: block-encoding-length
+            skip_compile_to_riscv32imac: true
+          # ethrex is not no_std compatible
+          - crate: stateless-validator-ethrex
+            skip_compile_to_riscv32imac: true
+          # integration-tests doesn't need to be compiled to riscv32imac
+          - crate: integration-tests
+            skip_compile_to_riscv32imac: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+          targets: riscv32imac-unknown-none-elf
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check clippy
+        run: cargo clippy --all-targets --package ${{ matrix.crate }} -- -D warnings
+
+      - name: Test on documentation
+        run: cargo test --doc --package ${{ matrix.crate }}
+
+      - name: Test lib
+        run: cargo test --lib --package ${{ matrix.crate }}
+
+      - name: Compile to target riscv32imac-unknown-none-elf
+        if: matrix.skip_compile_to_riscv32imac != true
+        run: cargo build --package ${{ matrix.crate }} --no-default-features --target riscv32imac-unknown-none-elf
