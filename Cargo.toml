@@ -5,6 +5,7 @@ members = [
 
     # Guest libs
     "crates/block-encoding-length",
+    "crates/stateless-validator-common",
     "crates/stateless-validator-ethrex",
     "crates/stateless-validator-reth",
 
@@ -88,5 +89,6 @@ ere-zkvm-interface = { git = "https://github.com/eth-act/ere", rev = "ec75f8a266
 # local
 guest = { path = "crates/guest", default-features = false }
 block-encoding-length = { path = "crates/block-encoding-length", default-features = false }
+stateless-validator-common = { path = "crates/stateless-validator-common", default-features = false }
 stateless-validator-ethrex = { path = "crates/stateless-validator-ethrex", default-features = false }
 stateless-validator-reth = { path = "crates/stateless-validator-reth", default-features = false }
