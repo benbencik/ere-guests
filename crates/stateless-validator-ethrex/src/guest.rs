@@ -118,34 +118,33 @@ impl Guest for StatelessValidatorEthrexGuest {
 
 #[cfg(test)]
 mod test {
-    use stateless_validator_common::execution_payload::{
-        ExecutionPayloadHeaderV1, NewPayloadRequest,
-    };
+    use stateless_validator_common::execution_payload::{ExecutionPayloadV1, NewPayloadRequest};
 
     use crate::guest::{Io, StatelessValidatorEthrexIo, StatelessValidatorOutput};
 
     #[test]
     fn serialize_output() {
-        let dummy_new_payload_request =
-            NewPayloadRequest::new_bellatrix(ExecutionPayloadHeaderV1 {
-                parent_hash: [1; 32],
-                fee_recipient: [2; 20],
-                state_root: [3; 32],
-                receipts_root: [4; 32],
-                logs_bloom: Default::default(),
-                prev_randao: [5; 32],
-                block_number: 1,
-                gas_limit: 2,
-                gas_used: 3,
-                timestamp: 4,
-                extra_data: Default::default(),
-                base_fee_per_gas: [6; 32],
-                block_hash: [7; 32],
-                transactions_root: [8; 32],
-            });
+        let dummy_new_payload_request_root = NewPayloadRequest::new_bellatrix(ExecutionPayloadV1 {
+            parent_hash: [1; 32],
+            fee_recipient: [2; 20],
+            state_root: [3; 32],
+            receipts_root: [4; 32],
+            logs_bloom: Default::default(),
+            prev_randao: [5; 32],
+            block_number: 1,
+            gas_limit: 2,
+            gas_used: 3,
+            timestamp: 4,
+            extra_data: Default::default(),
+            base_fee_per_gas: [6; 32],
+            block_hash: [7; 32],
+            transactions: Default::default(),
+        })
+        .tree_hash_root();
+
         for output in [
-            StatelessValidatorOutput::new(dummy_new_payload_request.clone(), false),
-            StatelessValidatorOutput::new(dummy_new_payload_request.clone(), true),
+            StatelessValidatorOutput::new(dummy_new_payload_request_root, false),
+            StatelessValidatorOutput::new(dummy_new_payload_request_root, true),
         ] {
             assert_eq!(
                 StatelessValidatorEthrexIo::serialize_output(&output).unwrap(),

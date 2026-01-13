@@ -68,7 +68,7 @@ impl Guest for StatelessValidatorRethGuest {
             Ok(block) => block,
             Err(err) => {
                 P::print(&format!("Failed to convert to reth block: {err}\n"));
-                return StatelessValidatorOutput::default(); // TODO
+                return StatelessValidatorOutput::new(new_payload_request_root, false);
             }
         };
 
@@ -83,14 +83,10 @@ impl Guest for StatelessValidatorRethGuest {
         });
 
         match res {
-            Ok(_) => StatelessValidatorOutput {
-                // TODO: change to use constructor
-                new_payload_request_root,
-                successful_block_validation: true,
-            },
+            Ok(_) => StatelessValidatorOutput::new(new_payload_request_root, true),
             Err(err) => {
                 P::print(&format!("Block validation failed: {err}\n"));
-                StatelessValidatorOutput::default() // TODO
+                StatelessValidatorOutput::new(new_payload_request_root, false)
             }
         }
     }

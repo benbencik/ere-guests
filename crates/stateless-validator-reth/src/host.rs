@@ -258,7 +258,7 @@ mod test {
 
     #[test]
     fn serialize_output() {
-        let dummy_new_payload_request = NewPayloadRequest::new_bellatrix(ExecutionPayloadV1 {
+        let dummy_new_payload_request_root = NewPayloadRequest::new_bellatrix(ExecutionPayloadV1 {
             parent_hash: [1; 32],
             fee_recipient: [2; 20],
             state_root: [3; 32],
@@ -273,10 +273,11 @@ mod test {
             base_fee_per_gas: [6; 32],
             block_hash: [7; 32],
             transactions: Default::default(),
-        });
+        })
+        .tree_hash_root();
         for output in [
-            StatelessValidatorOutput::new(&dummy_new_payload_request, false),
-            StatelessValidatorOutput::new(&dummy_new_payload_request, true),
+            StatelessValidatorOutput::new(dummy_new_payload_request_root, false),
+            StatelessValidatorOutput::new(dummy_new_payload_request_root, true),
         ] {
             assert_eq!(
                 StatelessValidatorRethIo::serialize_output(&output).unwrap(),
