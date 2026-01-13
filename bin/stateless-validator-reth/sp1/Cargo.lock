@@ -3732,6 +3732,7 @@ dependencies = [
  "ethereum_ssz_derive",
  "serde",
  "serde_with",
+ "sha2",
  "ssz_types",
  "tree_hash",
  "tree_hash_derive",

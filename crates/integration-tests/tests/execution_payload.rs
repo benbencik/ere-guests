@@ -13,9 +13,9 @@ use reth_chainspec::ChainSpec;
 use reth_evm_ethereum::EthEvmConfig;
 use reth_stateless::{Genesis, stateless_validation};
 use stateless_validator_reth::{
-    execution_payload::new_payload_request_to_block,
     guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput},
     host::to_new_payload_request,
+    new_payload_request::new_payload_request_to_block,
 };
 
 /// Verify that StatelessInput is converted to ExecutionPayload correctly against precomputed roots.

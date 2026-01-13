@@ -15,11 +15,11 @@ serde.workspace = true
 serde_with.workspace = true
 
 # alloy
-alloy-consensus = { workspace = true }
-alloy-eips = { workspace = true }
-alloy-genesis = { workspace = true }
-alloy-primitives = { workspace = true }
-alloy-rlp = { workspace = true }
+alloy-consensus.workspace = true
+alloy-eips.workspace = true
+alloy-genesis.workspace = true
+alloy-primitives.workspace = true
+alloy-rlp.workspace = true
 alloy-rpc-types-engine = { workspace = true, default-features = false, features = [
     "serde",
 ] }
@@ -33,7 +33,7 @@ reth-primitives-traits.workspace = true
 reth-stateless.workspace = true
 
 # lighthouse
-tree_hash = { workspace = true }
+tree_hash.workspace = true
 tree_hash_derive.workspace = true
 
 # ssz

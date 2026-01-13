@@ -12,9 +12,9 @@ use reth_stateless::{
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use sparsestate::SparseState;
-use stateless_validator_common::execution_payload::NewPayloadRequest;
+use stateless_validator_common::new_payload_request::NewPayloadRequest;
 
-use crate::execution_payload::new_payload_request_to_block;
+use crate::new_payload_request::new_payload_request_to_block;
 
 #[rustfmt::skip]
 pub use {

@@ -1,10 +1,9 @@
-//! Execution payload conversion between NewPayloadRequest and alloy types.
+//! Execution payload request to block utilities.
 
 use alloc::{sync::Arc, vec::Vec};
 
 use alloy_consensus::Block;
 use alloy_eips::eip4895::Withdrawal as AlloyWithdrawal;
-use alloy_genesis::ChainConfig;
 use alloy_primitives::{Address, B256, Bloom, Bytes, U256};
 use alloy_rpc_types_engine::{
     CancunPayloadFields, ExecutionData, ExecutionPayload as AlloyExecutionPayload,
@@ -16,52 +15,29 @@ use anyhow::{Context, Result};
 use reth_chainspec::{ChainSpec, EthereumHardforks};
 use reth_payload_validator::{cancun, prague, shanghai};
 use reth_primitives_traits::{Block as _, SealedBlock, SignedTransaction};
-use stateless_validator_common::execution_payload::{
-    ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, ForkName, NewPayloadRequest,
-    Withdrawal,
+use stateless_validator_common::new_payload_request::{
+    ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, NewPayloadRequest, Withdrawal,
+    compute_requests_hash,
 };
 
-/// Determines the fork name based on alloy chain config and block timestamp.
-pub fn determine_fork_name(chain_config: &ChainConfig, timestamp: u64) -> ForkName {
-    // Check forks in reverse chronological order
-    if chain_config
-        .prague_time
-        .is_some_and(|prague_time| timestamp >= prague_time)
-    {
-        return ForkName::Electra;
-    }
-    if chain_config
-        .cancun_time
-        .is_some_and(|cancun_time| timestamp >= cancun_time)
-    {
-        return ForkName::Deneb;
-    }
-    if chain_config
-        .shanghai_time
-        .is_some_and(|shanghai_time| timestamp >= shanghai_time)
-    {
-        return ForkName::Capella;
-    }
-    // Default to Bellatrix for post-merge blocks
-    ForkName::Bellatrix
-}
-
-/// Converts a [`NewPayloadRequest`] into a validated reth [`SealedBlock`].
-///
-/// This converts the request to `ExecutionData`, then uses
-/// `EthereumExecutionPayloadValidator` to validate the payload and return a sealed block.
+/// Converts a [`NewPayloadRequest`] into a validated reth [`Block`].
 pub fn new_payload_request_to_block(
     new_payload_request: NewPayloadRequest,
     chain_spec: Arc<ChainSpec>,
-) -> Result<alloy_consensus::Block<reth_ethereum_primitives::TransactionSigned>> {
+) -> Result<Block<reth_ethereum_primitives::TransactionSigned>> {
     let execution_data = new_payload_request_to_execution_data(new_payload_request);
-    let sealed_block: SealedBlock<
-        Block<alloy_consensus::EthereumTxEnvelope<alloy_consensus::TxEip4844>>,
-    > = ensure_well_formed_payload(chain_spec, execution_data)
+    let sealed_block = ensure_well_formed_payload(chain_spec, execution_data)
         .context("Payload validation failed")?;
     Ok(sealed_block.into_block())
 }
 
+/// This method is copied from `reth-ethereum-payload-builder` crate.
+/// https://github.com/paradigmxyz/reth/blob/8eecad3d1d433ed509373713c21c31504290d17d/crates/ethereum/payload/src/validator.rs#L66
+/// Unfortunately, that crate does not allow to have minimal activated
+/// features in alloy-consensus to use directly without pulling in blst
+/// and other non-friendly dependencies for zkVMs.
+/// TODO: If we can upstream some changes to this crate accordingly, we
+/// can remove this method and use directly from reth.
 fn ensure_well_formed_payload<ChainSpec, T>(
     chain_spec: ChainSpec,
     payload: ExecutionData,
@@ -105,12 +81,7 @@ where
     Ok(sealed_block)
 }
 
-// ============================================================================
-// Conversion: NewPayloadRequest -> ExecutionData
-// ============================================================================
-
-/// Converts a [`NewPayloadRequest`] into an alloy [`ExecutionData`].
-pub fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> ExecutionData {
+fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> ExecutionData {
     match req {
         NewPayloadRequest::Bellatrix(b) => {
             let v1 = convert_v1_to_alloy(b.execution_payload);
@@ -141,11 +112,8 @@ pub fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> Executio
                 excess_blob_gas: d.execution_payload.excess_blob_gas,
             };
 
-            let versioned_hashes: Vec<B256> = d
-                .versioned_hashes
-                .into_iter()
-                .map(|h| B256::from(h))
-                .collect();
+            let versioned_hashes: Vec<B256> =
+                d.versioned_hashes.into_iter().map(B256::from).collect();
             let parent_beacon_block_root = B256::from(d.parent_beacon_block_root);
             let cancun_fields =
                 CancunPayloadFields::new(parent_beacon_block_root, versioned_hashes);
@@ -164,18 +132,13 @@ pub fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> Executio
                 excess_blob_gas: e.execution_payload.excess_blob_gas,
             };
 
-            let versioned_hashes: Vec<B256> = e
-                .versioned_hashes
-                .into_iter()
-                .map(|h| B256::from(h))
-                .collect();
+            let versioned_hashes: Vec<B256> =
+                e.versioned_hashes.into_iter().map(B256::from).collect();
             let parent_beacon_block_root = B256::from(e.parent_beacon_block_root);
             let cancun_fields =
                 CancunPayloadFields::new(parent_beacon_block_root, versioned_hashes);
 
-            // For Electra, compute requests_hash from execution_requests
-            // The requests_hash is stored in the sidecar
-            let requests_hash = compute_requests_hash(&e.execution_requests);
+            let requests_hash = B256::from(compute_requests_hash(&e.execution_requests));
             let prague_fields = alloy_rpc_types_engine::PraguePayloadFields::new(requests_hash);
             let sidecar = ExecutionPayloadSidecar::v4(cancun_fields, prague_fields);
 
@@ -197,13 +160,13 @@ fn convert_v1_to_alloy(payload: ExecutionPayloadV1) -> AlloyExecutionPayloadV1 {
         gas_limit: payload.gas_limit,
         gas_used: payload.gas_used,
         timestamp: payload.timestamp,
-        extra_data: Bytes::from(payload.extra_data.to_vec()),
+        extra_data: Bytes::from(Vec::from(payload.extra_data)),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
         transactions: payload
             .transactions
             .into_iter()
-            .map(|tx| Bytes::from(tx.to_vec()))
+            .map(|tx| Bytes::from(Vec::from(tx)))
             .collect(),
     }
 }
@@ -223,13 +186,13 @@ fn convert_v2_to_alloy(
         gas_limit: payload.gas_limit,
         gas_used: payload.gas_used,
         timestamp: payload.timestamp,
-        extra_data: Bytes::from(payload.extra_data.to_vec()),
+        extra_data: Bytes::from(Vec::from(payload.extra_data)),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
         transactions: payload
             .transactions
             .into_iter()
-            .map(|tx| Bytes::from(tx.to_vec()))
+            .map(|tx| Bytes::from(Vec::from(tx)))
             .collect(),
     };
 
@@ -263,7 +226,7 @@ fn convert_v2_to_alloy_from_v3(
         transactions: payload
             .transactions
             .iter()
-            .map(|tx| Bytes::from(tx.to_vec()))
+            .map(|tx| Bytes::copy_from_slice(tx))
             .collect(),
     };
 
@@ -284,43 +247,4 @@ fn convert_withdrawal(w: Withdrawal) -> AlloyWithdrawal {
         address: Address::from(w.address),
         amount: w.amount,
     }
-}
-
-/// Computes the requests hash for Electra from ExecutionRequests per EIP-7685.
-fn compute_requests_hash(
-    requests: &stateless_validator_common::execution_payload::ExecutionRequests,
-) -> B256 {
-    use sha2::{Digest, Sha256};
-    use ssz::Encode;
-
-    let mut outer_hasher = Sha256::new();
-
-    // Deposit requests (type 0x00)
-    let mut deposits_bytes = vec![0x00u8];
-    for deposit in requests.deposits.iter() {
-        deposits_bytes.extend(deposit.as_ssz_bytes());
-    }
-    if deposits_bytes.len() > 1 {
-        outer_hasher.update(Sha256::digest(&deposits_bytes));
-    }
-
-    // Withdrawal requests (type 0x01)
-    let mut withdrawals_bytes = vec![0x01u8];
-    for withdrawal in requests.withdrawals.iter() {
-        withdrawals_bytes.extend(withdrawal.as_ssz_bytes());
-    }
-    if withdrawals_bytes.len() > 1 {
-        outer_hasher.update(Sha256::digest(&withdrawals_bytes));
-    }
-
-    // Consolidation requests (type 0x02)
-    let mut consolidations_bytes = vec![0x02u8];
-    for consolidation in requests.consolidations.iter() {
-        consolidations_bytes.extend(consolidation.as_ssz_bytes());
-    }
-    if consolidations_bytes.len() > 1 {
-        outer_hasher.update(Sha256::digest(&consolidations_bytes));
-    }
-
-    B256::from_slice(&outer_hasher.finalize())
 }

@@ -118,7 +118,7 @@ impl Guest for StatelessValidatorEthrexGuest {
 
 #[cfg(test)]
 mod test {
-    use stateless_validator_common::execution_payload::{ExecutionPayloadV1, NewPayloadRequest};
+    use stateless_validator_common::new_payload_request::{ExecutionPayloadV1, NewPayloadRequest};
 
     use crate::guest::{Io, StatelessValidatorEthrexIo, StatelessValidatorOutput};
 

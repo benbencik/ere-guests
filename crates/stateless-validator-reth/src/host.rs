@@ -3,6 +3,7 @@
 use alloc::{format, vec::Vec};
 
 use alloy_eips::{Encodable2718, eip7685::Requests};
+use alloy_genesis::ChainConfig;
 use alloy_primitives::U256;
 use anyhow::Context;
 use ere_zkvm_interface::Input;
@@ -12,16 +13,13 @@ use reth_primitives_traits::Block;
 pub use reth_stateless::StatelessInput;
 use reth_stateless::UncompressedPublicKey;
 use ssz_types::{FixedVector, VariableList};
-use stateless_validator_common::execution_payload::{
+pub use stateless_validator_common::guest::StatelessValidatorOutput;
+use stateless_validator_common::new_payload_request::{
     ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, ForkName, NewPayloadRequest,
     Transaction as Tx, Transactions, Withdrawal, Withdrawals,
 };
-pub use stateless_validator_common::guest::StatelessValidatorOutput;
 
-use crate::{
-    execution_payload::determine_fork_name,
-    guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput},
-};
+use crate::guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput};
 
 impl StatelessValidatorRethInput {
     /// Construct [`StatelessValidatorRethInput`] given [`StatelessInput`].
@@ -61,6 +59,31 @@ where
                 .with_context(|| format!("failed to recover signature for tx #{i}"))
         })
         .collect()
+}
+
+/// Determines the fork name based on alloy chain config and block timestamp.
+pub fn determine_fork_name(chain_config: &ChainConfig, timestamp: u64) -> ForkName {
+    // Check forks in reverse chronological order
+    if chain_config
+        .prague_time
+        .is_some_and(|prague_time| timestamp >= prague_time)
+    {
+        return ForkName::Electra;
+    }
+    if chain_config
+        .cancun_time
+        .is_some_and(|cancun_time| timestamp >= cancun_time)
+    {
+        return ForkName::Deneb;
+    }
+    if chain_config
+        .shanghai_time
+        .is_some_and(|shanghai_time| timestamp >= shanghai_time)
+    {
+        return ForkName::Capella;
+    }
+    // Default to Bellatrix for post-merge blocks
+    ForkName::Bellatrix
 }
 
 /// Converts a [`StatelessInput`] to a [`NewPayloadRequest`].
@@ -252,7 +275,7 @@ pub fn to_new_payload_request(
 
 #[cfg(test)]
 mod test {
-    use stateless_validator_common::execution_payload::{ExecutionPayloadV1, NewPayloadRequest};
+    use stateless_validator_common::new_payload_request::{ExecutionPayloadV1, NewPayloadRequest};
 
     use crate::guest::{Io, StatelessValidatorOutput, StatelessValidatorRethIo};
 

@@ -3,13 +3,13 @@
 use sha2::{Digest, Sha256};
 
 use crate::{
-    execution_payload::{
+    guest::StatelessValidatorOutput,
+    new_payload_request::{
         ConsolidationRequest, DepositRequest, ExecutionPayloadV1, ExecutionPayloadV2,
         ExecutionPayloadV3, ExecutionRequests, Hash32, NewPayloadRequest,
         NewPayloadRequestBellatrix, NewPayloadRequestCapella, NewPayloadRequestDeneb,
         NewPayloadRequestElectraFulu, WithdrawalRequest,
     },
-    guest::StatelessValidatorOutput,
 };
 use anyhow::{Context, Result};
 use ssz::{Decode, Encode};

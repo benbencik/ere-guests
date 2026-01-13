@@ -203,3 +203,40 @@ impl NewPayloadRequest {
         }
     }
 }
+
+/// Computes the requests hash for EL block construction.
+pub fn compute_requests_hash(requests: &ExecutionRequests) -> [u8; 32] {
+    use sha2::{Digest, Sha256};
+    use ssz::Encode;
+
+    let mut outer_hasher = Sha256::new();
+
+    // Deposit requests (type 0x00)
+    let mut deposits_bytes = vec![0x00u8];
+    for deposit in requests.deposits.iter() {
+        deposits_bytes.extend(deposit.as_ssz_bytes());
+    }
+    if deposits_bytes.len() > 1 {
+        outer_hasher.update(Sha256::digest(&deposits_bytes));
+    }
+
+    // Withdrawal requests (type 0x01)
+    let mut withdrawals_bytes = vec![0x01u8];
+    for withdrawal in requests.withdrawals.iter() {
+        withdrawals_bytes.extend(withdrawal.as_ssz_bytes());
+    }
+    if withdrawals_bytes.len() > 1 {
+        outer_hasher.update(Sha256::digest(&withdrawals_bytes));
+    }
+
+    // Consolidation requests (type 0x02)
+    let mut consolidations_bytes = vec![0x02u8];
+    for consolidation in requests.consolidations.iter() {
+        consolidations_bytes.extend(consolidation.as_ssz_bytes());
+    }
+    if consolidations_bytes.len() > 1 {
+        outer_hasher.update(Sha256::digest(&consolidations_bytes));
+    }
+
+    outer_hasher.finalize().into()
+}
