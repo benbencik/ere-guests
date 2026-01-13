@@ -7,17 +7,25 @@ edition = "2024"
 
 [dependencies]
 # enable features
-alloy-primitives = { version = "1.4.1", default-features = false, features = ["map-foldhash", "sha3-keccak"] }
+alloy-primitives = { version = "1.4.1", default-features = false, features = [
+    "map-foldhash",
+    "sha3-keccak",
+] }
 revm = { version = "33.1.0", default-features = false, features = ["bn"] }
 
 # ere
-ere-platform-airbender = { git = "https://github.com/eth-act/ere", rev = "ec75f8a26657ddbf7efc44cdb3167fff4f55fe27", features = ["custom_allocator"] }
+ere-platform-airbender = { git = "https://github.com/eth-act/ere", rev = "ec75f8a26657ddbf7efc44cdb3167fff4f55fe27", features = [
+    "custom_allocator",
+] }
 
 # local
-stateless-validator-reth = { path = "../../../crates/stateless-validator-reth", default-features = false, features = ["k256"] }
+stateless-validator-reth = { path = "../../../crates/stateless-validator-reth", default-features = false, features = [
+    "k256",
+] }
 
 [patch.crates-io]
 radium = { git = "https://github.com/han0110/radium", branch = "feature/riscv32ima" }
+ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "181896944365e4b76dd6407c2d679fb844165dd6" }
 
 [profile.release]
 codegen-units = 1

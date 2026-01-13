@@ -7,7 +7,10 @@ edition = "2024"
 
 [dependencies]
 # enable features
-alloy-primitives = { version = "1.4.1", default-features = false, features = ["map-foldhash", "sha3-keccak"] }
+alloy-primitives = { version = "1.4.1", default-features = false, features = [
+    "map-foldhash",
+    "sha3-keccak",
+] }
 revm = { version = "33.1.0", default-features = false, features = ["bn"] }
 
 # ere
@@ -28,6 +31,7 @@ ark-ff = { git = "https://github.com/0xPolygonHermez/zisk-patch-ark-algebra.git"
 ark-bn254 = { git = "https://github.com/0xPolygonHermez/zisk-patch-ark-algebra.git", tag = "patch-0.5.0-zisk-0.15.0" }
 ark-serialize = { git = "https://github.com/0xPolygonHermez/zisk-patch-ark-algebra.git", tag = "patch-0.5.0-zisk-0.15.0" }
 aurora-engine-modexp = { git = "https://github.com/0xPolygonHermez/zisk-patch-modexp.git", tag = "patch-1.2.0-zisk-0.15.0" }
+ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "181896944365e4b76dd6407c2d679fb844165dd6" }
 
 [profile.release]
 codegen-units = 1

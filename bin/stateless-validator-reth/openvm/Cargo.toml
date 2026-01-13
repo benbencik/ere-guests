@@ -7,25 +7,39 @@ edition = "2024"
 
 [dependencies]
 # enable features
-alloy-consensus = { version = "1.1.2", default-features = false, features = ["crypto-backend"] }
-alloy-primitives = { version = "1.4.1", default-features = false, features = ["map-hashbrown", "native-keccak"] }
+alloy-consensus = { version = "1.1.2", default-features = false, features = [
+    "crypto-backend",
+] }
+alloy-primitives = { version = "1.4.1", default-features = false, features = [
+    "map-hashbrown",
+    "native-keccak",
+] }
 
 # revm
 revm = { version = "33.1.0", default-features = false }
 
 # openvm
-openvm = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2", features = ["std"] }
+openvm = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2", features = [
+    "std",
+] }
 openvm-algebra-guest = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2" }
 openvm-ecc-guest = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2" }
 openvm-k256 = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2", package = "k256" }
 openvm-keccak256 = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2" }
 openvm-p256 = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2", package = "p256" }
-openvm-pairing = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2", features = ["bn254", "bls12_381"] }
+openvm-pairing = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2", features = [
+    "bn254",
+    "bls12_381",
+] }
 openvm-sha2 = { git = "https://github.com/openvm-org/openvm.git", tag = "v1.4.2" }
-openvm-kzg = { git = "https://github.com/axiom-crypto/openvm-kzg.git", rev = "530a6ed413def5296b7e4967650ba4fc8fd92ea1", default-features = false, features = ["use-intrinsics"] }
+openvm-kzg = { git = "https://github.com/axiom-crypto/openvm-kzg.git", rev = "530a6ed413def5296b7e4967650ba4fc8fd92ea1", default-features = false, features = [
+    "use-intrinsics",
+] }
 
 # ere
-ere-platform-openvm = { git = "https://github.com/eth-act/ere", rev = "ec75f8a26657ddbf7efc44cdb3167fff4f55fe27", features = ["std"] }
+ere-platform-openvm = { git = "https://github.com/eth-act/ere", rev = "ec75f8a26657ddbf7efc44cdb3167fff4f55fe27", features = [
+    "std",
+] }
 
 # local
 stateless-validator-reth = { path = "../../../crates/stateless-validator-reth" }
@@ -49,6 +63,9 @@ openvm-platform = { git = "https://github.com/openvm-org//openvm.git", tag = "v1
 openvm-rv32im-guest = { git = "https://github.com/openvm-org//openvm.git", tag = "v1.4.2" }
 openvm-sha2 = { git = "https://github.com/openvm-org//openvm.git", tag = "v1.4.2" }
 openvm-sha256-guest = { git = "https://github.com/openvm-org//openvm.git", tag = "v1.4.2" }
+
+[patch.crates-io]
+ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "181896944365e4b76dd6407c2d679fb844165dd6" }
 
 [profile.release]
 codegen-units = 1

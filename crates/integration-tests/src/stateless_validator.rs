@@ -1,6 +1,5 @@
 //! This module proivdes struct for stateless validator test fixture.
 
-use guest::Platform;
 use reth_stateless::StatelessInput;
 use serde::{Deserialize, Serialize};
 
