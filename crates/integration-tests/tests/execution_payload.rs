@@ -11,7 +11,7 @@ use guest::Guest;
 use integration_tests::{NoopPlatform, get_fixtures};
 use reth_chainspec::ChainSpec;
 use reth_evm_ethereum::EthEvmConfig;
-use reth_stateless::{Genesis, stateless_validation, stateless_validation_with_trie};
+use reth_stateless::{Genesis, stateless_validation};
 use stateless_validator_reth::{
     execution_payload::new_payload_request_to_block,
     guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput},

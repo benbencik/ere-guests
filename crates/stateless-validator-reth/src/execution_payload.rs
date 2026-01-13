@@ -16,7 +16,6 @@ use anyhow::{Context, Result};
 use reth_chainspec::{ChainSpec, EthereumHardforks};
 use reth_payload_validator::{cancun, prague, shanghai};
 use reth_primitives_traits::{Block as _, SealedBlock, SignedTransaction};
-use ssz_types::{FixedVector, VariableList};
 use stateless_validator_common::execution_payload::{
     ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, ForkName, NewPayloadRequest,
     Withdrawal,
@@ -63,7 +62,7 @@ pub fn new_payload_request_to_block(
     Ok(sealed_block.into_block())
 }
 
-pub fn ensure_well_formed_payload<ChainSpec, T>(
+fn ensure_well_formed_payload<ChainSpec, T>(
     chain_spec: ChainSpec,
     payload: ExecutionData,
 ) -> Result<SealedBlock<Block<T>>, PayloadError>
@@ -154,7 +153,7 @@ pub fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> Executio
 
             ExecutionData::new(AlloyExecutionPayload::V3(v3), sidecar)
         }
-        NewPayloadRequest::Electra(e) => {
+        NewPayloadRequest::ElectraFulu(e) => {
             let (v1, withdrawals) = convert_v2_to_alloy_from_v3(&e.execution_payload);
             let v3 = AlloyExecutionPayloadV3 {
                 payload_inner: AlloyExecutionPayloadV2 {
@@ -201,7 +200,11 @@ fn convert_v1_to_alloy(payload: ExecutionPayloadV1) -> AlloyExecutionPayloadV1 {
         extra_data: Bytes::from(payload.extra_data.to_vec()),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
-        transactions: payload.transactions.into_iter().map(Bytes::from).collect(),
+        transactions: payload
+            .transactions
+            .into_iter()
+            .map(|tx| Bytes::from(tx.to_vec()))
+            .collect(),
     }
 }
 
@@ -223,7 +226,11 @@ fn convert_v2_to_alloy(
         extra_data: Bytes::from(payload.extra_data.to_vec()),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
-        transactions: payload.transactions.into_iter().map(Bytes::from).collect(),
+        transactions: payload
+            .transactions
+            .into_iter()
+            .map(|tx| Bytes::from(tx.to_vec()))
+            .collect(),
     };
 
     let withdrawals = payload
@@ -256,7 +263,7 @@ fn convert_v2_to_alloy_from_v3(
         transactions: payload
             .transactions
             .iter()
-            .map(|tx| Bytes::from(tx.clone()))
+            .map(|tx| Bytes::from(tx.to_vec()))
             .collect(),
     };
 
@@ -316,127 +323,4 @@ fn compute_requests_hash(
     }
 
     B256::from_slice(&outer_hasher.finalize())
-}
-
-// ============================================================================
-// Conversion: ExecutionData -> NewPayloadRequest (for creating requests from blocks)
-// ============================================================================
-
-/// Creates a new execution payload request from ExecutionData.
-///
-/// This extracts the transaction and withdrawal data from the ExecutionData
-/// and creates the appropriate NewPayloadRequest variant.
-pub fn create_new_payload_request(
-    execution_data: &ExecutionData,
-    requests: &alloy_eips::eip7685::Requests,
-) -> anyhow::Result<NewPayloadRequest> {
-    match &execution_data.payload {
-        AlloyExecutionPayload::V1(v1) => {
-            let payload = ExecutionPayloadV1 {
-                parent_hash: v1.parent_hash.0,
-                fee_recipient: v1.fee_recipient.0.0,
-                state_root: v1.state_root.0,
-                receipts_root: v1.receipts_root.0,
-                logs_bloom: FixedVector::from(v1.logs_bloom.0.to_vec()),
-                prev_randao: v1.prev_randao.0,
-                block_number: v1.block_number,
-                gas_limit: v1.gas_limit,
-                gas_used: v1.gas_used,
-                timestamp: v1.timestamp,
-                extra_data: VariableList::from(v1.extra_data.to_vec()),
-                base_fee_per_gas: v1.base_fee_per_gas.to_le_bytes(),
-                block_hash: v1.block_hash.0,
-                transactions: v1.transactions.iter().map(|tx| tx.to_vec()).collect(),
-            };
-            Ok(NewPayloadRequest::new_bellatrix(payload))
-        }
-        AlloyExecutionPayload::V2(v2) => {
-            let v1 = &v2.payload_inner;
-            let payload = ExecutionPayloadV2 {
-                parent_hash: v1.parent_hash.0,
-                fee_recipient: v1.fee_recipient.0.0,
-                state_root: v1.state_root.0,
-                receipts_root: v1.receipts_root.0,
-                logs_bloom: FixedVector::from(v1.logs_bloom.0.to_vec()),
-                prev_randao: v1.prev_randao.0,
-                block_number: v1.block_number,
-                gas_limit: v1.gas_limit,
-                gas_used: v1.gas_used,
-                timestamp: v1.timestamp,
-                extra_data: VariableList::from(v1.extra_data.to_vec()),
-                base_fee_per_gas: v1.base_fee_per_gas.to_le_bytes(),
-                block_hash: v1.block_hash.0,
-                transactions: v1.transactions.iter().map(|tx| tx.to_vec()).collect(),
-                withdrawals: v2
-                    .withdrawals
-                    .iter()
-                    .map(convert_alloy_withdrawal)
-                    .collect(),
-            };
-            Ok(NewPayloadRequest::new_capella(payload))
-        }
-        AlloyExecutionPayload::V3(v3) => {
-            let v2 = &v3.payload_inner;
-            let v1 = &v2.payload_inner;
-            let payload = ExecutionPayloadV3 {
-                parent_hash: v1.parent_hash.0,
-                fee_recipient: v1.fee_recipient.0.0,
-                state_root: v1.state_root.0,
-                receipts_root: v1.receipts_root.0,
-                logs_bloom: FixedVector::from(v1.logs_bloom.0.to_vec()),
-                prev_randao: v1.prev_randao.0,
-                block_number: v1.block_number,
-                gas_limit: v1.gas_limit,
-                gas_used: v1.gas_used,
-                timestamp: v1.timestamp,
-                extra_data: VariableList::from(v1.extra_data.to_vec()),
-                base_fee_per_gas: v1.base_fee_per_gas.to_le_bytes(),
-                block_hash: v1.block_hash.0,
-                transactions: v1.transactions.iter().map(|tx| tx.to_vec()).collect(),
-                withdrawals: v2
-                    .withdrawals
-                    .iter()
-                    .map(convert_alloy_withdrawal)
-                    .collect(),
-                blob_gas_used: v3.blob_gas_used,
-                excess_blob_gas: v3.excess_blob_gas,
-            };
-
-            let sidecar = &execution_data.sidecar;
-            match (sidecar.cancun(), sidecar.prague()) {
-                // Deneb
-                (Some(c), None) => {
-                    let versioned_hashes = c.versioned_hashes.iter().map(|h| h.0).collect();
-                    let parent_beacon_block_root = c.parent_beacon_block_root.0;
-                    NewPayloadRequest::new_deneb(
-                        payload,
-                        versioned_hashes,
-                        parent_beacon_block_root,
-                    )
-                }
-                // Electra
-                (Some(c), Some(_)) => {
-                    let versioned_hashes = c.versioned_hashes.iter().map(|h| h.0).collect();
-                    let parent_beacon_block_root = c.parent_beacon_block_root.0;
-                    NewPayloadRequest::new_electra(
-                        payload,
-                        versioned_hashes,
-                        parent_beacon_block_root,
-                        requests,
-                    )
-                }
-                _ => anyhow::bail!("Missing sidecar for Deneb execution payload"),
-            }
-        }
-    }
-}
-
-/// Converts alloy's Withdrawal to our Withdrawal
-fn convert_alloy_withdrawal(w: &AlloyWithdrawal) -> Withdrawal {
-    Withdrawal {
-        index: w.index,
-        validator_index: w.validator_index,
-        address: w.address.0.0,
-        amount: w.amount,
-    }
 }
