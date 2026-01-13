@@ -102,14 +102,16 @@ fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> ExecutionDat
             )
         }
         NewPayloadRequest::Deneb(d) => {
-            let (v1, withdrawals) = convert_v2_to_alloy_from_v3(&d.execution_payload);
+            let blob_gas_used = d.execution_payload.blob_gas_used;
+            let excess_blob_gas = d.execution_payload.excess_blob_gas;
+            let (v1, withdrawals) = convert_v2_to_alloy_from_v3(d.execution_payload);
             let v3 = AlloyExecutionPayloadV3 {
                 payload_inner: AlloyExecutionPayloadV2 {
                     payload_inner: v1,
                     withdrawals,
                 },
-                blob_gas_used: d.execution_payload.blob_gas_used,
-                excess_blob_gas: d.execution_payload.excess_blob_gas,
+                blob_gas_used,
+                excess_blob_gas,
             };
 
             let versioned_hashes: Vec<B256> =
@@ -122,14 +124,16 @@ fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> ExecutionDat
             ExecutionData::new(AlloyExecutionPayload::V3(v3), sidecar)
         }
         NewPayloadRequest::ElectraFulu(e) => {
-            let (v1, withdrawals) = convert_v2_to_alloy_from_v3(&e.execution_payload);
+            let blob_gas_used = e.execution_payload.blob_gas_used;
+            let excess_blob_gas = e.execution_payload.excess_blob_gas;
+            let (v1, withdrawals) = convert_v2_to_alloy_from_v3(e.execution_payload);
             let v3 = AlloyExecutionPayloadV3 {
                 payload_inner: AlloyExecutionPayloadV2 {
                     payload_inner: v1,
                     withdrawals,
                 },
-                blob_gas_used: e.execution_payload.blob_gas_used,
-                excess_blob_gas: e.execution_payload.excess_blob_gas,
+                blob_gas_used,
+                excess_blob_gas,
             };
 
             let versioned_hashes: Vec<B256> =
@@ -207,7 +211,7 @@ fn convert_v2_to_alloy(
 
 /// Converts ExecutionPayloadV3 to alloy's (V1, withdrawals) - used for Deneb/Electra
 fn convert_v2_to_alloy_from_v3(
-    payload: &ExecutionPayloadV3,
+    payload: ExecutionPayloadV3,
 ) -> (AlloyExecutionPayloadV1, Vec<AlloyWithdrawal>) {
     let v1 = AlloyExecutionPayloadV1 {
         parent_hash: B256::from(payload.parent_hash),
@@ -220,20 +224,20 @@ fn convert_v2_to_alloy_from_v3(
         gas_limit: payload.gas_limit,
         gas_used: payload.gas_used,
         timestamp: payload.timestamp,
-        extra_data: Bytes::from(payload.extra_data.to_vec()),
+        extra_data: Bytes::from(Vec::from(payload.extra_data)),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
         transactions: payload
             .transactions
-            .iter()
-            .map(|tx| Bytes::copy_from_slice(tx))
+            .into_iter()
+            .map(|tx| Bytes::from(Vec::from(tx)))
             .collect(),
     };
 
     let withdrawals = payload
         .withdrawals
-        .iter()
-        .map(|w| convert_withdrawal(w.clone()))
+        .into_iter()
+        .map(convert_withdrawal)
         .collect();
 
     (v1, withdrawals)
