@@ -1,17 +1,21 @@
 //! Implementations for host environment.
 
 use alloc::{format, vec::Vec};
+use alloy_consensus::Transaction;
+use std::sync::Arc;
 
 use alloy_eips::{Encodable2718, eip7685::Requests};
-use alloy_genesis::ChainConfig;
+use alloy_genesis::{ChainConfig, Genesis};
 use alloy_primitives::U256;
 use anyhow::Context;
 use ere_zkvm_interface::Input;
 use guest::{GuestIo, Io};
+use reth_chainspec::ChainSpec;
 use reth_ethereum_primitives::TransactionSigned;
+use reth_evm_ethereum::EthEvmConfig;
 use reth_primitives_traits::Block;
 pub use reth_stateless::StatelessInput;
-use reth_stateless::UncompressedPublicKey;
+use reth_stateless::{UncompressedPublicKey, stateless_validation};
 use ssz_types::{FixedVector, VariableList};
 pub use stateless_validator_common::guest::StatelessValidatorOutput;
 use stateless_validator_common::new_payload_request::{
@@ -23,9 +27,10 @@ use crate::guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput};
 
 impl StatelessValidatorRethInput {
     /// Construct [`StatelessValidatorRethInput`] given [`StatelessInput`].
-    pub fn new(stateless_input: &StatelessInput, requests: Requests) -> anyhow::Result<Self> {
-        let new_payload_request = to_new_payload_request(stateless_input, requests)?;
+    pub fn new(stateless_input: &StatelessInput, valid_block: bool) -> anyhow::Result<Self> {
         let signers = recover_signers(&stateless_input.block.body.transactions)?;
+        let requests = get_requests(stateless_input, &signers, valid_block);
+        let new_payload_request = to_new_payload_request(stateless_input, requests)?;
 
         Ok(Self {
             new_payload_request,
@@ -65,6 +70,12 @@ where
 pub fn determine_fork_name(chain_config: &ChainConfig, timestamp: u64) -> ForkName {
     // Check forks in reverse chronological order
     if chain_config
+        .osaka_time
+        .is_some_and(|osaka_time| timestamp >= osaka_time)
+    {
+        return ForkName::Fulu;
+    }
+    if chain_config
         .prague_time
         .is_some_and(|prague_time| timestamp >= prague_time)
     {
@@ -82,19 +93,14 @@ pub fn determine_fork_name(chain_config: &ChainConfig, timestamp: u64) -> ForkNa
     {
         return ForkName::Capella;
     }
-    // Default to Bellatrix for post-merge blocks
     ForkName::Bellatrix
 }
 
 /// Converts a [`StatelessInput`] to a [`NewPayloadRequest`].
-///
-/// This creates the appropriate NewPayloadRequest variant based on the fork.
 pub fn to_new_payload_request(
     stateless_input: &StatelessInput,
     requests: Requests,
 ) -> anyhow::Result<NewPayloadRequest> {
-    use alloy_consensus::transaction::Transaction;
-
     let header = stateless_input.block.header();
     let body = stateless_input.block.body();
     let fork = determine_fork_name(&stateless_input.chain_config, header.timestamp);
@@ -218,7 +224,7 @@ pub fn to_new_payload_request(
 
             NewPayloadRequest::new_deneb(payload, versioned_hashes, parent_beacon_block_root)
         }
-        ForkName::Electra => {
+        ForkName::Electra | ForkName::Fulu => {
             let withdrawals: Withdrawals = {
                 let wdls: Vec<Withdrawal> = body
                     .withdrawals
@@ -271,6 +277,36 @@ pub fn to_new_payload_request(
             )
         }
     }
+}
+
+fn get_requests(
+    stateless_input: &StatelessInput,
+    signers: &[UncompressedPublicKey],
+    valid_block: bool,
+) -> Requests {
+    if !valid_block {
+        return Requests::default();
+    }
+
+    let genesis = Genesis {
+        config: stateless_input.chain_config.clone(),
+        ..Default::default()
+    };
+    let chain_spec: Arc<ChainSpec> = Arc::new(genesis.into());
+    let evm_config = EthEvmConfig::new(chain_spec.clone());
+    let (_, out) = stateless_validation(
+        stateless_input.block.clone(),
+        signers.to_owned(),
+        stateless_input.witness.clone(),
+        chain_spec.clone(),
+        evm_config,
+    )
+    .unwrap();
+
+    // This clone doesn't make much sense, but rust-analyzer can't figure out
+    // why isn't required and mark it as error otherwise. Since this is only used
+    // in the host side, we can afford the extra clone.
+    out.requests.clone()
 }
 
 #[cfg(test)]

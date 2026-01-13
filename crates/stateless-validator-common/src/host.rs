@@ -1,6 +1,9 @@
 //! Stateless validator common types and utilities for host.
 
+use anyhow::{Context, Result};
 use sha2::{Digest, Sha256};
+use ssz::{Decode, Encode};
+use ssz_types::VariableList;
 
 use crate::{
     guest::StatelessValidatorOutput,
@@ -11,9 +14,6 @@ use crate::{
         NewPayloadRequestElectraFulu, WithdrawalRequest,
     },
 };
-use anyhow::{Context, Result};
-use ssz::{Decode, Encode};
-use ssz_types::VariableList;
 
 impl StatelessValidatorOutput {
     /// Returns sha256 digest of serialized output.

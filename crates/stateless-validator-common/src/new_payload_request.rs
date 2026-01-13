@@ -92,6 +92,7 @@ pub enum ForkName {
     Capella,
     Deneb,
     Electra,
+    Fulu,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]

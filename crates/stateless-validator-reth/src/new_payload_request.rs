@@ -151,7 +151,6 @@ fn new_payload_request_to_execution_data(req: NewPayloadRequest) -> ExecutionDat
     }
 }
 
-/// Converts ExecutionPayloadV1 to alloy's ExecutionPayloadV1
 fn convert_v1_to_alloy(payload: ExecutionPayloadV1) -> AlloyExecutionPayloadV1 {
     AlloyExecutionPayloadV1 {
         parent_hash: B256::from(payload.parent_hash),
@@ -175,7 +174,6 @@ fn convert_v1_to_alloy(payload: ExecutionPayloadV1) -> AlloyExecutionPayloadV1 {
     }
 }
 
-/// Converts ExecutionPayloadV2 to alloy's (V1, withdrawals)
 fn convert_v2_to_alloy(
     payload: ExecutionPayloadV2,
 ) -> (AlloyExecutionPayloadV1, Vec<AlloyWithdrawal>) {
@@ -209,7 +207,6 @@ fn convert_v2_to_alloy(
     (v1, withdrawals)
 }
 
-/// Converts ExecutionPayloadV3 to alloy's (V1, withdrawals) - used for Deneb/Electra
 fn convert_v2_to_alloy_from_v3(
     payload: ExecutionPayloadV3,
 ) -> (AlloyExecutionPayloadV1, Vec<AlloyWithdrawal>) {
@@ -243,7 +240,6 @@ fn convert_v2_to_alloy_from_v3(
     (v1, withdrawals)
 }
 
-/// Converts our Withdrawal to alloy's Withdrawal
 fn convert_withdrawal(w: Withdrawal) -> AlloyWithdrawal {
     AlloyWithdrawal {
         index: w.index,
