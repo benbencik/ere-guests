@@ -21,9 +21,12 @@ alloy-rlp = { workspace = true, optional = true }
 # ethrex
 ethrex-common.workspace = true
 ethrex-guest-program.workspace = true
-ethrex-rlp = { workspace = true, optional = true }
+ethrex-rlp = { workspace = true }
 ethrex-rpc = { workspace = true, optional = true }
 ethrex-vm.workspace = true
+
+# reth
+reth-stateless = { workspace = true, optional = true }
 
 # ere
 ere-io = { workspace = true, features = ["rkyv"] }
@@ -51,7 +54,7 @@ host = [
     "dep:alloy-eips",
     "dep:alloy-rlp",
     "dep:alloy-genesis",
-    "dep:ethrex-rlp",
     "dep:ethrex-rpc",
     "dep:ere-zkvm-interface",
+    "dep:reth-stateless",
 ]
