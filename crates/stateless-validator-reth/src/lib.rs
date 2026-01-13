@@ -8,7 +8,5 @@ pub mod guest;
 
 pub mod execution_payload;
 
-pub mod serde_bincode_compat;
-
 #[cfg(feature = "host")]
 pub mod host;
