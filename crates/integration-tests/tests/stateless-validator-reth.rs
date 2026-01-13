@@ -1,31 +1,46 @@
 //! Execution tests for `stateless-validator-reth` guest program
 
-use std::fs;
+use std::sync::Arc;
 
 use ere_dockerized::zkVMKind;
-use integration_tests::{
-    TestCase, fixtures_dir, stateless_validator::StatelessValidatorFixture, untar_fixtures,
-};
-use stateless_validator_reth::guest::{
-    StatelessValidatorOutput, StatelessValidatorRethGuest, StatelessValidatorRethInput,
-};
+use guest::Guest;
+use integration_tests::{NoopPlatform, TestCase, get_fixtures};
+use reth_chainspec::ChainSpec;
+use reth_evm_ethereum::EthEvmConfig;
+use reth_stateless::{Genesis, stateless_validation};
+use stateless_validator_reth::guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput};
 
 fn test_execution(zkvm_kind: zkVMKind) {
-    untar_fixtures().unwrap();
-    let inputs = fs::read_dir(fixtures_dir().join("block"))
-        .unwrap()
-        .map(|file| {
-            let bytes = fs::read(file.unwrap().path()).unwrap();
-            let fixture: StatelessValidatorFixture = serde_json::from_slice(&bytes).unwrap();
-            let input = StatelessValidatorRethInput::new(&fixture.stateless_input).unwrap();
-            let output = StatelessValidatorOutput::new(
-                fixture.stateless_input.block.hash_slow(),
-                fixture.stateless_input.block.parent_hash,
-                fixture.success,
-            );
-            TestCase::new::<StatelessValidatorRethGuest>(fixture.name, input, output)
-                .output_sha256()
-        });
+    let fixtures = get_fixtures();
+    let inputs = fixtures.into_iter().filter(|a| a.success).map(|fixture| {
+        // TODO: remove .filter above
+        // TODO: move inside StatelessValidatorRethInput::new?
+        let genesis = Genesis {
+            config: fixture.stateless_input.chain_config.clone(),
+            ..Default::default()
+        };
+        let chain_spec: Arc<ChainSpec> = Arc::new(genesis.into());
+        let evm_config = EthEvmConfig::new(chain_spec.clone());
+        let signers = stateless_validator_reth::host::recover_signers(
+            &fixture.stateless_input.block.body.transactions,
+        )
+        .unwrap();
+        let (_, out) = stateless_validation(
+            fixture.stateless_input.block.clone(),
+            signers,
+            fixture.stateless_input.witness.clone(),
+            chain_spec.clone(),
+            evm_config,
+        )
+        .unwrap();
+        let input =
+            StatelessValidatorRethInput::new(&fixture.stateless_input, out.requests.clone())
+                .unwrap();
+        let output = StatelessValidatorRethGuest::compute::<NoopPlatform>(input.clone());
+        assert_eq!(output.successful_block_validation, fixture.success);
+
+        TestCase::new::<StatelessValidatorRethGuest>(fixture.name, input, output).output_sha256()
+    });
     integration_tests::test_execution("stateless-validator-reth", zkvm_kind, inputs);
 }
 
