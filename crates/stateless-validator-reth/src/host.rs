@@ -1,7 +1,6 @@
 //! Implementations for host environment.
 
 use alloc::{format, vec::Vec};
-use sparsestate::SparseState;
 use std::sync::Arc;
 
 use alloy_consensus::Transaction;
@@ -17,6 +16,7 @@ use reth_evm_ethereum::EthEvmConfig;
 use reth_primitives_traits::Block;
 pub use reth_stateless::StatelessInput;
 use reth_stateless::{UncompressedPublicKey, stateless_validation_with_trie};
+use sparsestate::SparseState;
 use ssz_types::{FixedVector, VariableList};
 pub use stateless_validator_common::guest::StatelessValidatorOutput;
 use stateless_validator_common::new_payload_request::{

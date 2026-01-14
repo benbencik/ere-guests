@@ -7,5 +7,8 @@ extern crate alloc;
 pub mod guest;
 pub mod new_payload_request;
 
+#[cfg(feature = "rkyv")]
+pub mod rkyv_wrappers;
+
 #[cfg(feature = "host")]
 pub mod host;

@@ -1,6 +1,5 @@
 #![allow(missing_docs)]
 use bytes::Bytes;
-
 use ethrex_common::{
     Address, Bloom, H256,
     constants::DEFAULT_OMMERS_HASH,

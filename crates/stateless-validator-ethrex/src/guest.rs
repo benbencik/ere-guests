@@ -2,13 +2,13 @@
 
 use alloc::format;
 use core::fmt::Debug;
+
+use ere_io::rkyv::IoRkyv;
+use ethrex_common::types::{block_execution_witness::ExecutionWitness, fee_config::FeeConfig};
+use ethrex_guest_program::{execution::execution_program, input::ProgramInput};
 use stateless_validator_common::new_payload_request::NewPayloadRequest;
 
 use crate::new_payload_request::get_block_from_new_payload_request;
-use ere_io::serde::{IoSerde, bincode::BincodeLegacy};
-use ethrex_common::types::{block_execution_witness::ExecutionWitness, fee_config::FeeConfig};
-use ethrex_guest_program::{execution::execution_program, input::ProgramInput};
-use serde::{Deserialize, Serialize};
 
 #[rustfmt::skip]
 pub use {
@@ -17,7 +17,7 @@ pub use {
 };
 
 /// Input for the Ethrex stateless validator guest program.
-#[derive(Serialize, Deserialize)]
+#[derive(rkyv::Serialize, rkyv::Deserialize, rkyv::Archive)]
 pub struct StatelessValidatorEthrexInput {
     /// New payload request data.
     pub new_payload_request: NewPayloadRequest,
@@ -84,7 +84,7 @@ impl Debug for StatelessValidatorEthrexInput {
 
 /// [`Io`] implementation of Ethrex stateless validator.
 pub type StatelessValidatorEthrexIo =
-    IoSerde<StatelessValidatorEthrexInput, StatelessValidatorOutput, BincodeLegacy>;
+    IoRkyv<StatelessValidatorEthrexInput, StatelessValidatorOutput>;
 
 /// [`Guest`] implementation for Ethrex stateless validator.
 #[derive(Debug, Clone)]

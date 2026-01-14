@@ -35,6 +35,10 @@ pub type Transactions = VariableList<Transaction, MaxTransactionsPerPayload>;
 pub type Withdrawals = VariableList<Withdrawal, MaxWithdrawalsPerPayload>;
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct Withdrawal {
     pub index: u64,
     pub validator_index: u64,
@@ -45,6 +49,10 @@ pub struct Withdrawal {
 #[serde_as]
 #[derive(
     Debug, Clone, Serialize, Deserialize, TreeHash, ssz_derive::Encode, ssz_derive::Decode,
+)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
 )]
 pub struct DepositRequest {
     #[serde_as(as = "Bytes")]
@@ -60,6 +68,10 @@ pub struct DepositRequest {
 #[derive(
     Debug, Clone, Serialize, Deserialize, TreeHash, ssz_derive::Encode, ssz_derive::Decode,
 )]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct WithdrawalRequest {
     pub source_address: Address20,
     #[serde_as(as = "Bytes")]
@@ -71,6 +83,10 @@ pub struct WithdrawalRequest {
 #[derive(
     Debug, Clone, Serialize, Deserialize, TreeHash, ssz_derive::Encode, ssz_derive::Decode,
 )]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct ConsolidationRequest {
     pub source_address: Address20,
     #[serde_as(as = "Bytes")]
@@ -80,9 +96,16 @@ pub struct ConsolidationRequest {
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct ExecutionRequests {
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub deposits: VariableList<DepositRequest, MaxDepositRequestsPerPayload>,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub withdrawals: VariableList<WithdrawalRequest, MaxWithdrawalRequestsPerPayload>,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub consolidations: VariableList<ConsolidationRequest, MaxConsolidationRequestsPerPayload>,
 }
 
@@ -96,97 +119,147 @@ pub enum ForkName {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct ExecutionPayloadV1 {
     pub parent_hash: Hash32,
     pub fee_recipient: Address20,
     pub state_root: Hash32,
     pub receipts_root: Hash32,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsFixedVector))]
     pub logs_bloom: LogsBloom,
     pub prev_randao: Hash32,
     pub block_number: u64,
     pub gas_limit: u64,
     pub gas_used: u64,
     pub timestamp: u64,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
     pub transactions: Transactions,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct ExecutionPayloadV2 {
     pub parent_hash: Hash32,
     pub fee_recipient: Address20,
     pub state_root: Hash32,
     pub receipts_root: Hash32,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsFixedVector))]
     pub logs_bloom: LogsBloom,
     pub prev_randao: Hash32,
     pub block_number: u64,
     pub gas_limit: u64,
     pub gas_used: u64,
     pub timestamp: u64,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
     pub transactions: Transactions,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub withdrawals: Withdrawals,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct ExecutionPayloadV3 {
     pub parent_hash: Hash32,
     pub fee_recipient: Address20,
     pub state_root: Hash32,
     pub receipts_root: Hash32,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsFixedVector))]
     pub logs_bloom: LogsBloom,
     pub prev_randao: Hash32,
     pub block_number: u64,
     pub gas_limit: u64,
     pub gas_used: u64,
     pub timestamp: u64,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
     pub transactions: Transactions,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub withdrawals: Withdrawals,
     pub blob_gas_used: u64,
     pub excess_blob_gas: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct NewPayloadRequestBellatrix {
     pub execution_payload: ExecutionPayloadV1,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct NewPayloadRequestCapella {
     pub execution_payload: ExecutionPayloadV2,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct NewPayloadRequestDeneb {
     pub execution_payload: ExecutionPayloadV3,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub versioned_hashes: VariableList<Hash32, MaxBlobCommitmentsPerBlock>,
     pub parent_beacon_block_root: Hash32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct NewPayloadRequestElectraFulu {
     pub execution_payload: ExecutionPayloadV3,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub versioned_hashes: VariableList<Hash32, MaxBlobCommitmentsPerBlock>,
     pub parent_beacon_block_root: Hash32,
     pub execution_requests: ExecutionRequests,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TreeHash)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct NewPayloadRequestFulu {
     pub execution_payload: ExecutionPayloadV3,
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
     pub versioned_hashes: VariableList<Hash32, MaxBlobCommitmentsPerBlock>,
     pub parent_beacon_block_root: Hash32,
     pub execution_requests: ExecutionRequests,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub enum NewPayloadRequest {
     Bellatrix(NewPayloadRequestBellatrix),
     Capella(NewPayloadRequestCapella),
