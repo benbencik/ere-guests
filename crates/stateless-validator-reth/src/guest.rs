@@ -86,9 +86,9 @@ impl StatelessValidatorRethGuest {
                 };
                 let chain_spec: Arc<ChainSpec> = Arc::new(genesis.into());
                 let evm_config = EthEvmConfig::new(chain_spec.clone());
-                let block_result =
+                let sealed_block_res =
                     new_payload_request_to_block(input.new_payload_request, chain_spec.clone());
-                (chain_spec, evm_config, block_result)
+                (chain_spec, evm_config, sealed_block_res)
             });
 
         let block = match block_result {
@@ -98,6 +98,11 @@ impl StatelessValidatorRethGuest {
                 return StatelessValidatorOutput::new(new_payload_request_root, false);
             }
         };
+
+        // TODO: consider asking Reth to have an `stateless_validation_with_trie`
+        // variant which accepts `SealedBlock`. Since this isn't the case today,
+        // `stateless_validator_with_trie` will hash again the block.
+        let block = block.into_block();
 
         let res = P::cycle_scope("validation", || {
             stateless_validation_with_trie::<SparseState, _, _>(

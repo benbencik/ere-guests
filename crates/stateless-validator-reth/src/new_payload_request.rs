@@ -24,11 +24,11 @@ use stateless_validator_common::new_payload_request::{
 pub fn new_payload_request_to_block(
     new_payload_request: NewPayloadRequest,
     chain_spec: Arc<ChainSpec>,
-) -> Result<Block<reth_ethereum_primitives::TransactionSigned>> {
+) -> Result<SealedBlock<Block<reth_ethereum_primitives::TransactionSigned>>> {
     let execution_data = new_payload_request_to_execution_data(new_payload_request);
     let sealed_block = ensure_well_formed_payload(chain_spec, execution_data)
         .context("Payload validation failed")?;
-    Ok(sealed_block.into_block())
+    Ok(sealed_block)
 }
 
 /// This method is copied from `reth-ethereum-payload-builder` crate.
