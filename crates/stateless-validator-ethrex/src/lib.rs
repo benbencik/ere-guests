@@ -8,3 +8,5 @@ pub mod guest;
 
 #[cfg(feature = "host")]
 pub mod host;
+
+pub mod new_payload_request;
