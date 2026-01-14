@@ -94,6 +94,8 @@ fn decode_execution_requests(requests_list: &[impl AsRef<[u8]>]) -> Result<Execu
     let mut withdrawals = Vec::new();
     let mut consolidations = Vec::new();
 
+    let mut last_request_type: Option<u8> = None;
+
     for (idx, request) in requests_list.iter().enumerate() {
         let request_bytes = request.as_ref();
 
@@ -103,60 +105,82 @@ fn decode_execution_requests(requests_list: &[impl AsRef<[u8]>]) -> Result<Execu
         let request_type = request_bytes[0];
         let data = &request_bytes[1..];
 
+        // Validate uniqueness and ascending order
+        if let Some(last_type) = last_request_type {
+            anyhow::ensure!(
+                request_type > last_type,
+                "Invalid request ordering at index {}: type {:#x} must be greater than previous type {:#x}",
+                idx,
+                request_type,
+                last_type
+            );
+        }
+        last_request_type = Some(request_type);
+
         match request_type {
             DEPOSIT_REQUEST_TYPE => {
                 anyhow::ensure!(
-                    data.len() == deposit_request_size,
-                    "Invalid deposit request size at index {}: expected {}, got {}",
-                    idx,
+                    data.len() % deposit_request_size == 0,
+                    "Deposit request data length {} is not a multiple of {} at index {}",
+                    data.len(),
                     deposit_request_size,
-                    data.len()
+                    idx
                 );
 
-                let deposit = DepositRequest::from_ssz_bytes(data).map_err(|e| {
-                    anyhow::anyhow!(
-                        "Failed to SSZ decode deposit request at index {}: {:?}",
-                        idx,
-                        e
-                    )
-                })?;
-                deposits.push(deposit);
+                for (i, chunk) in data.chunks_exact(deposit_request_size).enumerate() {
+                    let deposit = DepositRequest::from_ssz_bytes(chunk).map_err(|e| {
+                        anyhow::anyhow!(
+                            "Failed to SSZ decode deposit request {} at index {}: {:?}",
+                            i,
+                            idx,
+                            e
+                        )
+                    })?;
+                    deposits.push(deposit);
+                }
             }
             WITHDRAWAL_REQUEST_TYPE => {
                 anyhow::ensure!(
-                    data.len() == withdrawal_request_size,
-                    "Invalid withdrawal request size at index {}: expected {}, got {}",
-                    idx,
+                    data.len() % withdrawal_request_size == 0,
+                    "Withdrawal request data length {} is not a multiple of {} at index {}",
+                    data.len(),
                     withdrawal_request_size,
-                    data.len()
+                    idx
                 );
 
-                let withdrawal = WithdrawalRequest::from_ssz_bytes(data).map_err(|e| {
-                    anyhow::anyhow!(
-                        "Failed to SSZ decode withdrawal request at index {}: {:?}",
-                        idx,
-                        e
-                    )
-                })?;
-                withdrawals.push(withdrawal);
+                for (i, chunk) in data.chunks_exact(withdrawal_request_size).enumerate() {
+                    let withdrawal = WithdrawalRequest::from_ssz_bytes(chunk).map_err(|e| {
+                        anyhow::anyhow!(
+                            "Failed to SSZ decode withdrawal request {} at index {}: {:?}",
+                            i,
+                            idx,
+                            e
+                        )
+                    })?;
+                    withdrawals.push(withdrawal);
+                }
             }
             CONSOLIDATION_REQUEST_TYPE => {
                 anyhow::ensure!(
-                    data.len() == consolidation_request_size,
-                    "Invalid consolidation request size at index {}: expected {}, got {}",
-                    idx,
+                    data.len() % consolidation_request_size == 0,
+                    "Consolidation request data length {} is not a multiple of {} at index {}",
+                    data.len(),
                     consolidation_request_size,
-                    data.len()
+                    idx
                 );
 
-                let consolidation = ConsolidationRequest::from_ssz_bytes(data).map_err(|e| {
-                    anyhow::anyhow!(
-                        "Failed to SSZ decode consolidation request at index {}: {:?}",
-                        idx,
-                        e
-                    )
-                })?;
-                consolidations.push(consolidation);
+                for (i, chunk) in data.chunks_exact(consolidation_request_size).enumerate() {
+                    let consolidation =
+                        ConsolidationRequest::from_ssz_bytes(chunk).map_err(|e| {
+                            anyhow::anyhow!(
+                                "Failed to SSZ decode consolidation request {} at index {}: {:?}",
+                                i,
+                                idx,
+                                e
+                            )
+                        })?;
+                    consolidations.push(consolidation);
+                }
             }
             _ => {
                 anyhow::bail!("Unknown request type at index {}: {:#x}", idx, request_type);
