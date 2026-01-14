@@ -1,19 +1,16 @@
 //! Implementations for host environment.
 
-use alloc::vec;
-
 use alloy_eips::eip6110::MAINNET_DEPOSIT_CONTRACT_ADDRESS;
-use alloy_rlp::Encodable;
 use ere_zkvm_interface::Input;
 use ethrex_common::{
     H160,
-    types::{BlobSchedule, Block, ChainConfig, ForkBlobSchedule, block_execution_witness},
+    types::{BlobSchedule, ChainConfig, ForkBlobSchedule, block_execution_witness},
 };
-use ethrex_rlp::decode::RLPDecode;
 use ethrex_rpc::debug::execution_witness::{
     RpcExecutionWitness, execution_witness_from_rpc_chain_config,
 };
 use guest::{GuestIo, Io};
+use stateless_validator_reth::guest::StatelessValidatorRethInput;
 
 use crate::guest::{StatelessValidatorEthrexGuest, StatelessValidatorEthrexInput};
 
@@ -25,13 +22,12 @@ pub use {
 
 impl StatelessValidatorEthrexInput {
     /// Construct [`StatelessValidatorEthrexInput`] given [`StatelessInput`].
-    pub fn new(stateless_input: &StatelessInput) -> anyhow::Result<Self> {
-        let mut rlp_bytes = vec![];
-        stateless_input.block.encode(&mut rlp_bytes);
-        let (ethrex_block, _) = Block::decode_unfinished(&rlp_bytes)?;
+    pub fn new(stateless_input: &StatelessInput, valid_block: bool) -> anyhow::Result<Self> {
+        let reth_input = StatelessValidatorRethInput::new(stateless_input, valid_block)?;
+        let new_payload_request = reth_input.new_payload_request;
 
-        Ok(Self(ProgramInput {
-            blocks: vec![ethrex_block],
+        Ok(Self {
+            new_payload_request,
             execution_witness: from_reth_witness_to_ethrex_witness(
                 stateless_input.block.number,
                 stateless_input,
@@ -42,7 +38,7 @@ impl StatelessValidatorEthrexInput {
             blob_commitment: [0; 48],
             #[cfg(feature = "l2")]
             blob_proof: [0; 48],
-        }))
+        })
     }
 
     /// Returns [`Input`] to [`zkVM`] methods.

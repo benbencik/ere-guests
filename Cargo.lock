@@ -6064,6 +6064,7 @@ dependencies = [
  "reth-stateless",
  "serde",
  "stateless-validator-common",
+ "stateless-validator-reth",
 ]
 
 [[package]]

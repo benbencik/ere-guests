@@ -10,7 +10,8 @@ use stateless_validator_ethrex::guest::{
 fn test_execution(zkvm_kind: zkVMKind) {
     let fixtures = get_fixtures();
     let inputs = fixtures.into_iter().map(|fixture| {
-        let input = StatelessValidatorEthrexInput::new(&fixture.stateless_input).unwrap();
+        let input =
+            StatelessValidatorEthrexInput::new(&fixture.stateless_input, fixture.success).unwrap();
         let output = StatelessValidatorEthrexGuest::compute::<NoopPlatform>(input.clone());
         assert_eq!(output.successful_block_validation, fixture.success);
 
