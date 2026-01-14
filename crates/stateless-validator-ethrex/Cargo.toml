@@ -36,7 +36,7 @@ ere-zkvm-interface = { workspace = true, optional = true }
 # local
 guest.workspace = true
 stateless-validator-common = { workspace = true, features = ["rkyv"] }
-stateless-validator-reth.workspace = true
+stateless-validator-reth = { workspace = true, optional = true }
 
 [features]
 # guest
@@ -58,4 +58,5 @@ host = [
     "dep:ere-zkvm-interface",
     "dep:ethrex-rpc",
     "dep:reth-stateless",
+    "dep:stateless-validator-reth",
 ]
