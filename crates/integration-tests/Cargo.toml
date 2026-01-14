@@ -22,6 +22,9 @@ serde_json.workspace = true
 # reth
 reth-stateless.workspace = true
 
+# alloy
+alloy-primitives.workspace = true
+
 # ere
 ere-dockerized.workspace = true
 ere-io.workspace = true
@@ -29,9 +32,11 @@ ere-zkvm-interface.workspace = true
 
 # local
 guest.workspace = true
+stateless-validator-reth = { workspace = true, default-features = true, features = [
+    "host",
+] }
 
 [dev-dependencies]
-alloy-primitives.workspace = true
 reth-chainspec.workspace = true
 reth-stateless.workspace = true
 reth-evm-ethereum.workspace = true
@@ -48,8 +53,5 @@ stateless-validator-common = { workspace = true, default-features = true, featur
     "host",
 ] }
 stateless-validator-ethrex = { workspace = true, default-features = true, features = [
-    "host",
-] }
-stateless-validator-reth = { workspace = true, default-features = true, features = [
     "host",
 ] }

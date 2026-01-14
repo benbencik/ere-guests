@@ -1,9 +1,9 @@
 //! Implementations for host environment.
 
 use alloc::{format, vec::Vec};
-use alloy_consensus::Transaction;
 use std::sync::Arc;
 
+use alloy_consensus::Transaction;
 use alloy_eips::{Encodable2718, eip7685::Requests};
 use alloy_genesis::{ChainConfig, Genesis};
 use alloy_primitives::U256;
