@@ -10,7 +10,7 @@ workspace = true
 
 [dependencies]
 anyhow = { workspace = true, optional = true }
-rkyv.workspace = true
+serde.workspace = true
 
 # alloy
 alloy-consensus = { workspace = true, optional = true }

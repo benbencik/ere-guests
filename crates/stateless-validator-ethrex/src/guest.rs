@@ -2,13 +2,17 @@
 
 use alloc::format;
 use core::fmt::Debug;
+use stateless_validator_common::new_payload_request::NewPayloadRequest;
 
-use ere_io::rkyv::{
-    IoRkyv,
-    rkyv::{Archive, Deserialize, Serialize},
+use ere_io::serde::{IoSerde, bincode::BincodeLegacy};
+use ethrex_common::types::{
+    Block, block_execution_witness::ExecutionWitness, fee_config::FeeConfig,
 };
-use ethrex_common::types::block_execution_witness::ExecutionWitness;
-use ethrex_guest_program::{execution::execution_program, input::ProgramInput};
+use ethrex_guest_program::{
+    execution::execution_program,
+    input::{self, ProgramInput},
+};
+use serde::{Deserialize, Serialize};
 
 #[rustfmt::skip]
 pub use {
@@ -17,21 +21,38 @@ pub use {
 };
 
 /// Input for the Ethrex stateless validator guest program.
-#[derive(Serialize, Deserialize, Archive)]
-pub struct StatelessValidatorEthrexInput(pub ProgramInput);
+#[derive(Serialize, Deserialize)]
+pub struct StatelessValidatorEthrexInput {
+    /// New payload request data.
+    pub new_payload_request: NewPayloadRequest,
+    /// database containing all the data necessary to execute
+    pub execution_witness: ExecutionWitness,
+    /// value used to calculate base fee
+    pub elasticity_multiplier: u64,
+    /// Configuration for L2 fees used for each block
+    pub fee_configs: Option<Vec<FeeConfig>>,
+    #[cfg(feature = "l2")]
+    /// KZG commitment to the blob data
+    #[serde_as(as = "[_; 48]")]
+    pub blob_commitment: blobs_bundle::Commitment,
+    #[cfg(feature = "l2")]
+    /// KZG opening for a challenge over the blob commitment
+    #[serde_as(as = "[_; 48]")]
+    pub blob_proof: blobs_bundle::Proof,
+}
 
 impl Clone for StatelessValidatorEthrexInput {
     fn clone(&self) -> Self {
-        Self(ProgramInput {
-            blocks: self.0.blocks.clone(),
-            execution_witness: self.0.execution_witness.clone(),
-            elasticity_multiplier: self.0.elasticity_multiplier,
-            fee_configs: self.0.fee_configs.clone(),
+        Self {
+            new_payload_request: self.new_payload_request.clone(),
+            execution_witness: self.execution_witness.clone(),
+            elasticity_multiplier: self.elasticity_multiplier,
+            fee_configs: self.fee_configs.clone(),
             #[cfg(feature = "l2")]
-            blob_commitment: self.0.blob_commitment,
+            blob_commitment: self.blob_commitment,
             #[cfg(feature = "l2")]
-            blob_proof: self.0.blob_proof,
-        })
+            blob_proof: self.blob_proof,
+        }
     }
 }
 
@@ -54,20 +75,20 @@ impl Debug for StatelessValidatorEthrexInput {
         }
 
         f.debug_struct("StatelessValidatorEthrexInput")
-            .field("blocks", &self.0.blocks)
+            .field("new_payload_request", &self.new_payload_request)
             .field(
                 "execution_witness",
-                &DebugExecutionWitness(&self.0.execution_witness),
+                &DebugExecutionWitness(&self.execution_witness),
             )
-            .field("elasticity_multiplier", &self.0.elasticity_multiplier)
-            .field("fee_configs", &self.0.fee_configs)
+            .field("elasticity_multiplier", &self.elasticity_multiplier)
+            .field("fee_configs", &self.fee_configs)
             .finish()
     }
 }
 
 /// [`Io`] implementation of Ethrex stateless validator.
 pub type StatelessValidatorEthrexIo =
-    IoRkyv<StatelessValidatorEthrexInput, StatelessValidatorOutput>;
+    IoSerde<StatelessValidatorEthrexInput, StatelessValidatorOutput, BincodeLegacy>;
 
 /// [`Guest`] implementation for Ethrex stateless validator.
 #[derive(Debug, Clone)]
@@ -76,12 +97,19 @@ pub struct StatelessValidatorEthrexGuest;
 impl Guest for StatelessValidatorEthrexGuest {
     type Io = StatelessValidatorEthrexIo;
 
-    fn compute<P: Platform>(
-        StatelessValidatorEthrexInput(input): GuestInput<Self>,
-    ) -> GuestOutput<Self> {
-        if input.blocks.len() != 1 {
-            return StatelessValidatorOutput::default(); // TODO
-        }
+    fn compute<P: Platform>(input: GuestInput<Self>) -> GuestOutput<Self> {
+        let new_payload_request_root = input.new_payload_request.tree_hash_root();
+        let block = get_block_from_new_payload_request(&input.new_payload_request);
+        let input = ProgramInput {
+            blocks: vec![block],
+            execution_witness: input.execution_witness,
+            elasticity_multiplier: input.elasticity_multiplier,
+            fee_configs: input.fee_configs,
+            #[cfg(feature = "l2")]
+            blob_commitment: input.blob_commitment,
+            #[cfg(feature = "l2")]
+            blob_proof: input.blob_proof,
+        };
 
         let (execution_payload_header_hash, beacon_root) =
             P::cycle_scope("public_inputs_preparation", || {
@@ -106,11 +134,11 @@ impl Guest for StatelessValidatorEthrexGuest {
 
         match res {
             Ok(_) => {
-                StatelessValidatorOutput::default() // TODO -- Implement.
+                return StatelessValidatorOutput::new(new_payload_request_root, true);
             }
             Err(err) => {
                 P::print(&format!("Block {} validation failed: {err}\n", block_num));
-                StatelessValidatorOutput::default() // TODO
+                return StatelessValidatorOutput::new(new_payload_request_root, false);
             }
         }
     }

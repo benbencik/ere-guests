@@ -6063,7 +6063,7 @@ dependencies = [
  "guest",
  "guest_program",
  "reth-stateless",
- "rkyv",
+ "serde",
  "stateless-validator-common",
 ]
 
