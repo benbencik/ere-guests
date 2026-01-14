@@ -1951,7 +1951,6 @@ version = "0.0.16"
 source = "git+https://github.com/eth-act/ere?rev=ec75f8a26657ddbf7efc44cdb3167fff4f55fe27#ec75f8a26657ddbf7efc44cdb3167fff4f55fe27"
 dependencies = [
  "bincode 2.0.1",
- "rkyv",
  "serde",
 ]
 
@@ -2087,7 +2086,7 @@ dependencies = [
 [[package]]
 name = "ethrex-blockchain"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "bytes",
  "ethrex-common",
@@ -2108,7 +2107,7 @@ dependencies = [
 [[package]]
 name = "ethrex-common"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "bytes",
  "crc32fast",
@@ -2139,7 +2138,7 @@ dependencies = [
 [[package]]
 name = "ethrex-crypto"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "c-kzg",
  "kzg-rs",
@@ -2150,7 +2149,7 @@ dependencies = [
 [[package]]
 name = "ethrex-l2-common"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -2174,7 +2173,7 @@ dependencies = [
 [[package]]
 name = "ethrex-levm"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "ark-bn254",
  "ark-ec",
@@ -2208,7 +2207,7 @@ dependencies = [
 [[package]]
 name = "ethrex-metrics"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "axum",
  "ethrex-common",
@@ -2224,7 +2223,7 @@ dependencies = [
 [[package]]
 name = "ethrex-p2p"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "aes",
  "async-trait",
@@ -2266,7 +2265,7 @@ dependencies = [
 [[package]]
 name = "ethrex-rlp"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -2280,7 +2279,7 @@ dependencies = [
 [[package]]
 name = "ethrex-rpc"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "axum",
  "axum-extra",
@@ -2319,7 +2318,7 @@ dependencies = [
 [[package]]
 name = "ethrex-storage"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2344,7 +2343,7 @@ dependencies = [
 [[package]]
 name = "ethrex-threadpool"
 version = "0.1.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "crossbeam 0.8.4",
 ]
@@ -2352,7 +2351,7 @@ dependencies = [
 [[package]]
 name = "ethrex-trie"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "anyhow",
  "bytes",
@@ -2376,7 +2375,7 @@ dependencies = [
 [[package]]
 name = "ethrex-vm"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "bincode 1.3.3",
  "bytes",
@@ -2710,7 +2709,7 @@ dependencies = [
 [[package]]
 name = "guest_program"
 version = "8.0.0"
-source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
+source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
 dependencies = [
  "bincode 1.3.3",
  "bytes",

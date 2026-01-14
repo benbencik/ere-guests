@@ -4,14 +4,10 @@ use alloc::format;
 use core::fmt::Debug;
 use stateless_validator_common::new_payload_request::NewPayloadRequest;
 
+use crate::new_payload_request::get_block_from_new_payload_request;
 use ere_io::serde::{IoSerde, bincode::BincodeLegacy};
-use ethrex_common::types::{
-    Block, block_execution_witness::ExecutionWitness, fee_config::FeeConfig,
-};
-use ethrex_guest_program::{
-    execution::execution_program,
-    input::{self, ProgramInput},
-};
+use ethrex_common::types::{block_execution_witness::ExecutionWitness, fee_config::FeeConfig};
+use ethrex_guest_program::{execution::execution_program, input::ProgramInput};
 use serde::{Deserialize, Serialize};
 
 #[rustfmt::skip]
@@ -99,7 +95,14 @@ impl Guest for StatelessValidatorEthrexGuest {
 
     fn compute<P: Platform>(input: GuestInput<Self>) -> GuestOutput<Self> {
         let new_payload_request_root = input.new_payload_request.tree_hash_root();
-        let block = get_block_from_new_payload_request(&input.new_payload_request);
+
+        let block = match get_block_from_new_payload_request(input.new_payload_request) {
+            Ok(block) => block,
+            Err(err) => {
+                P::print(&format!("Block construction failed: {err}\n"));
+                return StatelessValidatorOutput::new(new_payload_request_root, false);
+            }
+        };
         let input = ProgramInput {
             blocks: vec![block],
             execution_witness: input.execution_witness,
@@ -110,24 +113,6 @@ impl Guest for StatelessValidatorEthrexGuest {
             #[cfg(feature = "l2")]
             blob_proof: input.blob_proof,
         };
-
-        let (execution_payload_header_hash, beacon_root) =
-            P::cycle_scope("public_inputs_preparation", || {
-                // let execution_payload = to_execution_payload_ethrex(
-                //     &input.blocks[0],
-                //     &input.execution_witness.chain_config,
-                // );
-                // TODO
-                // let execution_payload_header_hash =
-                //     execution_payload_to_header_hash(&execution_payload);
-                let execution_payload_header_hash = [0u8; 32];
-                let beacon_root = input.blocks[0]
-                    .header
-                    .parent_beacon_block_root
-                    .unwrap_or_default();
-
-                (execution_payload_header_hash, beacon_root)
-            });
 
         let block_num = input.blocks[0].header.number;
         let res = P::cycle_scope("validation", || execution_program(input));
