@@ -2,11 +2,12 @@
 
 use anyhow::{Context, Result};
 use ethrex_common::{Address, Bloom, Bytes, H256, types::Block};
-use ethrex_rpc::types::payload::{EncodedTransaction, ExecutionPayload};
 use stateless_validator_common::new_payload_request::{
     ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, NewPayloadRequest, Withdrawal,
     compute_requests_hash,
 };
+
+use crate::execution_payload::{EncodedTransaction, ExecutionPayload};
 
 /// Converts a [`NewPayloadRequest`] into an ethrex [`Block`].
 pub fn get_block_from_new_payload_request(req: NewPayloadRequest) -> Result<Block> {

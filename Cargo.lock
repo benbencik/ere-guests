@@ -489,7 +489,7 @@ version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -500,7 +500,7 @@ checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
 dependencies = [
  "anstyle",
  "once_cell_polyfill",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -1661,9 +1661,9 @@ dependencies = [
 
 [[package]]
 name = "data-encoding"
-version = "2.9.0"
+version = "2.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a2330da5de22e8a3cb63252ce2abb30116bf5265e89c0e01bc17015ce30a476"
+checksum = "d7a1e2f27636f116493b8b860f5546edb47c8d8f8ea73e1d2a20be88e28d1fea"
 
 [[package]]
 name = "datatest-stable"
@@ -1999,7 +1999,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2086,7 +2086,7 @@ dependencies = [
 [[package]]
 name = "ethrex-blockchain"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "bytes",
  "ethrex-common",
@@ -2107,7 +2107,7 @@ dependencies = [
 [[package]]
 name = "ethrex-common"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "bytes",
  "crc32fast",
@@ -2138,7 +2138,7 @@ dependencies = [
 [[package]]
 name = "ethrex-crypto"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "c-kzg",
  "kzg-rs",
@@ -2149,7 +2149,7 @@ dependencies = [
 [[package]]
 name = "ethrex-l2-common"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -2173,7 +2173,7 @@ dependencies = [
 [[package]]
 name = "ethrex-levm"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "ark-bn254",
  "ark-ec",
@@ -2207,7 +2207,7 @@ dependencies = [
 [[package]]
 name = "ethrex-metrics"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "axum",
  "ethrex-common",
@@ -2223,7 +2223,7 @@ dependencies = [
 [[package]]
 name = "ethrex-p2p"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "aes",
  "async-trait",
@@ -2265,7 +2265,7 @@ dependencies = [
 [[package]]
 name = "ethrex-rlp"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -2279,7 +2279,7 @@ dependencies = [
 [[package]]
 name = "ethrex-rpc"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "axum",
  "axum-extra",
@@ -2318,7 +2318,7 @@ dependencies = [
 [[package]]
 name = "ethrex-storage"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2343,7 +2343,7 @@ dependencies = [
 [[package]]
 name = "ethrex-threadpool"
 version = "0.1.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "crossbeam 0.8.4",
 ]
@@ -2351,7 +2351,7 @@ dependencies = [
 [[package]]
 name = "ethrex-trie"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "anyhow",
  "bytes",
@@ -2375,7 +2375,7 @@ dependencies = [
 [[package]]
 name = "ethrex-vm"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "bincode 1.3.3",
  "bytes",
@@ -2709,7 +2709,7 @@ dependencies = [
 [[package]]
 name = "guest_program"
 version = "8.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=1b8ead02693419e9dc98f1940f18c0029a1efb6f#1b8ead02693419e9dc98f1940f18c0029a1efb6f"
+source = "git+https://github.com/lambdaclass/ethrex.git?rev=e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1#e6d70854d0fe3b0f29ed8961e5cbfc5de7bdd7d1"
 dependencies = [
  "bincode 1.3.3",
  "bytes",
@@ -2731,9 +2731,9 @@ dependencies = [
 
 [[package]]
 name = "h2"
-version = "0.4.12"
+version = "0.4.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3c0b69cfcb4e1b9f1bf2f53f95f766e4661169728ec61cd3fe5a0166f2d1386"
+checksum = "2f44da3a8150a6703ed5d34e164b875fd14c2cdab9af1252a9a1020bde2bdc54"
 dependencies = [
  "atomic-waker",
  "bytes",
@@ -3669,7 +3669,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4385,7 +4385,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a56d757972c98b346a9b766e3f02746cde6dd1cd1d1d563472929fdd74bec4d"
 dependencies = [
  "anyhow",
- "itertools 0.12.1",
+ "itertools 0.10.5",
  "proc-macro2",
  "quote",
  "syn 2.0.112",
@@ -5441,14 +5441,14 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.11.0",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
 name = "rustls"
-version = "0.23.35"
+version = "0.23.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "533f54bc6a7d4f647e46ad909549eda97bf5afc1585190ef692b4286b198bd8f"
+checksum = "c665f33d38cea657d9614f766881e4d510e0eda4239891eea56b4cadcf01801b"
 dependencies = [
  "once_cell",
  "rustls-pki-types",
@@ -6053,6 +6053,7 @@ dependencies = [
  "alloy-genesis",
  "alloy-rlp",
  "anyhow",
+ "bytes",
  "ere-io",
  "ere-zkvm-interface",
  "ethrex-common",
@@ -6253,7 +6254,7 @@ dependencies = [
  "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.3",
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6429,9 +6430,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-stream"
-version = "0.1.17"
+version = "0.1.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eca58d7bba4a75707817a2c44174253f9236b2d5fbd055602e9d5c07c139a047"
+checksum = "32da49809aab5c3bc678af03902d4ccddea2a87d028d86392a4b1560c6906c70"
 dependencies = [
  "futures-core",
  "pin-project-lite",
@@ -6938,7 +6939,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

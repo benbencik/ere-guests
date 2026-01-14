@@ -28,8 +28,8 @@ ethereum_ssz.workspace = true
 ethereum_ssz_derive.workspace = true
 
 #alloy
-alloy-primitives.workspace = true
-alloy-eips.workspace = true
+alloy-primitives = { workspace = true, optional = true }
+alloy-eips = { workspace = true, optional = true }
 
 # crypto
 sha2.workspace = true
@@ -42,4 +42,4 @@ serde = ["dep:serde", "dep:serde_with"]
 rkyv = ["dep:rkyv"]
 
 # host
-host = ["std"]
+host = ["std", "dep:alloy-primitives", "dep:alloy-eips"]

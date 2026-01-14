@@ -11,6 +11,7 @@ workspace = true
 [dependencies]
 anyhow.workspace = true
 serde.workspace = true
+bytes.workspace = true
 
 # alloy
 alloy-consensus = { workspace = true, optional = true }
@@ -22,7 +23,7 @@ alloy-rlp = { workspace = true, optional = true }
 ethrex-common.workspace = true
 ethrex-guest-program.workspace = true
 ethrex-rlp.workspace = true
-ethrex-rpc.workspace = true
+ethrex-rpc = { workspace = true, optional = true }
 ethrex-vm.workspace = true
 
 # reth
@@ -55,5 +56,6 @@ host = [
     "dep:alloy-rlp",
     "dep:alloy-genesis",
     "dep:ere-zkvm-interface",
+    "dep:ethrex-rpc",
     "dep:reth-stateless",
 ]
