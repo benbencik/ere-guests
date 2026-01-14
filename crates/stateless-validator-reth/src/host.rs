@@ -1,6 +1,7 @@
 //! Implementations for host environment.
 
 use alloc::{format, vec::Vec};
+use sparsestate::SparseState;
 use std::sync::Arc;
 
 use alloy_consensus::Transaction;
@@ -15,7 +16,7 @@ use reth_ethereum_primitives::TransactionSigned;
 use reth_evm_ethereum::EthEvmConfig;
 use reth_primitives_traits::Block;
 pub use reth_stateless::StatelessInput;
-use reth_stateless::{UncompressedPublicKey, stateless_validation};
+use reth_stateless::{UncompressedPublicKey, stateless_validation_with_trie};
 use ssz_types::{FixedVector, VariableList};
 pub use stateless_validator_common::guest::StatelessValidatorOutput;
 use stateless_validator_common::new_payload_request::{
@@ -294,7 +295,7 @@ fn get_requests(
     };
     let chain_spec: Arc<ChainSpec> = Arc::new(genesis.into());
     let evm_config = EthEvmConfig::new(chain_spec.clone());
-    let (_, out) = stateless_validation(
+    let (_, out) = stateless_validation_with_trie::<SparseState, _, _>(
         stateless_input.block.clone(),
         signers.to_owned(),
         stateless_input.witness.clone(),
