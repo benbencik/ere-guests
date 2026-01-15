@@ -118,12 +118,10 @@ impl Guest for StatelessValidatorEthrexGuest {
         let res = P::cycle_scope("validation", || execution_program(input));
 
         match res {
-            Ok(_) => {
-                return StatelessValidatorOutput::new(new_payload_request_root, true);
-            }
+            Ok(_) => StatelessValidatorOutput::new(new_payload_request_root, true),
             Err(err) => {
                 P::print(&format!("Block {} validation failed: {err}\n", block_num));
-                return StatelessValidatorOutput::new(new_payload_request_root, false);
+                StatelessValidatorOutput::new(new_payload_request_root, false)
             }
         }
     }
