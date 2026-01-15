@@ -10,7 +10,7 @@ fn test_execution(zkvm_kind: zkVMKind) {
     let fixtures = get_fixtures();
     let fixture = fixtures
         .into_iter()
-        .find(|f| f.name == "rpc_block_22974575.json")
+        .find(|f| f.name == "rpc_block_22974575")
         .expect("Fixture rpc_block_22974575.json not found");
     let block = fixture.stateless_input.block;
     let loop_count = 10;
