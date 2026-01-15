@@ -31,7 +31,7 @@ ark-ff = { git = "https://github.com/0xPolygonHermez/zisk-patch-ark-algebra.git"
 ark-bn254 = { git = "https://github.com/0xPolygonHermez/zisk-patch-ark-algebra.git", tag = "patch-0.5.0-zisk-0.15.0" }
 ark-serialize = { git = "https://github.com/0xPolygonHermez/zisk-patch-ark-algebra.git", tag = "patch-0.5.0-zisk-0.15.0" }
 aurora-engine-modexp = { git = "https://github.com/0xPolygonHermez/zisk-patch-modexp.git", tag = "patch-1.2.0-zisk-0.15.0" }
-ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "181896944365e4b76dd6407c2d679fb844165dd6" }
+ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "08c88633b700d7447ef840d19ce7b369c44311de" }
 
 [profile.release]
 codegen-units = 1

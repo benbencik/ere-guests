@@ -2039,8 +2039,11 @@ dependencies = [
 [[package]]
 name = "ethereum_hashing"
 version = "0.7.0"
-source = "git+https://github.com/jsign/ethereum_hashing?rev=181896944365e4b76dd6407c2d679fb844165dd6#181896944365e4b76dd6407c2d679fb844165dd6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c853bd72c9e5787f8aafc3df2907c2ed03cff3150c3acd94e2e53a98ab70a8ab"
 dependencies = [
+ "cpufeatures",
+ "ring",
  "sha2",
 ]
 

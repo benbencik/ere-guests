@@ -1337,8 +1337,9 @@ dependencies = [
 [[package]]
 name = "ethereum_hashing"
 version = "0.7.0"
-source = "git+https://github.com/jsign/ethereum_hashing?rev=181896944365e4b76dd6407c2d679fb844165dd6#181896944365e4b76dd6407c2d679fb844165dd6"
+source = "git+https://github.com/jsign/ethereum_hashing?rev=08c88633b700d7447ef840d19ce7b369c44311de#08c88633b700d7447ef840d19ce7b369c44311de"
 dependencies = [
+ "cpufeatures",
  "sha2",
 ]
 
