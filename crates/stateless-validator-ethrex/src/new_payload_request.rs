@@ -8,8 +8,8 @@ use stateless_validator_common::new_payload_request::{
 };
 
 use crate::execution_payload::{
-    EncodedTransaction, ExecutionPayload, validate_execution_payload_v1,
-    validate_execution_payload_v2, validate_execution_payload_v3,
+    EncodedTransaction, ExecutionPayload, validate_block_payload_v1_v2, validate_block_payload_v3,
+    validate_execution_payload_v1, validate_execution_payload_v2, validate_execution_payload_v3,
 };
 
 /// Converts a [`NewPayloadRequest`] into an ethrex [`Block`].
@@ -18,20 +18,36 @@ pub fn get_block_from_new_payload_request(req: NewPayloadRequest) -> Result<Bloc
         NewPayloadRequest::Bellatrix(b) => {
             let payload: ExecutionPayload = b.execution_payload.into();
             validate_execution_payload_v1(&payload).context("V1 payload validation failed")?;
-            payload.into_block(None, None).context("into_block failed")
+            let block = payload
+                .clone()
+                .into_block(None, None)
+                .context("into_block failed")?;
+            validate_block_payload_v1_v2(&payload, &block)
+                .context("Block/Payload validation failed")?;
+            Ok(block)
         }
         NewPayloadRequest::Capella(c) => {
             let payload: ExecutionPayload = c.execution_payload.into();
             validate_execution_payload_v2(&payload).context("V2 payload validation failed")?;
-            payload.into_block(None, None).context("into_block failed")
+            let block = payload
+                .clone()
+                .into_block(None, None)
+                .context("into_block failed")?;
+            validate_block_payload_v1_v2(&payload, &block)
+                .context("Block/Payload validation failed")?;
+            Ok(block)
         }
         NewPayloadRequest::Deneb(d) => {
             let parent_beacon_block_root = Some(H256::from(d.parent_beacon_block_root));
             let payload: ExecutionPayload = d.execution_payload.into();
             validate_execution_payload_v3(&payload).context("V3 payload validation failed")?;
-            payload
+            let block = payload
+                .clone()
                 .into_block(parent_beacon_block_root, None)
-                .context("into_block failed")
+                .context("into_block failed")?;
+            validate_block_payload_v3(&payload, &block, &d.versioned_hashes)
+                .context("Block/Payload validation failed")?;
+            Ok(block)
         }
         NewPayloadRequest::ElectraFulu(e) => {
             let parent_beacon_block_root = Some(H256::from(e.parent_beacon_block_root));

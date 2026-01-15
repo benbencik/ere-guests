@@ -1,5 +1,5 @@
 #![allow(missing_docs)]
-use anyhow::Result;
+use anyhow::{Context, Result};
 use bytes::Bytes;
 use ethrex_common::{
     Address, Bloom, H256,
@@ -141,6 +141,52 @@ pub fn validate_execution_payload_v3(payload: &ExecutionPayload) -> Result<()> {
         payload.excess_blob_gas.is_some(),
         "excess_blob_gas field is required in ExecutionPayloadV3"
     );
+
+    Ok(())
+}
+
+pub fn validate_block_payload_v1_v2(payload: &ExecutionPayload, block: &Block) -> Result<()> {
+    let block_hash = payload.block_hash;
+    let actual_block_hash = block.hash();
+    anyhow::ensure!(
+        block_hash == actual_block_hash,
+        "Block hash mismatch: expected {:?}, got {:?}",
+        block_hash,
+        actual_block_hash
+    );
+    Ok(())
+}
+
+pub fn validate_block_payload_v3(
+    payload: &ExecutionPayload,
+    block: &Block,
+    versioned_hashes: &[[u8; 32]],
+) -> Result<()> {
+    validate_block_payload_v1_v2(payload, block)
+        .context("Block validation against payload for v1/v2 fields failed")?;
+
+    // V3 specific: validate blob hashes
+    let blob_versioned_hashes: Vec<H256> = block
+        .body
+        .transactions
+        .iter()
+        .flat_map(|tx| tx.blob_versioned_hashes())
+        .collect();
+
+    anyhow::ensure!(
+        versioned_hashes.len() != blob_versioned_hashes.len(),
+        "Invalid number of blob_versioned_hashes: expected {}, got {}",
+        versioned_hashes.len(),
+        blob_versioned_hashes.len()
+    );
+    for (expected, actual) in versioned_hashes.iter().zip(blob_versioned_hashes.iter()) {
+        anyhow::ensure!(
+            H256::from(*expected) == *actual,
+            "Invalid blob_versioned_hashes: expected {:?}, got {:?}",
+            H256::from(*expected),
+            actual
+        );
+    }
 
     Ok(())
 }
