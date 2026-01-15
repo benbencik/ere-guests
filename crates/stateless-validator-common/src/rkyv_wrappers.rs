@@ -3,8 +3,8 @@
 //! ssz_types doesn't support rkyv natively, so we provide wrappers that
 //! serialize them as `Vec<T>` and reconstruct on deserialization.
 
-use alloc::vec::Vec;
-use core::ops::Deref;
+use alloc::{format, string::String, vec::Vec};
+use core::{fmt, ops::Deref};
 
 use rkyv::{
     Archive, Deserialize, Place, Serialize,
@@ -15,6 +15,18 @@ use rkyv::{
 };
 use ssz_types::{FixedVector, VariableList};
 use typenum::Unsigned;
+
+/// Simple error wrapper for ssz_types errors which don't implement std::error::Error.
+#[derive(Debug)]
+struct SszError(String);
+
+impl fmt::Display for SszError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl core::error::Error for SszError {}
 
 /// Wrapper to serialize `VariableList<T, N>` as `Vec<T>`.
 ///
@@ -70,7 +82,7 @@ where
         let vec: Vec<T> = Deserialize::<Vec<T>, D>::deserialize(archived, deserializer)?;
         // VariableList::new returns Err if vec.len() > N::to_usize()
         // This shouldn't happen if data was serialized correctly
-        Ok(VariableList::new(vec).expect("deserialized VariableList exceeds max length"))
+        VariableList::new(vec).map_err(|e| <D::Error as Source>::new(SszError(format!("{e:?}"))))
     }
 }
 
@@ -127,7 +139,7 @@ where
     ) -> Result<FixedVector<T, N>, D::Error> {
         let vec: Vec<T> = Deserialize::<Vec<T>, D>::deserialize(archived, deserializer)?;
         // FixedVector::new returns Err if vec.len() != N::to_usize()
-        Ok(FixedVector::new(vec).expect("deserialized FixedVector has wrong length"))
+        FixedVector::new(vec).map_err(|e| <D::Error as Source>::new(SszError(format!("{e:?}"))))
     }
 }
 
@@ -224,9 +236,9 @@ where
             let inner_vec: Vec<T> =
                 Deserialize::<Vec<T>, D>::deserialize(inner_archived, deserializer)?;
             let inner = VariableList::new(inner_vec)
-                .expect("deserialized inner VariableList exceeds max length");
+                .map_err(|e| <D::Error as Source>::new(SszError(format!("{e:?}"))))?;
             outer.push(inner);
         }
-        Ok(VariableList::new(outer).expect("deserialized outer VariableList exceeds max length"))
+        VariableList::new(outer).map_err(|e| <D::Error as Source>::new(SszError(format!("{e:?}"))))
     }
 }

@@ -30,7 +30,7 @@ impl StatelessValidatorRethInput {
     /// Construct [`StatelessValidatorRethInput`] given [`StatelessInput`].
     pub fn new(stateless_input: &StatelessInput, valid_block: bool) -> anyhow::Result<Self> {
         let signers = recover_signers(&stateless_input.block.body.transactions)?;
-        let requests = get_requests(stateless_input, &signers, valid_block);
+        let requests = get_requests(stateless_input, &signers, valid_block)?;
         let new_payload_request = to_new_payload_request(stateless_input, requests)?;
 
         Ok(Self {
@@ -284,9 +284,9 @@ fn get_requests(
     stateless_input: &StatelessInput,
     signers: &[UncompressedPublicKey],
     valid_block: bool,
-) -> Requests {
+) -> anyhow::Result<Requests> {
     if !valid_block {
-        return Requests::default();
+        return Ok(Requests::default());
     }
 
     let genesis = Genesis {
@@ -302,12 +302,12 @@ fn get_requests(
         chain_spec.clone(),
         evm_config,
     )
-    .unwrap();
+    .context("stateless validation failed")?;
 
     // This clone doesn't make much sense, but rust-analyzer can't figure out
     // why isn't required and mark it as error otherwise. Since this is only used
     // in the host side, we can afford the extra clone.
-    out.requests.clone()
+    Ok(out.requests.clone())
 }
 
 #[cfg(test)]

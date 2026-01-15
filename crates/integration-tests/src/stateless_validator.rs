@@ -1,4 +1,4 @@
-//! This module proivdes struct for stateless validator test fixture.
+//! This module provides struct for stateless validator test fixture.
 
 use std::collections::HashMap;
 
