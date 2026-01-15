@@ -96,6 +96,33 @@ impl Guest for StatelessValidatorEthrexGuest {
     fn compute<P: Platform>(input: GuestInput<Self>) -> GuestOutput<Self> {
         let new_payload_request_root = input.new_payload_request.tree_hash_root();
 
+        #[cfg(feature = "std")]
+        {
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                Self::compute_inner::<P>(input, new_payload_request_root)
+            }));
+
+            match result {
+                Ok(output) => output,
+                Err(_) => {
+                    P::print("Panic occurred during validation\n");
+                    StatelessValidatorOutput::new(new_payload_request_root, false)
+                }
+            }
+        }
+
+        #[cfg(not(feature = "std"))]
+        {
+            Self::compute_inner::<P>(input, new_payload_request_root)
+        }
+    }
+}
+
+impl StatelessValidatorEthrexGuest {
+    fn compute_inner<P: Platform>(
+        input: GuestInput<Self>,
+        new_payload_request_root: [u8; 32],
+    ) -> GuestOutput<Self> {
         let block = match get_block_from_new_payload_request(input.new_payload_request) {
             Ok(block) => block,
             Err(err) => {
