@@ -10,5 +10,8 @@ pub mod new_payload_request;
 #[cfg(feature = "rkyv")]
 pub mod rkyv_wrappers;
 
+#[cfg(feature = "serde")]
+pub mod serde_wrappers;
+
 #[cfg(feature = "host")]
 pub mod host;
