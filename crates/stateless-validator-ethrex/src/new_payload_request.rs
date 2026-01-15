@@ -7,22 +7,28 @@ use stateless_validator_common::new_payload_request::{
     compute_requests_hash,
 };
 
-use crate::execution_payload::{EncodedTransaction, ExecutionPayload};
+use crate::execution_payload::{
+    EncodedTransaction, ExecutionPayload, validate_execution_payload_v1,
+    validate_execution_payload_v2, validate_execution_payload_v3,
+};
 
 /// Converts a [`NewPayloadRequest`] into an ethrex [`Block`].
 pub fn get_block_from_new_payload_request(req: NewPayloadRequest) -> Result<Block> {
     match req {
         NewPayloadRequest::Bellatrix(b) => {
             let payload = convert_v1_to_ethrex(b.execution_payload);
+            validate_execution_payload_v1(&payload).context("V1 payload validation failed")?;
             payload.into_block(None, None).context("into_block failed")
         }
         NewPayloadRequest::Capella(c) => {
             let payload = convert_v2_to_ethrex(c.execution_payload);
+            validate_execution_payload_v2(&payload).context("V2 payload validation failed")?;
             payload.into_block(None, None).context("into_block failed")
         }
         NewPayloadRequest::Deneb(d) => {
             let parent_beacon_block_root = Some(H256::from(d.parent_beacon_block_root));
             let payload = convert_v3_to_ethrex(d.execution_payload);
+            validate_execution_payload_v3(&payload).context("V3 payload validation failed")?;
             payload
                 .into_block(parent_beacon_block_root, None)
                 .context("into_block failed")
@@ -31,6 +37,7 @@ pub fn get_block_from_new_payload_request(req: NewPayloadRequest) -> Result<Bloc
             let parent_beacon_block_root = Some(H256::from(e.parent_beacon_block_root));
             let requests_hash = Some(H256::from(compute_requests_hash(&e.execution_requests)));
             let payload = convert_v3_to_ethrex(e.execution_payload);
+            validate_execution_payload_v3(&payload).context("V3 payload validation failed")?;
             payload
                 .into_block(parent_beacon_block_root, requests_hash)
                 .context("into_block failed")

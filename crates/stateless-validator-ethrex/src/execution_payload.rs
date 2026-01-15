@@ -1,4 +1,5 @@
 #![allow(missing_docs)]
+use anyhow::Result;
 use bytes::Bytes;
 use ethrex_common::{
     Address, Bloom, H256,
@@ -89,4 +90,58 @@ impl EncodedTransaction {
     fn decode(&self) -> Result<Transaction, RLPDecodeError> {
         Transaction::decode_canonical(self.0.as_ref())
     }
+}
+
+pub fn validate_execution_payload_v1(payload: &ExecutionPayload) -> Result<()> {
+    // Validate that only the required arguments are present
+    anyhow::ensure!(
+        payload.withdrawals.is_none(),
+        "withdrawals field is not allowed in ExecutionPayloadV1"
+    );
+    anyhow::ensure!(
+        payload.blob_gas_used.is_none(),
+        "blob_gas_used field is not allowed in ExecutionPayloadV1"
+    );
+    anyhow::ensure!(
+        payload.excess_blob_gas.is_none(),
+        "excess_blob_gas field is not allowed in ExecutionPayloadV1"
+    );
+
+    Ok(())
+}
+
+pub fn validate_execution_payload_v2(payload: &ExecutionPayload) -> Result<()> {
+    // Validate that only the required arguments are present
+    anyhow::ensure!(
+        payload.withdrawals.is_some(),
+        "withdrawals field is required in ExecutionPayloadV2"
+    );
+    anyhow::ensure!(
+        payload.blob_gas_used.is_none(),
+        "blob_gas_used field is not allowed in ExecutionPayloadV2"
+    );
+    anyhow::ensure!(
+        payload.excess_blob_gas.is_none(),
+        "excess_blob_gas field is not allowed in ExecutionPayloadV2"
+    );
+
+    Ok(())
+}
+
+pub fn validate_execution_payload_v3(payload: &ExecutionPayload) -> Result<()> {
+    // Validate that only the required arguments are present
+    anyhow::ensure!(
+        payload.withdrawals.is_some(),
+        "withdrawals field is required in ExecutionPayloadV3"
+    );
+    anyhow::ensure!(
+        payload.blob_gas_used.is_some(),
+        "blob_gas_used field is required in ExecutionPayloadV3"
+    );
+    anyhow::ensure!(
+        payload.excess_blob_gas.is_some(),
+        "excess_blob_gas field is required in ExecutionPayloadV3"
+    );
+
+    Ok(())
 }
