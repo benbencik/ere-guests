@@ -89,4 +89,6 @@ jobs:
             --target riscv32imac-unknown-none-elf \
             --exclude integration-tests \
             --exclude block-encoding-length \
-            --exclude stateless-validator-ethrex
+            --exclude stateless-validator-ethrex \
+            --exclude stateless-validator-reth \
+            --exclude stateless-validator-common
