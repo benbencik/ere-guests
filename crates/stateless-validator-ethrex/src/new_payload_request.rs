@@ -54,9 +54,13 @@ pub fn get_block_from_new_payload_request(req: NewPayloadRequest) -> Result<Bloc
             let requests_hash = Some(H256::from(compute_requests_hash(&e.execution_requests)));
             let payload: ExecutionPayload = e.execution_payload.into();
             validate_execution_payload_v3(&payload).context("V3 payload validation failed")?;
-            payload
+            let block = payload
+                .clone()
                 .into_block(parent_beacon_block_root, requests_hash)
-                .context("into_block failed")
+                .context("into_block failed")?;
+            validate_block_payload_v3(&payload, &block, &e.versioned_hashes)
+                .context("Block/Payload validation failed")?;
+            Ok(block)
         }
     }
 }

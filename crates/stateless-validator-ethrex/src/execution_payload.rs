@@ -174,7 +174,7 @@ pub fn validate_block_payload_v3(
         .collect();
 
     anyhow::ensure!(
-        versioned_hashes.len() != blob_versioned_hashes.len(),
+        versioned_hashes.len() == blob_versioned_hashes.len(),
         "Invalid number of blob_versioned_hashes: expected {}, got {}",
         versioned_hashes.len(),
         blob_versioned_hashes.len()
