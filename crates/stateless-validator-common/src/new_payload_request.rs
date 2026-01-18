@@ -245,20 +245,6 @@ pub struct NewPayloadRequestElectraFulu {
     pub execution_requests: ExecutionRequests,
 }
 
-#[derive(Debug, Clone, TreeHash)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(
-    feature = "rkyv",
-    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
-)]
-pub struct NewPayloadRequestFulu {
-    pub execution_payload: ExecutionPayloadV3,
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
-    pub versioned_hashes: VariableList<Hash32, MaxBlobCommitmentsPerBlock>,
-    pub parent_beacon_block_root: Hash32,
-    pub execution_requests: ExecutionRequests,
-}
-
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
