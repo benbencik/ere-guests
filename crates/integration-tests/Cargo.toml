@@ -32,9 +32,7 @@ ere-zkvm-interface.workspace = true
 
 # local
 guest.workspace = true
-stateless-validator-reth = { workspace = true, default-features = true, features = [
-    "host",
-] }
+stateless-validator-common.workspace = true
 
 [dev-dependencies]
 reth-chainspec.workspace = true
@@ -53,5 +51,8 @@ stateless-validator-common = { workspace = true, default-features = true, featur
     "host",
 ] }
 stateless-validator-ethrex = { workspace = true, default-features = true, features = [
+    "host",
+] }
+stateless-validator-reth = { workspace = true, default-features = true, features = [
     "host",
 ] }

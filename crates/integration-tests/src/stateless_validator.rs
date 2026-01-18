@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use alloy_primitives::{B256, b256};
 use reth_stateless::StatelessInput;
 use serde::{Deserialize, Serialize};
-use stateless_validator_reth::host::StatelessValidatorOutput;
+use stateless_validator_common::guest::StatelessValidatorOutput;
 
 /// A stateless validation fixture containing block data and witness information.
 #[derive(Debug, Clone, Serialize, Deserialize)]

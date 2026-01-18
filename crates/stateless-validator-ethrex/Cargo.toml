@@ -36,7 +36,10 @@ ere-zkvm-interface = { workspace = true, optional = true }
 # local
 guest.workspace = true
 stateless-validator-common = { workspace = true, features = ["rkyv"] }
-stateless-validator-reth = { workspace = true, optional = true }
+stateless-validator-reth = { workspace = true, default-features = true, optional = true, features = [
+    "host",
+] }
+
 
 [features]
 # guest
