@@ -27,14 +27,6 @@ pub struct StatelessValidatorEthrexInput {
     pub elasticity_multiplier: u64,
     /// Configuration for L2 fees used for each block
     pub fee_configs: Option<Vec<FeeConfig>>,
-    #[cfg(feature = "l2")]
-    /// KZG commitment to the blob data
-    #[serde_as(as = "[_; 48]")]
-    pub blob_commitment: blobs_bundle::Commitment,
-    #[cfg(feature = "l2")]
-    /// KZG opening for a challenge over the blob commitment
-    #[serde_as(as = "[_; 48]")]
-    pub blob_proof: blobs_bundle::Proof,
 }
 
 impl Clone for StatelessValidatorEthrexInput {
@@ -44,10 +36,6 @@ impl Clone for StatelessValidatorEthrexInput {
             execution_witness: self.execution_witness.clone(),
             elasticity_multiplier: self.elasticity_multiplier,
             fee_configs: self.fee_configs.clone(),
-            #[cfg(feature = "l2")]
-            blob_commitment: self.blob_commitment,
-            #[cfg(feature = "l2")]
-            blob_proof: self.blob_proof,
         }
     }
 }
