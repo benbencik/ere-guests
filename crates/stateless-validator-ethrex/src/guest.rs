@@ -123,10 +123,6 @@ impl StatelessValidatorEthrexGuest {
             execution_witness: input.execution_witness,
             elasticity_multiplier: input.elasticity_multiplier,
             fee_configs: input.fee_configs,
-            #[cfg(feature = "l2")]
-            blob_commitment: input.blob_commitment,
-            #[cfg(feature = "l2")]
-            blob_proof: input.blob_proof,
         };
 
         let block_num = input.blocks[0].header.number;

@@ -34,10 +34,6 @@ impl StatelessValidatorEthrexInput {
             )?,
             elasticity_multiplier: 2u64, // NOTE: Ethrex doesn't derive this value from chain config.
             fee_configs: Default::default(),
-            #[cfg(feature = "l2")]
-            blob_commitment: [0; 48],
-            #[cfg(feature = "l2")]
-            blob_proof: [0; 48],
         })
     }
 
