@@ -10,7 +10,10 @@ version = "0.1.0"
 ere-platform-sp1 = { git = "https://github.com/eth-act/ere", rev = "ec75f8a26657ddbf7efc44cdb3167fff4f55fe27" }
 
 # local
-stateless-validator-ethrex = { path = "../../../crates/stateless-validator-ethrex", features = ["std", "sp1"] }
+stateless-validator-ethrex = { path = "../../../crates/stateless-validator-ethrex", features = [
+    "std",
+    "sp1",
+] }
 
 [patch.crates-io]
 sha2-v0-10-9 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", package = "sha2", tag = "patch-sha2-0.10.9-sp1-4.0.0" }
@@ -21,6 +24,7 @@ p256 = { git = "https://github.com/sp1-patches/elliptic-curves", tag = "patch-p2
 ecdsa = { git = "https://github.com/sp1-patches/signatures", tag = "patch-16.9-sp1-4.1.0" }
 k256 = { git = "https://github.com/sp1-patches/elliptic-curves", tag = "patch-k256-13.4-sp1-5.0.0" }
 substrate-bn = { git = "https://github.com/sp1-patches/bn", tag = "patch-0.6.0-sp1-5.0.0" }
+ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "08c88633b700d7447ef840d19ce7b369c44311de" }
 
 [patch."https://github.com/lambdaclass/bls12_381"]
 bls12_381 = { git = "https://github.com/lambdaclass/bls12_381-patch/", branch = "expose-fp-struct" }

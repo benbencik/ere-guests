@@ -9,8 +9,9 @@ license.workspace = true
 workspace = true
 
 [dependencies]
-anyhow = { workspace = true, optional = true }
+anyhow.workspace = true
 rkyv.workspace = true
+bytes.workspace = true
 
 # alloy
 alloy-consensus = { workspace = true, optional = true }
@@ -21,9 +22,12 @@ alloy-rlp = { workspace = true, optional = true }
 # ethrex
 ethrex-common.workspace = true
 ethrex-guest-program.workspace = true
-ethrex-rlp = { workspace = true, optional = true }
+ethrex-rlp.workspace = true
 ethrex-rpc = { workspace = true, optional = true }
 ethrex-vm.workspace = true
+
+# reth
+reth-stateless = { workspace = true, optional = true }
 
 # ere
 ere-io = { workspace = true, features = ["rkyv"] }
@@ -32,6 +36,10 @@ ere-zkvm-interface = { workspace = true, optional = true }
 # local
 guest.workspace = true
 stateless-validator-common = { workspace = true, features = ["rkyv"] }
+stateless-validator-reth = { workspace = true, default-features = true, optional = true, features = [
+    "host",
+] }
+
 
 [features]
 # guest
@@ -46,12 +54,12 @@ zisk = ["ethrex-vm/zisk"]
 host = [
     "std",
     "stateless-validator-common/host",
-    "dep:anyhow",
     "dep:alloy-consensus",
     "dep:alloy-eips",
     "dep:alloy-rlp",
     "dep:alloy-genesis",
-    "dep:ethrex-rlp",
-    "dep:ethrex-rpc",
     "dep:ere-zkvm-interface",
+    "dep:ethrex-rpc",
+    "dep:reth-stateless",
+    "dep:stateless-validator-reth",
 ]

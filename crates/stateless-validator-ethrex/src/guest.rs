@@ -3,12 +3,12 @@
 use alloc::format;
 use core::fmt::Debug;
 
-use ere_io::rkyv::{
-    IoRkyv,
-    rkyv::{Archive, Deserialize, Serialize},
-};
-use ethrex_common::types::block_execution_witness::ExecutionWitness;
+use ere_io::rkyv::IoRkyv;
+use ethrex_common::types::{block_execution_witness::ExecutionWitness, fee_config::FeeConfig};
 use ethrex_guest_program::{execution::execution_program, input::ProgramInput};
+use stateless_validator_common::new_payload_request::NewPayloadRequest;
+
+use crate::new_payload_request::get_block_from_new_payload_request;
 
 #[rustfmt::skip]
 pub use {
@@ -17,21 +17,26 @@ pub use {
 };
 
 /// Input for the Ethrex stateless validator guest program.
-#[derive(Serialize, Deserialize, Archive)]
-pub struct StatelessValidatorEthrexInput(pub ProgramInput);
+#[derive(rkyv::Serialize, rkyv::Deserialize, rkyv::Archive)]
+pub struct StatelessValidatorEthrexInput {
+    /// New payload request data.
+    pub new_payload_request: NewPayloadRequest,
+    /// database containing all the data necessary to execute
+    pub execution_witness: ExecutionWitness,
+    /// value used to calculate base fee
+    pub elasticity_multiplier: u64,
+    /// Configuration for L2 fees used for each block
+    pub fee_configs: Option<Vec<FeeConfig>>,
+}
 
 impl Clone for StatelessValidatorEthrexInput {
     fn clone(&self) -> Self {
-        Self(ProgramInput {
-            blocks: self.0.blocks.clone(),
-            execution_witness: self.0.execution_witness.clone(),
-            elasticity_multiplier: self.0.elasticity_multiplier,
-            fee_configs: self.0.fee_configs.clone(),
-            #[cfg(feature = "l2")]
-            blob_commitment: self.0.blob_commitment,
-            #[cfg(feature = "l2")]
-            blob_proof: self.0.blob_proof,
-        })
+        Self {
+            new_payload_request: self.new_payload_request.clone(),
+            execution_witness: self.execution_witness.clone(),
+            elasticity_multiplier: self.elasticity_multiplier,
+            fee_configs: self.fee_configs.clone(),
+        }
     }
 }
 
@@ -54,13 +59,13 @@ impl Debug for StatelessValidatorEthrexInput {
         }
 
         f.debug_struct("StatelessValidatorEthrexInput")
-            .field("blocks", &self.0.blocks)
+            .field("new_payload_request", &self.new_payload_request)
             .field(
                 "execution_witness",
-                &DebugExecutionWitness(&self.0.execution_witness),
+                &DebugExecutionWitness(&self.execution_witness),
             )
-            .field("elasticity_multiplier", &self.0.elasticity_multiplier)
-            .field("fee_configs", &self.0.fee_configs)
+            .field("elasticity_multiplier", &self.elasticity_multiplier)
+            .field("fee_configs", &self.fee_configs)
             .finish()
     }
 }
@@ -76,30 +81,58 @@ pub struct StatelessValidatorEthrexGuest;
 impl Guest for StatelessValidatorEthrexGuest {
     type Io = StatelessValidatorEthrexIo;
 
-    fn compute<P: Platform>(
-        StatelessValidatorEthrexInput(input): GuestInput<Self>,
-    ) -> GuestOutput<Self> {
-        let (header, parent_hash) = P::cycle_scope("public_inputs_preparation", || {
-            (
-                input.blocks[0].header.clone(),
-                input.blocks[0].header.parent_hash,
-            )
-        });
+    fn compute<P: Platform>(input: GuestInput<Self>) -> GuestOutput<Self> {
+        let new_payload_request_root = input.new_payload_request.tree_hash_root();
 
-        if input.blocks.len() != 1 {
-            return StatelessValidatorOutput::new(header.compute_block_hash(), parent_hash, false);
+        #[cfg(feature = "std")]
+        {
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                Self::compute_inner::<P>(input, new_payload_request_root)
+            }));
+
+            match result {
+                Ok(output) => output,
+                Err(_) => {
+                    P::print("Panic occurred during validation\n");
+                    StatelessValidatorOutput::new(new_payload_request_root, false)
+                }
+            }
         }
 
+        #[cfg(not(feature = "std"))]
+        {
+            Self::compute_inner::<P>(input, new_payload_request_root)
+        }
+    }
+}
+
+impl StatelessValidatorEthrexGuest {
+    fn compute_inner<P: Platform>(
+        input: GuestInput<Self>,
+        new_payload_request_root: [u8; 32],
+    ) -> GuestOutput<Self> {
+        let block = match get_block_from_new_payload_request(input.new_payload_request) {
+            Ok(block) => block,
+            Err(err) => {
+                P::print(&format!("Block construction failed: {err}\n"));
+                return StatelessValidatorOutput::new(new_payload_request_root, false);
+            }
+        };
+        let input = ProgramInput {
+            blocks: vec![block],
+            execution_witness: input.execution_witness,
+            elasticity_multiplier: input.elasticity_multiplier,
+            fee_configs: input.fee_configs,
+        };
+
+        let block_num = input.blocks[0].header.number;
         let res = P::cycle_scope("validation", || execution_program(input));
 
         match res {
-            Ok(out) => StatelessValidatorOutput::new(out.last_block_hash, parent_hash, true),
+            Ok(_) => StatelessValidatorOutput::new(new_payload_request_root, true),
             Err(err) => {
-                P::print(&format!(
-                    "Block {} validation failed: {err}\n",
-                    header.number
-                ));
-                StatelessValidatorOutput::new(header.compute_block_hash(), parent_hash, false)
+                P::print(&format!("Block {} validation failed: {err}\n", block_num));
+                StatelessValidatorOutput::new(new_payload_request_root, false)
             }
         }
     }
@@ -107,13 +140,33 @@ impl Guest for StatelessValidatorEthrexGuest {
 
 #[cfg(test)]
 mod test {
+    use stateless_validator_common::new_payload_request::{ExecutionPayloadV1, NewPayloadRequest};
+
     use crate::guest::{Io, StatelessValidatorEthrexIo, StatelessValidatorOutput};
 
     #[test]
     fn serialize_output() {
+        let dummy_new_payload_request_root = NewPayloadRequest::new_bellatrix(ExecutionPayloadV1 {
+            parent_hash: [1; 32],
+            fee_recipient: [2; 20],
+            state_root: [3; 32],
+            receipts_root: [4; 32],
+            logs_bloom: Default::default(),
+            prev_randao: [5; 32],
+            block_number: 1,
+            gas_limit: 2,
+            gas_used: 3,
+            timestamp: 4,
+            extra_data: Default::default(),
+            base_fee_per_gas: [6; 32],
+            block_hash: [7; 32],
+            transactions: Default::default(),
+        })
+        .tree_hash_root();
+
         for output in [
-            StatelessValidatorOutput::new([0x00; 32], [0x00; 32], false),
-            StatelessValidatorOutput::new([0xff; 32], [0xff; 32], true),
+            StatelessValidatorOutput::new(dummy_new_payload_request_root, false),
+            StatelessValidatorOutput::new(dummy_new_payload_request_root, true),
         ] {
             assert_eq!(
                 StatelessValidatorEthrexIo::serialize_output(&output).unwrap(),

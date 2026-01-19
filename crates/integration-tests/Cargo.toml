@@ -16,9 +16,14 @@ serde = { workspace = true, features = ["derive"] }
 tar.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+tempfile.workspace = true
+serde_json.workspace = true
 
 # reth
 reth-stateless.workspace = true
+
+# alloy
+alloy-primitives.workspace = true
 
 # ere
 ere-dockerized.workspace = true
@@ -27,15 +32,27 @@ ere-zkvm-interface.workspace = true
 
 # local
 guest.workspace = true
+stateless-validator-common.workspace = true
 
 [dev-dependencies]
-serde_json.workspace = true
+reth-chainspec.workspace = true
+reth-stateless.workspace = true
+reth-evm-ethereum.workspace = true
 
 # ere
 ere-zkvm-interface.workspace = true
 ere-dockerized.workspace = true
 
 # local
-block-encoding-length = { workspace = true, default-features = true, features = ["host"] }
-stateless-validator-ethrex = { workspace = true, default-features = true, features = ["host"] }
-stateless-validator-reth = { workspace = true, default-features = true, features = ["host"] }
+block-encoding-length = { workspace = true, default-features = true, features = [
+    "host",
+] }
+stateless-validator-common = { workspace = true, default-features = true, features = [
+    "host",
+] }
+stateless-validator-ethrex = { workspace = true, default-features = true, features = [
+    "host",
+] }
+stateless-validator-reth = { workspace = true, default-features = true, features = [
+    "host",
+] }

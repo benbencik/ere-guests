@@ -9,19 +9,37 @@ license.workspace = true
 workspace = true
 
 [dependencies]
+anyhow.workspace = true
 rkyv = { workspace = true, optional = true }
-serde = { workspace = true, features = ["derive"], optional = true }
-sha2 = { workspace = true, optional = true }
+serde_with = { workspace = true, optional = true, features = ["macros"] }
+serde = { workspace = true, optional = true, features = [
+    "derive",
+    "alloc",
+], default-features = false }
 
-# reth
-reth-stateless = { workspace = true, optional = true }
+# lighthouse
+tree_hash.workspace = true
+tree_hash_derive.workspace = true
+ssz_types.workspace = true
+typenum.workspace = true
+
+# ssz
+ethereum_ssz.workspace = true
+ethereum_ssz_derive.workspace = true
+
+#alloy
+alloy-primitives = { workspace = true, optional = true }
+alloy-eips = { workspace = true, optional = true }
+
+# crypto
+sha2.workspace = true
 
 [features]
 # guest
 default = ["std"]
-std = []
-serde = ["dep:serde"]
+std = ["serde"]
+serde = ["dep:serde", "dep:serde_with"]
 rkyv = ["dep:rkyv"]
 
 # host
-host = ["std", "dep:sha2", "dep:reth-stateless"]
+host = ["std", "dep:alloy-primitives", "dep:alloy-eips"]

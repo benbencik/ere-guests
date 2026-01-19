@@ -2,19 +2,21 @@
 
 use std::{
     fs::{self, File},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use ere_dockerized::{CompilerKind, DockerizedCompiler, DockerizedzkVM, zkVMKind};
 use ere_io::Io;
 use ere_zkvm_interface::{Compiler, Input, ProverResourceType, zkVM};
 use flate2::read::GzDecoder;
-use guest::{Guest, GuestInput, GuestOutput};
+use guest::{Guest, GuestInput, GuestOutput, Platform};
 use rayon::prelude::*;
 use sha2::{Digest, Sha256};
 use tar::Archive;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
+
+use crate::stateless_validator::StatelessValidatorFixture;
 
 pub mod stateless_validator;
 
@@ -32,7 +34,7 @@ pub fn fixtures_dir() -> PathBuf {
 }
 
 /// Unpack all fixtures in fixtures dir.
-pub fn untar_fixtures() -> std::io::Result<()> {
+pub fn untar_fixtures(target_dir: &Path) -> std::io::Result<()> {
     let fixtures_dir = fixtures_dir();
 
     for entry in fs::read_dir(&fixtures_dir)? {
@@ -41,11 +43,26 @@ pub fn untar_fixtures() -> std::io::Result<()> {
         if filename.is_some_and(|file_name| file_name.ends_with(".tar.gz")) {
             let file = File::open(&path)?;
             let gz = GzDecoder::new(file);
-            Archive::new(gz).unpack(&fixtures_dir)?;
+            Archive::new(gz).unpack(target_dir)?;
         }
     }
 
     Ok(())
+}
+
+/// Reads all stateless validator fixtures.
+pub fn get_fixtures() -> Vec<StatelessValidatorFixture> {
+    let dir = tempfile::tempdir().unwrap();
+    let dir_path = dir.path();
+    untar_fixtures(dir_path).unwrap();
+    fs::read_dir(dir_path.join("block"))
+        .unwrap()
+        .map(|file| {
+            let bytes = fs::read(file.unwrap().path()).unwrap();
+            let fixture: StatelessValidatorFixture = serde_json::from_slice(&bytes).unwrap();
+            fixture
+        })
+        .collect()
 }
 
 /// Compiles guest program and initialize zkVM.
@@ -132,5 +149,24 @@ impl TestCase {
     pub fn output_sha256(mut self) -> Self {
         self.expected_public_values = Sha256::digest(self.expected_public_values).to_vec();
         self
+    }
+}
+/// A platform that to run guests outside zkVMs.
+#[derive(Debug)]
+pub struct NoopPlatform;
+
+impl Platform for NoopPlatform {
+    #[allow(unreachable_code)]
+    fn read_whole_input() -> impl std::ops::Deref<Target = [u8]> {
+        panic!("Can't read input in NoopPlatform");
+        &[] as &[u8]
+    }
+
+    fn write_whole_output(_: &[u8]) {
+        panic!("Can't write output in NoopPlatform");
+    }
+
+    fn print(message: &str) {
+        println!("{}", message);
     }
 }
