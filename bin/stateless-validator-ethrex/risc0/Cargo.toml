@@ -10,7 +10,7 @@ version = "0.1.0"
 c-kzg = { version = "2.1.1", features = ["eip-7594"] }
 
 # ere
-ere-platform-risc0 = { git = "https://github.com/eth-act/ere", rev = "ec75f8a26657ddbf7efc44cdb3167fff4f55fe27", features = [
+ere-platform-risc0 = { git = "https://github.com/eth-act/ere", tag = "v0.2.0", features = [
     "std",
     "unstable",
     "getrandom",
@@ -37,9 +37,6 @@ ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "0
 # tiny-keccak = { git = "https://github.com/risc0/tiny-keccak", tag = "tiny-keccak/v2.0.2-risczero.0" }
 # [patch."https://github.com/lambdaclass/bls12_381"]
 # bls12_381 = { git = "https://github.com/lambdaclass/zkcrypto-bls12_381", branch = "expose-fp-struct" }
-
-[features]
-l2 = ["stateless-validator-ethrex/l2"]
 
 [profile.release]
 codegen-units = 1

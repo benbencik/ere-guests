@@ -7,7 +7,7 @@ version = "0.1.0"
 
 [dependencies]
 # ere
-ere-platform-zisk = { git = "https://github.com/eth-act/ere", rev = "ec75f8a26657ddbf7efc44cdb3167fff4f55fe27" }
+ere-platform-zisk = { git = "https://github.com/eth-act/ere", tag = "v0.2.0" }
 
 # local
 stateless-validator-ethrex = { path = "../../../crates/stateless-validator-ethrex", features = [
@@ -24,9 +24,6 @@ sp1_bls12_381 = { git = "https://github.com/0xPolygonHermez/zisk-patch-bls12-381
 tiny-keccak = { git = "https://github.com/0xPolygonHermez/zisk-patch-tiny-keccak/", tag = "patch-2.0.2-zisk-0.15.0" }
 kzg-rs = { git = "https://github.com/0xPolygonHermez/zisk-patch-kzg/", tag = "patch-0.2.7-zisk-0.15.0" }
 ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "08c88633b700d7447ef840d19ce7b369c44311de" }
-
-[features]
-l2 = ["stateless-validator-ethrex/l2"]
 
 [profile.release]
 codegen-units = 1

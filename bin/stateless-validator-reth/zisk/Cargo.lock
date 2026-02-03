@@ -1313,8 +1313,8 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "ere-io"
-version = "0.0.16"
-source = "git+https://github.com/eth-act/ere?rev=ec75f8a26657ddbf7efc44cdb3167fff4f55fe27#ec75f8a26657ddbf7efc44cdb3167fff4f55fe27"
+version = "0.2.0"
+source = "git+https://github.com/eth-act/ere?tag=v0.2.0#a274f17c4a1a8843ccdb8febcf0ec56afb457745"
 dependencies = [
  "bincode",
  "serde",
@@ -1322,16 +1322,16 @@ dependencies = [
 
 [[package]]
 name = "ere-platform-trait"
-version = "0.0.16"
-source = "git+https://github.com/eth-act/ere?rev=ec75f8a26657ddbf7efc44cdb3167fff4f55fe27#ec75f8a26657ddbf7efc44cdb3167fff4f55fe27"
+version = "0.2.0"
+source = "git+https://github.com/eth-act/ere?tag=v0.2.0#a274f17c4a1a8843ccdb8febcf0ec56afb457745"
 dependencies = [
  "digest 0.10.7",
 ]
 
 [[package]]
 name = "ere-platform-zisk"
-version = "0.0.16"
-source = "git+https://github.com/eth-act/ere?rev=ec75f8a26657ddbf7efc44cdb3167fff4f55fe27#ec75f8a26657ddbf7efc44cdb3167fff4f55fe27"
+version = "0.2.0"
+source = "git+https://github.com/eth-act/ere?tag=v0.2.0#a274f17c4a1a8843ccdb8febcf0ec56afb457745"
 dependencies = [
  "ere-platform-trait",
  "ziskos",
@@ -1576,7 +1576,7 @@ dependencies = [
 
 [[package]]
 name = "guest"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "ere-io",
  "ere-platform-trait",
@@ -3523,7 +3523,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 
 [[package]]
 name = "stateless-validator-common"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "ethereum_ssz",
@@ -3539,7 +3539,7 @@ dependencies = [
 
 [[package]]
 name = "stateless-validator-reth"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "alloy-consensus",
  "alloy-eips",
