@@ -82,7 +82,10 @@ impl Guest for StatelessValidatorEthrexGuest {
     type Io = StatelessValidatorEthrexIo;
 
     fn compute<P: Platform>(input: GuestInput<Self>) -> GuestOutput<Self> {
-        let new_payload_request_root = input.new_payload_request.tree_hash_root();
+        let new_payload_request_root =
+            P::cycle_scope("new_payload_request_root_calculation", || {
+                input.new_payload_request.tree_hash_root()
+            });
 
         #[cfg(feature = "std")]
         {
@@ -111,22 +114,29 @@ impl StatelessValidatorEthrexGuest {
         input: GuestInput<Self>,
         new_payload_request_root: [u8; 32],
     ) -> GuestOutput<Self> {
-        let block = match get_block_from_new_payload_request(input.new_payload_request) {
+        let block_res = P::cycle_scope("new_payload_request_to_block", || {
+            get_block_from_new_payload_request(input.new_payload_request)
+        });
+        let block = match block_res {
             Ok(block) => block,
             Err(err) => {
                 P::print(&format!("Block construction failed: {err}\n"));
                 return StatelessValidatorOutput::new(new_payload_request_root, false);
             }
         };
-        let input = ProgramInput {
-            blocks: vec![block],
-            execution_witness: input.execution_witness,
-            elasticity_multiplier: input.elasticity_multiplier,
-            fee_configs: input.fee_configs,
-        };
 
-        let block_num = input.blocks[0].header.number;
-        let res = P::cycle_scope("validation", || execution_program(input));
+        let (input, block_num) = P::cycle_scope("misc_preparation", || {
+            let input = ProgramInput {
+                blocks: vec![block],
+                execution_witness: input.execution_witness,
+                elasticity_multiplier: input.elasticity_multiplier,
+                fee_configs: input.fee_configs,
+            };
+            let block_num = input.blocks[0].header.number;
+            (input, block_num)
+        });
+
+        let res = P::cycle_scope("stf", || execution_program(input));
 
         match res {
             Ok(_) => StatelessValidatorOutput::new(new_payload_request_root, true),
