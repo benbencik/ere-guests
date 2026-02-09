@@ -2,7 +2,7 @@
 
 #![no_main]
 
-use ere_platform_zisk::{ziskos, ZiskPlatform};
+use ere_platform_zisk::{ZiskPlatform, ziskos};
 use stateless_validator_ethrex::guest::{Guest, StatelessValidatorEthrexGuest};
 
 ziskos::entrypoint!(main);
