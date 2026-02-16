@@ -30,7 +30,7 @@ reth-payload-validator = { workspace = true, default-features = false }
 reth-ethereum-primitives.workspace = true
 reth-evm-ethereum.workspace = true
 reth-primitives-traits.workspace = true
-reth-stateless.workspace = true
+stateless.workspace = true
 
 # lighthouse
 tree_hash.workspace = true
@@ -41,7 +41,7 @@ ssz_types.workspace = true
 ethereum_ssz.workspace = true
 
 # mpt
-sparsestate.workspace = true
+zeth-mpt-state.workspace = true
 
 # ere
 ere-io = { workspace = true, features = ["bincode"] }
@@ -56,10 +56,8 @@ stateless-validator-common = { workspace = true, features = ["serde"] }
 
 [features]
 # guest
-default = ["std", "k256"]
+default = ["std"]
 std = ["once_cell/std", "stateless-validator-common/std"]
-k256 = ["reth-stateless/k256"]
-secp256k1 = ["reth-stateless/secp256k1"]
 
 # host
 host = ["std", "stateless-validator-common/host", "dep:ere-zkvm-interface"]

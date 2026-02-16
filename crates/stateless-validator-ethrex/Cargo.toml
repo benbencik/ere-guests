@@ -27,7 +27,7 @@ ethrex-rpc = { workspace = true, optional = true }
 ethrex-vm.workspace = true
 
 # reth
-reth-stateless = { workspace = true, optional = true }
+stateless = { workspace = true, optional = true }
 
 # ere
 ere-io = { workspace = true, features = ["rkyv"] }
@@ -59,6 +59,6 @@ host = [
     "dep:alloy-genesis",
     "dep:ere-zkvm-interface",
     "dep:ethrex-rpc",
-    "dep:reth-stateless",
+    "dep:stateless",
     "dep:stateless-validator-reth",
 ]

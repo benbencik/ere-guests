@@ -20,7 +20,7 @@ tempfile.workspace = true
 serde_json.workspace = true
 
 # reth
-reth-stateless.workspace = true
+stateless.workspace = true
 
 # alloy
 alloy-primitives.workspace = true
@@ -36,7 +36,7 @@ stateless-validator-common.workspace = true
 
 [dev-dependencies]
 reth-chainspec.workspace = true
-reth-stateless.workspace = true
+stateless.workspace = true
 reth-evm-ethereum.workspace = true
 
 # ere
