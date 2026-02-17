@@ -117,8 +117,8 @@ dependencies = [
 
 [[package]]
 name = "ere-platform-sp1"
-version = "0.2.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.2.0#a274f17c4a1a8843ccdb8febcf0ec56afb457745"
+version = "0.3.0"
+source = "git+https://github.com/eth-act/ere?tag=v0.3.0#ffc0e230cf4387fb22eb755f0fb323b38294520f"
 dependencies = [
  "ere-platform-trait",
  "sp1-zkvm",
@@ -126,8 +126,8 @@ dependencies = [
 
 [[package]]
 name = "ere-platform-trait"
-version = "0.2.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.2.0#a274f17c4a1a8843ccdb8febcf0ec56afb457745"
+version = "0.3.0"
+source = "git+https://github.com/eth-act/ere?tag=v0.3.0#ffc0e230cf4387fb22eb755f0fb323b38294520f"
 dependencies = [
  "digest",
 ]
