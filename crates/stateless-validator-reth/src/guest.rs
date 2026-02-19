@@ -6,13 +6,11 @@ use alloy_genesis::ChainConfig;
 use ere_io::serde::{IoSerde, bincode::BincodeLegacy};
 use reth_chainspec::ChainSpec;
 use reth_evm_ethereum::EthEvmConfig;
-use reth_stateless::{
-    ExecutionWitness, Genesis, UncompressedPublicKey, stateless_validation_with_trie,
-};
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
-use sparsestate::SparseState;
+use stateless::{ExecutionWitness, Genesis, UncompressedPublicKey, stateless_validation_with_trie};
 use stateless_validator_common::new_payload_request::NewPayloadRequest;
+use zeth_mpt_state::SparseState;
 
 use crate::new_payload_request::new_payload_request_to_block;
 

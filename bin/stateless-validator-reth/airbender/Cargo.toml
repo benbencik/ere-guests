@@ -19,9 +19,7 @@ ere-platform-airbender = { git = "https://github.com/eth-act/ere", tag = "v0.3.0
 ] }
 
 # local
-stateless-validator-reth = { path = "../../../crates/stateless-validator-reth", default-features = false, features = [
-    "k256",
-] }
+stateless-validator-reth = { path = "../../../crates/stateless-validator-reth", default-features = false }
 
 [patch.crates-io]
 radium = { git = "https://github.com/han0110/radium", branch = "feature/riscv32ima" }

@@ -14,15 +14,15 @@ use reth_chainspec::ChainSpec;
 use reth_ethereum_primitives::TransactionSigned;
 use reth_evm_ethereum::EthEvmConfig;
 use reth_primitives_traits::Block;
-pub use reth_stateless::StatelessInput;
-use reth_stateless::{UncompressedPublicKey, stateless_validation_with_trie};
-use sparsestate::SparseState;
 use ssz_types::{FixedVector, VariableList};
+pub use stateless::StatelessInput;
+use stateless::{UncompressedPublicKey, stateless_validation_with_trie};
 pub use stateless_validator_common::guest::StatelessValidatorOutput;
 use stateless_validator_common::new_payload_request::{
     ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, ForkName, NewPayloadRequest,
     Transaction as Tx, Transactions, Withdrawal, Withdrawals,
 };
+use zeth_mpt_state::SparseState;
 
 use crate::guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput};
 

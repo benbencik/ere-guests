@@ -2,7 +2,7 @@
 use std::sync::Arc;
 
 use integration_tests::get_fixtures;
-use reth_stateless::Genesis;
+use stateless::Genesis;
 use stateless_validator_reth::{
     guest::StatelessValidatorRethInput, new_payload_request::new_payload_request_to_block,
 };
