@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
 use stateless::{ExecutionWitness, Genesis, UncompressedPublicKey, stateless_validation_with_trie};
 use stateless_validator_common::new_payload_request::NewPayloadRequest;
-use zeth_mpt_state::SparseState;
+use tries::zeth::SparseState;
 
 use crate::new_payload_request::new_payload_request_to_block;
 

@@ -41,7 +41,7 @@ ssz_types.workspace = true
 ethereum_ssz.workspace = true
 
 # mpt
-zeth-mpt-state.workspace = true
+tries.workspace = true
 
 # ere
 ere-io = { workspace = true, features = ["bincode"] }
