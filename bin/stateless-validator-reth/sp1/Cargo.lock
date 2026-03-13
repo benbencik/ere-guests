@@ -3788,15 +3788,13 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "stateless"
 version = "0.1.0"
-source = "git+https://github.com/paradigmxyz/stateless?rev=68cd8e73682d21fed69670fc7eabe25e55c5cdbe#68cd8e73682d21fed69670fc7eabe25e55c5cdbe"
+source = "git+https://github.com/paradigmxyz/stateless?rev=ed189a51931e8589102f3139d48fdbb3bbe4c1f7#ed189a51931e8589102f3139d48fdbb3bbe4c1f7"
 dependencies = [
  "alloy-consensus",
  "alloy-genesis",
  "alloy-primitives",
  "alloy-rlp",
  "alloy-rpc-types-debug",
- "alloy-trie 0.9.4",
- "itertools 0.14.0",
  "reth-chainspec",
  "reth-consensus",
  "reth-ethereum-consensus",
@@ -3804,13 +3802,13 @@ dependencies = [
  "reth-evm",
  "reth-primitives-traits",
  "reth-trie-common",
- "reth-trie-sparse",
  "revm-bytecode",
  "revm-database-interface",
  "revm-state",
  "serde",
  "serde_with",
  "thiserror",
+ "tries",
 ]
 
 [[package]]
@@ -3857,7 +3855,7 @@ dependencies = [
  "stateless-validator-common",
  "tree_hash",
  "tree_hash_derive",
- "zeth-mpt-state",
+ "tries",
 ]
 
 [[package]]
@@ -4143,6 +4141,24 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.116",
+]
+
+[[package]]
+name = "tries"
+version = "0.1.0"
+source = "git+https://github.com/paradigmxyz/stateless?rev=ed189a51931e8589102f3139d48fdbb3bbe4c1f7#ed189a51931e8589102f3139d48fdbb3bbe4c1f7"
+dependencies = [
+ "alloy-primitives",
+ "alloy-rlp",
+ "alloy-rpc-types-debug",
+ "alloy-trie 0.9.4",
+ "itertools 0.14.0",
+ "reth-trie-common",
+ "reth-trie-sparse",
+ "revm-bytecode",
+ "revm-database-interface",
+ "thiserror",
+ "zeth-mpt",
 ]
 
 [[package]]
@@ -4640,26 +4656,12 @@ dependencies = [
 [[package]]
 name = "zeth-mpt"
 version = "0.1.0"
-source = "git+https://github.com/eth-act/zkvm-ethereum-mpt.git?rev=0e7ec8ecccf0d00ed1b7981155433e34b8746cc5#0e7ec8ecccf0d00ed1b7981155433e34b8746cc5"
+source = "git+https://github.com/paradigmxyz/stateless?rev=ed189a51931e8589102f3139d48fdbb3bbe4c1f7#ed189a51931e8589102f3139d48fdbb3bbe4c1f7"
 dependencies = [
  "alloy-primitives",
  "alloy-rlp",
  "alloy-trie 0.8.1",
  "arrayvec",
-]
-
-[[package]]
-name = "zeth-mpt-state"
-version = "0.1.0"
-source = "git+https://github.com/eth-act/zkvm-ethereum-mpt.git?rev=0e7ec8ecccf0d00ed1b7981155433e34b8746cc5#0e7ec8ecccf0d00ed1b7981155433e34b8746cc5"
-dependencies = [
- "alloy-primitives",
- "alloy-rlp",
- "alloy-trie 0.9.4",
- "reth-trie-common",
- "revm-bytecode",
- "stateless",
- "zeth-mpt",
 ]
 
 [[package]]
