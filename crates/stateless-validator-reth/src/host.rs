@@ -22,7 +22,7 @@ use stateless_validator_common::new_payload_request::{
     ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, ForkName, NewPayloadRequest,
     Transaction as Tx, Transactions, Withdrawal, Withdrawals,
 };
-use zeth_mpt_state::SparseState;
+use tries::zeth::SparseState;
 
 use crate::guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput};
 

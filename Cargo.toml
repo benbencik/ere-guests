@@ -74,7 +74,8 @@ reth-ethereum-primitives = { git = "https://github.com/paradigmxyz/reth", tag = 
 reth-evm-ethereum = { git = "https://github.com/paradigmxyz/reth", tag = "v1.11.0", default-features = false }
 reth-primitives-traits = { git = "https://github.com/paradigmxyz/reth", tag = "v1.11.0", default-features = false }
 reth-payload-validator = { git = "https://github.com/paradigmxyz/reth", tag = "v1.11.0", default-features = false }
-stateless = { git = "https://github.com/paradigmxyz/stateless", rev = "68cd8e73682d21fed69670fc7eabe25e55c5cdbe", default-features = false }
+stateless = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a51931e8589102f3139d48fdbb3bbe4c1f7", default-features = false }
+tries = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a51931e8589102f3139d48fdbb3bbe4c1f7", default-features = false }
 
 # ethrex
 ethrex-common = { git = "https://github.com/lambdaclass/ethrex.git", tag = "v9.0.0", default-features = false }
@@ -92,9 +93,6 @@ typenum = { version = "1.18", default-features = false }
 # ssz
 ethereum_ssz = "0.9"
 ethereum_ssz_derive = "0.9"
-
-# mpt
-zeth-mpt-state = { git = "https://github.com/eth-act/zkvm-ethereum-mpt.git", rev = "0e7ec8ecccf0d00ed1b7981155433e34b8746cc5" }
 
 # ere
 ere-dockerized = { git = "https://github.com/eth-act/ere", tag = "v0.3.0" }
