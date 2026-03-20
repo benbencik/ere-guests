@@ -161,7 +161,7 @@ mod test {
             fee_recipient: [2; 20],
             state_root: [3; 32],
             receipts_root: [4; 32],
-            logs_bloom: Default::default(),
+            logs_bloom: [0; 256],
             prev_randao: [5; 32],
             block_number: 1,
             gas_limit: 2,
