@@ -4,11 +4,11 @@
 
 use alloc::{vec, vec::Vec};
 
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
 use libssz_derive::{HashTreeRoot, SszDecode, SszEncode};
 use libssz_merkle::HashTreeRoot;
 use libssz_types::SszList;
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 
 /// Primitive types
 pub type Hash32 = [u8; 32];
@@ -144,7 +144,10 @@ pub struct ExecutionPayloadV1 {
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
-    #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::nested_ssz_list"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::serde_wrappers::nested_ssz_list")
+    )]
     #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
     pub transactions: Transactions,
 }
@@ -172,7 +175,10 @@ pub struct ExecutionPayloadV2 {
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
-    #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::nested_ssz_list"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::serde_wrappers::nested_ssz_list")
+    )]
     #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
     pub transactions: Transactions,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
@@ -203,7 +209,10 @@ pub struct ExecutionPayloadV3 {
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
-    #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::nested_ssz_list"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::serde_wrappers::nested_ssz_list")
+    )]
     #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
     pub transactions: Transactions,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]

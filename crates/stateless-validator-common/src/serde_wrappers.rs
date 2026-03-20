@@ -32,8 +32,9 @@ pub mod bytes_array {
 
 /// Serialize an `SszList<T, N>` as `Vec<T>`.
 pub mod ssz_list {
-    use super::*;
     use serde::{Deserialize, Serialize, de::Error};
+
+    use super::*;
 
     /// Serialize an `SszList<T, N>` as a sequence.
     pub fn serialize<T, S: Serializer, const N: usize>(
@@ -60,8 +61,9 @@ pub mod ssz_list {
 
 /// Serialize an `SszList<SszList<T, M>, N>` as `Vec<Vec<T>>`.
 pub mod nested_ssz_list {
-    use super::*;
     use serde::{Deserialize, Serialize, de::Error};
+
+    use super::*;
 
     /// Serialize a nested `SszList` as a nested sequence.
     pub fn serialize<T, S: Serializer, const M: usize, const N: usize>(

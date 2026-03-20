@@ -6,6 +6,7 @@
 use alloc::{format, string::String, vec::Vec};
 use core::{fmt, ops::Deref};
 
+use libssz_types::SszList;
 use rkyv::{
     Archive, Deserialize, Place, Serialize,
     rancor::{Fallible, Source},
@@ -13,7 +14,6 @@ use rkyv::{
     vec::{ArchivedVec, VecResolver},
     with::{ArchiveWith, DeserializeWith, SerializeWith},
 };
-use libssz_types::SszList;
 
 /// Simple error wrapper for `libssz_types` errors which don't implement `std::error::Error`.
 #[derive(Debug)]
@@ -41,11 +41,7 @@ where
     type Archived = ArchivedVec<T::Archived>;
     type Resolver = VecResolver;
 
-    fn resolve_with(
-        field: &SszList<T, N>,
-        resolver: Self::Resolver,
-        out: Place<Self::Archived>,
-    ) {
+    fn resolve_with(field: &SszList<T, N>, resolver: Self::Resolver, out: Place<Self::Archived>) {
         ArchivedVec::resolve_from_slice(field.deref(), resolver, out);
     }
 }
@@ -117,10 +113,7 @@ where
         serializer: &mut S,
     ) -> Result<Self::Resolver, S::Error> {
         let vecs: Vec<&[T]> = field.iter().map(|inner| inner.deref()).collect();
-        ArchivedVec::serialize_from_iter(
-            vecs.iter().map(|slice| SliceAsVec(slice)),
-            serializer,
-        )
+        ArchivedVec::serialize_from_iter(vecs.iter().map(|slice| SliceAsVec(slice)), serializer)
     }
 }
 

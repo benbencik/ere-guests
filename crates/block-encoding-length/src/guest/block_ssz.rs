@@ -310,11 +310,7 @@ impl From<alloy_consensus::transaction::TxEip1559> for TxEip1559 {
             max_priority_fee_per_gas: value.max_priority_fee_per_gas,
             to: tx_kind_to_address(value.to),
             value: value.value.to_le_bytes(),
-            access_list: value
-                .access_list
-                .iter()
-                .map(AccessListItem::from)
-                .collect(),
+            access_list: value.access_list.iter().map(AccessListItem::from).collect(),
             input: value.input.to_vec(),
         }
     }
@@ -362,11 +358,7 @@ impl From<alloy_consensus::transaction::TxEip4844> for TxEip4844 {
             max_priority_fee_per_gas: value.max_priority_fee_per_gas,
             to: value.to.into(),
             value: value.value.to_le_bytes(),
-            access_list: value
-                .access_list
-                .iter()
-                .map(AccessListItem::from)
-                .collect(),
+            access_list: value.access_list.iter().map(AccessListItem::from).collect(),
             blob_versioned_hashes: value
                 .blob_versioned_hashes
                 .into_iter()
@@ -400,11 +392,7 @@ impl From<alloy_consensus::transaction::TxEip2930> for TxEip2930 {
             gas_limit: value.gas_limit,
             to: tx_kind_to_address(value.to),
             value: value.value.to_le_bytes(),
-            access_list: value
-                .access_list
-                .iter()
-                .map(AccessListItem::from)
-                .collect(),
+            access_list: value.access_list.iter().map(AccessListItem::from).collect(),
             input: value.input.to_vec(),
         }
     }
@@ -435,11 +423,7 @@ impl From<alloy_consensus::transaction::TxEip7702> for TxEip7702 {
             max_priority_fee_per_gas: value.max_priority_fee_per_gas,
             to: value.to.into(),
             value: value.value.to_le_bytes(),
-            access_list: value
-                .access_list
-                .iter()
-                .map(AccessListItem::from)
-                .collect(),
+            access_list: value.access_list.iter().map(AccessListItem::from).collect(),
             authorization_list: value
                 .authorization_list
                 .into_iter()
