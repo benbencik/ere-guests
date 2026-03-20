@@ -79,10 +79,7 @@ jobs:
         run: cargo test --lib --no-fail-fast
 
       # Include the package once the issue is resolved:
-      # - `block-encoding-length` - `ethereum_ssz` is not no_std compatible
       # - `stateless-validator-ethrex` - ethrex is not no_std compatible
-      # - `stateless-validator-reth` - depends on `stateless-validator-common`
-      # - `stateless-validator-common` - sigp deps are not no_std compatible (see https://github.com/eth-act/ere-guests/issues/8)
       - name: Compile to target riscv32imac-unknown-none-elf
         run: |
           cargo build \
