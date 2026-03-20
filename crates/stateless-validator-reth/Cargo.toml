@@ -32,14 +32,6 @@ reth-evm-ethereum.workspace = true
 reth-primitives-traits.workspace = true
 stateless.workspace = true
 
-# lighthouse
-tree_hash.workspace = true
-tree_hash_derive.workspace = true
-
-# ssz
-ssz_types.workspace = true
-ethereum_ssz.workspace = true
-
 # mpt
 tries.workspace = true
 

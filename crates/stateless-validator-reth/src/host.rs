@@ -14,13 +14,12 @@ use reth_chainspec::ChainSpec;
 use reth_ethereum_primitives::TransactionSigned;
 use reth_evm_ethereum::EthEvmConfig;
 use reth_primitives_traits::Block;
-use ssz_types::{FixedVector, VariableList};
 pub use stateless::StatelessInput;
 use stateless::{UncompressedPublicKey, stateless_validation_with_trie};
 pub use stateless_validator_common::guest::StatelessValidatorOutput;
 use stateless_validator_common::new_payload_request::{
-    ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, ForkName, NewPayloadRequest,
-    Transaction as Tx, Transactions, Withdrawal, Withdrawals,
+    ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, ExtraData, ForkName,
+    NewPayloadRequest, Transaction as Tx, Transactions, Withdrawal, Withdrawals,
 };
 use tries::zeth::SparseState;
 
@@ -113,11 +112,21 @@ pub fn to_new_payload_request(
             .map(|tx| {
                 let mut buf = Vec::new();
                 tx.encode_2718(&mut buf);
-                Tx::from(buf)
+                Tx::try_from(buf)
             })
-            .collect();
-        Transactions::from(txs)
+            .collect::<Result<_, _>>()
+            .map_err(|err| {
+                anyhow::anyhow!("transaction length should be within bounds: {err:?}")
+            })?;
+        txs.try_into()
+            .map_err(|err| anyhow::anyhow!("transactions count should be within bounds: {err:?}"))?
     };
+    let logs_bloom = *header.logs_bloom.data();
+    let extra_data: ExtraData = header
+        .extra_data
+        .to_vec()
+        .try_into()
+        .map_err(|err| anyhow::anyhow!("extra data length should be within bounds: {err:?}"))?;
 
     // Helper to convert alloy withdrawal to our neutral type
     let convert_withdrawal = |w: &alloy_eips::eip4895::Withdrawal| Withdrawal {
@@ -125,6 +134,15 @@ pub fn to_new_payload_request(
         validator_index: w.validator_index,
         address: w.address.0.0,
         amount: w.amount,
+    };
+    let build_withdrawals = || -> anyhow::Result<Withdrawals> {
+        let wdls: Vec<Withdrawal> = body
+            .withdrawals
+            .as_ref()
+            .map(|ws| ws.iter().map(convert_withdrawal).collect())
+            .unwrap_or_default();
+        wdls.try_into()
+            .map_err(|err| anyhow::anyhow!("withdrawals length should be within bounds: {err:?}"))
     };
 
     match fork {
@@ -134,13 +152,13 @@ pub fn to_new_payload_request(
                 fee_recipient: header.beneficiary.0.0,
                 state_root: header.state_root.0,
                 receipts_root: header.receipts_root.0,
-                logs_bloom: FixedVector::from(header.logs_bloom.0.to_vec()),
+                logs_bloom,
                 prev_randao: header.mix_hash.0,
                 block_number: header.number,
                 gas_limit: header.gas_limit,
                 gas_used: header.gas_used,
                 timestamp: header.timestamp,
-                extra_data: VariableList::from(header.extra_data.to_vec()),
+                extra_data: extra_data.clone(),
                 base_fee_per_gas: U256::from(header.base_fee_per_gas.unwrap_or_default())
                     .to_le_bytes(),
                 block_hash: stateless_input.block.hash_slow().0,
@@ -149,27 +167,20 @@ pub fn to_new_payload_request(
             Ok(NewPayloadRequest::new_bellatrix(payload))
         }
         ForkName::Capella => {
-            let withdrawals: Withdrawals = {
-                let wdls: Vec<Withdrawal> = body
-                    .withdrawals
-                    .as_ref()
-                    .map(|ws| ws.iter().map(convert_withdrawal).collect())
-                    .unwrap_or_default();
-                Withdrawals::from(wdls)
-            };
+            let withdrawals = build_withdrawals()?;
 
             let payload = ExecutionPayloadV2 {
                 parent_hash: header.parent_hash.0,
                 fee_recipient: header.beneficiary.0.0,
                 state_root: header.state_root.0,
                 receipts_root: header.receipts_root.0,
-                logs_bloom: FixedVector::from(header.logs_bloom.0.to_vec()),
+                logs_bloom,
                 prev_randao: header.mix_hash.0,
                 block_number: header.number,
                 gas_limit: header.gas_limit,
                 gas_used: header.gas_used,
                 timestamp: header.timestamp,
-                extra_data: VariableList::from(header.extra_data.to_vec()),
+                extra_data: extra_data.clone(),
                 base_fee_per_gas: U256::from(header.base_fee_per_gas.unwrap_or_default())
                     .to_le_bytes(),
                 block_hash: stateless_input.block.hash_slow().0,
@@ -179,27 +190,20 @@ pub fn to_new_payload_request(
             Ok(NewPayloadRequest::new_capella(payload))
         }
         ForkName::Deneb => {
-            let withdrawals: Withdrawals = {
-                let wdls: Vec<Withdrawal> = body
-                    .withdrawals
-                    .as_ref()
-                    .map(|ws| ws.iter().map(convert_withdrawal).collect())
-                    .unwrap_or_default();
-                Withdrawals::from(wdls)
-            };
+            let withdrawals = build_withdrawals()?;
 
             let payload = ExecutionPayloadV3 {
                 parent_hash: header.parent_hash.0,
                 fee_recipient: header.beneficiary.0.0,
                 state_root: header.state_root.0,
                 receipts_root: header.receipts_root.0,
-                logs_bloom: FixedVector::from(header.logs_bloom.0.to_vec()),
+                logs_bloom,
                 prev_randao: header.mix_hash.0,
                 block_number: header.number,
                 gas_limit: header.gas_limit,
                 gas_used: header.gas_used,
                 timestamp: header.timestamp,
-                extra_data: VariableList::from(header.extra_data.to_vec()),
+                extra_data: extra_data.clone(),
                 base_fee_per_gas: U256::from(header.base_fee_per_gas.unwrap_or_default())
                     .to_le_bytes(),
                 block_hash: stateless_input.block.hash_slow().0,
@@ -226,27 +230,20 @@ pub fn to_new_payload_request(
             NewPayloadRequest::new_deneb(payload, versioned_hashes, parent_beacon_block_root)
         }
         ForkName::Electra | ForkName::Fulu => {
-            let withdrawals: Withdrawals = {
-                let wdls: Vec<Withdrawal> = body
-                    .withdrawals
-                    .as_ref()
-                    .map(|ws| ws.iter().map(convert_withdrawal).collect())
-                    .unwrap_or_default();
-                Withdrawals::from(wdls)
-            };
+            let withdrawals = build_withdrawals()?;
 
             let payload = ExecutionPayloadV3 {
                 parent_hash: header.parent_hash.0,
                 fee_recipient: header.beneficiary.0.0,
                 state_root: header.state_root.0,
                 receipts_root: header.receipts_root.0,
-                logs_bloom: FixedVector::from(header.logs_bloom.0.to_vec()),
+                logs_bloom,
                 prev_randao: header.mix_hash.0,
                 block_number: header.number,
                 gas_limit: header.gas_limit,
                 gas_used: header.gas_used,
                 timestamp: header.timestamp,
-                extra_data: VariableList::from(header.extra_data.to_vec()),
+                extra_data,
                 base_fee_per_gas: U256::from(header.base_fee_per_gas.unwrap_or_default())
                     .to_le_bytes(),
                 block_hash: stateless_input.block.hash_slow().0,

@@ -23,7 +23,6 @@ substrate-bn = { git = "https://github.com/0xPolygonHermez/zisk-patch-bn.git", t
 sp1_bls12_381 = { git = "https://github.com/0xPolygonHermez/zisk-patch-bls12-381", tag = "patch-0.8.0-zisk-0.15.0" }
 tiny-keccak = { git = "https://github.com/0xPolygonHermez/zisk-patch-tiny-keccak/", tag = "patch-2.0.2-zisk-0.15.0" }
 kzg-rs = { git = "https://github.com/0xPolygonHermez/zisk-patch-kzg/", tag = "patch-0.2.7-zisk-0.15.0" }
-ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "08c88633b700d7447ef840d19ce7b369c44311de" }
 
 [profile.release]
 codegen-units = 1

@@ -449,7 +449,7 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "397406cf04b11ca2a48e6f81804c70af3f40a36abf648e11dc7416043eb0834d"
 dependencies = [
- "darling 0.21.3",
+ "darling",
  "proc-macro2",
  "quote",
  "syn 2.0.116",
@@ -1428,36 +1428,12 @@ dependencies = [
 
 [[package]]
 name = "darling"
-version = "0.20.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc7f46116c46ff9ab3eb1597a45688b6715c6e628b5c133e288e709a29bcb4ee"
-dependencies = [
- "darling_core 0.20.11",
- "darling_macro 0.20.11",
-]
-
-[[package]]
-name = "darling"
 version = "0.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9cdf337090841a411e2a7f3deb9187445851f91b309c0c0a29e05f74a00a48c0"
 dependencies = [
- "darling_core 0.21.3",
- "darling_macro 0.21.3",
-]
-
-[[package]]
-name = "darling_core"
-version = "0.20.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d00b9596d185e565c2207a0b01f8bd1a135483d02d9b7b0a54b11da8d53412e"
-dependencies = [
- "fnv",
- "ident_case",
- "proc-macro2",
- "quote",
- "strsim",
- "syn 2.0.116",
+ "darling_core",
+ "darling_macro",
 ]
 
 [[package]]
@@ -1477,22 +1453,11 @@ dependencies = [
 
 [[package]]
 name = "darling_macro"
-version = "0.20.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc34b93ccb385b40dc71c6fceac4b2ad23662c7eeb248cf10d529b7e055b6ead"
-dependencies = [
- "darling_core 0.20.11",
- "quote",
- "syn 2.0.116",
-]
-
-[[package]]
-name = "darling_macro"
 version = "0.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d38308df82d1080de0afee5d069fa14b0326a88c14f15c5ccda35b4a6c414c81"
 dependencies = [
- "darling_core 0.21.3",
+ "darling_core",
  "quote",
  "syn 2.0.116",
 ]
@@ -1874,55 +1839,6 @@ checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
  "windows-sys",
-]
-
-[[package]]
-name = "ethereum_hashing"
-version = "0.7.0"
-source = "git+https://github.com/jsign/ethereum_hashing?rev=08c88633b700d7447ef840d19ce7b369c44311de#08c88633b700d7447ef840d19ce7b369c44311de"
-dependencies = [
- "cpufeatures",
- "sha2",
-]
-
-[[package]]
-name = "ethereum_serde_utils"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3dc1355dbb41fbbd34ec28d4fb2a57d9a70c67ac3c19f6a5ca4d4a176b9e997a"
-dependencies = [
- "alloy-primitives",
- "hex",
- "serde",
- "serde_derive",
- "serde_json",
-]
-
-[[package]]
-name = "ethereum_ssz"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0dcddb2554d19cde19b099fadddde576929d7a4d0c1cd3512d1fd95cf174375c"
-dependencies = [
- "alloy-primitives",
- "ethereum_serde_utils",
- "itertools 0.13.0",
- "serde",
- "serde_derive",
- "smallvec",
- "typenum",
-]
-
-[[package]]
-name = "ethereum_ssz_derive"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a657b6b3b7e153637dc6bdc6566ad9279d9ee11a15b12cfb24a2e04360637e9f"
-dependencies = [
- "darling 0.20.11",
- "proc-macro2",
- "quote",
- "syn 2.0.116",
 ]
 
 [[package]]
@@ -2714,6 +2630,43 @@ name = "libm"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981"
+
+[[package]]
+name = "libssz"
+version = "0.1.0"
+source = "git+https://github.com/lambdaclass/libssz?rev=31786524708d853f5ac8da5bdfd8090a9b99103d#31786524708d853f5ac8da5bdfd8090a9b99103d"
+dependencies = [
+ "smallvec",
+]
+
+[[package]]
+name = "libssz-derive"
+version = "0.1.0"
+source = "git+https://github.com/lambdaclass/libssz?rev=31786524708d853f5ac8da5bdfd8090a9b99103d#31786524708d853f5ac8da5bdfd8090a9b99103d"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.116",
+]
+
+[[package]]
+name = "libssz-merkle"
+version = "0.1.0"
+source = "git+https://github.com/lambdaclass/libssz?rev=31786524708d853f5ac8da5bdfd8090a9b99103d#31786524708d853f5ac8da5bdfd8090a9b99103d"
+dependencies = [
+ "libssz",
+ "sha2",
+]
+
+[[package]]
+name = "libssz-types"
+version = "0.1.0"
+source = "git+https://github.com/lambdaclass/libssz?rev=31786524708d853f5ac8da5bdfd8090a9b99103d#31786524708d853f5ac8da5bdfd8090a9b99103d"
+dependencies = [
+ "libssz",
+ "libssz-merkle",
+ "smallvec",
+]
 
 [[package]]
 name = "linux-raw-sys"
@@ -4956,7 +4909,7 @@ version = "3.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52a8e3ca0ca629121f70ab50f95249e5a6f925cc0f6ffe8256c45b728875706c"
 dependencies = [
- "darling 0.21.3",
+ "darling",
  "proc-macro2",
  "quote",
  "syn 2.0.116",
@@ -5068,22 +5021,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ssz_types"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75b55bedc9a18ed2860a46d6beb4f4082416ee1d60be0cc364cebdcdddc7afd4"
-dependencies = [
- "ethereum_serde_utils",
- "ethereum_ssz",
- "itertools 0.13.0",
- "serde",
- "serde_derive",
- "smallvec",
- "tree_hash",
- "typenum",
-]
-
-[[package]]
 name = "stable_deref_trait"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5120,15 +5057,13 @@ name = "stateless-validator-common"
 version = "0.5.0"
 dependencies = [
  "anyhow",
- "ethereum_ssz",
- "ethereum_ssz_derive",
+ "libssz",
+ "libssz-derive",
+ "libssz-merkle",
+ "libssz-types",
  "serde",
  "serde_with",
  "sha2",
- "ssz_types",
- "tree_hash",
- "tree_hash_derive",
- "typenum",
 ]
 
 [[package]]
@@ -5143,7 +5078,6 @@ dependencies = [
  "alloy-rpc-types-engine",
  "anyhow",
  "ere-io",
- "ethereum_ssz",
  "guest",
  "once_cell",
  "reth-chainspec",
@@ -5154,11 +5088,8 @@ dependencies = [
  "serde",
  "serde_with",
  "sha2",
- "ssz_types",
  "stateless",
  "stateless-validator-common",
- "tree_hash",
- "tree_hash_derive",
  "tries",
 ]
 
@@ -5572,31 +5503,6 @@ checksum = "1ad61aed86bc3faea4300c7aee358b4c6d0c8d6ccc36524c96e4c92ccf26e77e"
 dependencies = [
  "num-integer",
  "strength_reduce",
-]
-
-[[package]]
-name = "tree_hash"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee44f4cef85f88b4dea21c0b1f58320bdf35715cf56d840969487cff00613321"
-dependencies = [
- "alloy-primitives",
- "ethereum_hashing",
- "ethereum_ssz",
- "smallvec",
- "typenum",
-]
-
-[[package]]
-name = "tree_hash_derive"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0bee2ea1551f90040ab0e34b6fb7f2fa3bad8acc925837ac654f2c78a13e3089"
-dependencies = [
- "darling 0.20.11",
- "proc-macro2",
- "quote",
- "syn 2.0.116",
 ]
 
 [[package]]

@@ -27,7 +27,6 @@ k256 = { git = "https://github.com/sp1-patches/elliptic-curves", tag = "patch-k2
 p256 = { git = "https://github.com/sp1-patches/elliptic-curves", tag = "patch-p256-13.2-sp1-5.0.0" }
 substrate-bn = { git = "https://github.com/sp1-patches/bn", tag = "patch-0.6.0-sp1-5.0.0" }
 ecdsa = { git = "https://github.com/sp1-patches/signatures", tag = "patch-16.9-sp1-4.1.0" }
-ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "08c88633b700d7447ef840d19ce7b369c44311de" }
 
 [profile.release]
 codegen-units = 1
