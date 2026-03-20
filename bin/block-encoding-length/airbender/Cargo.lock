@@ -3187,13 +3187,3 @@ dependencies = [
  "cc",
  "pkg-config",
 ]
-
-[[patch.unused]]
-name = "ethereum_ssz"
-version = "0.9.0"
-source = "git+https://github.com/han0110/ethereum_ssz?branch=feature%2Fno-std#4a5312b676699bb24ff246a0f522db8c05c6212c"
-
-[[patch.unused]]
-name = "ethereum_ssz_derive"
-version = "0.9.0"
-source = "git+https://github.com/han0110/ethereum_ssz?branch=feature%2Fno-std#4a5312b676699bb24ff246a0f522db8c05c6212c"
