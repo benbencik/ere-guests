@@ -88,8 +88,8 @@ jobs:
           cargo build \
             --no-default-features \
             --target riscv32imac-unknown-none-elf \
-            --package guest
-            # --include block-encoding-length \
-            # --include stateless-validator-ethrex \
-            # --include stateless-validator-reth \
-            # --include stateless-validator-common
+            --package guest \
+            --package block-encoding-length \
+            --package stateless-validator-reth \
+            --package stateless-validator-common
+            # --package stateless-validator-ethrex
