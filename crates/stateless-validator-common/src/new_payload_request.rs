@@ -102,13 +102,13 @@ pub struct ConsolidationRequest {
 )]
 pub struct ExecutionRequests {
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub deposits: DepositRequests,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub withdrawals: WithdrawalRequests,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub consolidations: ConsolidationRequests,
 }
 
@@ -140,7 +140,7 @@ pub struct ExecutionPayloadV1 {
     pub gas_used: u64,
     pub timestamp: u64,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
@@ -148,7 +148,7 @@ pub struct ExecutionPayloadV1 {
         feature = "serde",
         serde(with = "crate::serde_wrappers::nested_ssz_list")
     )]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedSszList))]
     pub transactions: Transactions,
 }
 
@@ -171,7 +171,7 @@ pub struct ExecutionPayloadV2 {
     pub gas_used: u64,
     pub timestamp: u64,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
@@ -179,10 +179,10 @@ pub struct ExecutionPayloadV2 {
         feature = "serde",
         serde(with = "crate::serde_wrappers::nested_ssz_list")
     )]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedSszList))]
     pub transactions: Transactions,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub withdrawals: Withdrawals,
 }
 
@@ -205,7 +205,7 @@ pub struct ExecutionPayloadV3 {
     pub gas_used: u64,
     pub timestamp: u64,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub extra_data: ExtraData,
     pub base_fee_per_gas: Uint256Bytes,
     pub block_hash: Hash32,
@@ -213,10 +213,10 @@ pub struct ExecutionPayloadV3 {
         feature = "serde",
         serde(with = "crate::serde_wrappers::nested_ssz_list")
     )]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsNestedSszList))]
     pub transactions: Transactions,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub withdrawals: Withdrawals,
     pub blob_gas_used: u64,
     pub excess_blob_gas: u64,
@@ -251,7 +251,7 @@ pub struct NewPayloadRequestCapella {
 pub struct NewPayloadRequestDeneb {
     pub execution_payload: ExecutionPayloadV3,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub versioned_hashes: VersionedHashes,
     pub parent_beacon_block_root: Hash32,
 }
@@ -265,7 +265,7 @@ pub struct NewPayloadRequestDeneb {
 pub struct NewPayloadRequestElectraFulu {
     pub execution_payload: ExecutionPayloadV3,
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_wrappers::ssz_list"))]
-    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsVariableList))]
+    #[cfg_attr(feature = "rkyv", rkyv(with = crate::rkyv_wrappers::AsSszList))]
     pub versioned_hashes: VersionedHashes,
     pub parent_beacon_block_root: Hash32,
     pub execution_requests: ExecutionRequests,
