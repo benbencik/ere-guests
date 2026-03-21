@@ -1,9 +1,9 @@
 //! Stateless validator common types and utilities for host.
 
 use anyhow::{Context, Result};
+use libssz::{SszDecode, SszEncode};
+use libssz_types::SszList;
 use sha2::{Digest, Sha256};
-use ssz::{Decode, Encode};
-use ssz_types::VariableList;
 
 use crate::{
     guest::StatelessValidatorOutput,
@@ -39,9 +39,7 @@ impl NewPayloadRequest {
         versioned_hashes: Vec<Hash32>,
         parent_beacon_block_root: Hash32,
     ) -> Result<Self> {
-        let versioned_hashes = VariableList::new(versioned_hashes).map_err(|err| {
-            anyhow::anyhow!("Versioned hashes length should be within bounds: {:?}", err)
-        })?;
+        let versioned_hashes = bounded_list(versioned_hashes, "versioned hashes")?;
         Ok(NewPayloadRequest::Deneb(NewPayloadRequestDeneb {
             execution_payload,
             versioned_hashes,
@@ -56,9 +54,7 @@ impl NewPayloadRequest {
         parent_beacon_block_root: Hash32,
         execution_requests: &[impl AsRef<[u8]>],
     ) -> Result<Self> {
-        let versioned_hashes = VariableList::new(versioned_hashes).map_err(|err| {
-            anyhow::anyhow!("Versioned hashes length should be within bounds: {:?}", err)
-        })?;
+        let versioned_hashes = bounded_list(versioned_hashes, "versioned hashes")?;
         let execution_requests = decode_execution_requests(execution_requests)
             .context("Decoding execution requests failed")?;
         Ok(NewPayloadRequest::ElectraFulu(
@@ -70,6 +66,11 @@ impl NewPayloadRequest {
             },
         ))
     }
+}
+
+fn bounded_list<T, const N: usize>(values: Vec<T>, label: &str) -> Result<SszList<T, N>> {
+    SszList::try_from(values)
+        .map_err(|err| anyhow::anyhow!("{label} length should be within bounds: {err:?}"))
 }
 
 /// Decodes a list of execution requests obtained from execution and deserializes them into an
@@ -86,9 +87,9 @@ fn decode_execution_requests(requests_list: &[impl AsRef<[u8]>]) -> Result<Execu
     const CONSOLIDATION_REQUEST_TYPE: u8 = 0x02;
 
     // Fixed SSZ sizes for each request type (excluding the type byte)
-    let deposit_request_size = <DepositRequest as Encode>::ssz_fixed_len();
-    let withdrawal_request_size = <WithdrawalRequest as Encode>::ssz_fixed_len();
-    let consolidation_request_size = <ConsolidationRequest as Encode>::ssz_fixed_len();
+    let deposit_request_size = <DepositRequest as SszEncode>::fixed_size();
+    let withdrawal_request_size = <WithdrawalRequest as SszEncode>::fixed_size();
+    let consolidation_request_size = <ConsolidationRequest as SszEncode>::fixed_size();
 
     let mut deposits = Vec::new();
     let mut withdrawals = Vec::new();
@@ -189,12 +190,8 @@ fn decode_execution_requests(requests_list: &[impl AsRef<[u8]>]) -> Result<Execu
     }
 
     Ok(ExecutionRequests {
-        deposits: VariableList::new(deposits)
-            .map_err(|e| anyhow::anyhow!("Failed to create deposits VariableList: {:?}", e))?,
-        withdrawals: VariableList::new(withdrawals)
-            .map_err(|e| anyhow::anyhow!("Failed to create withdrawals VariableList: {:?}", e))?,
-        consolidations: VariableList::new(consolidations).map_err(|e| {
-            anyhow::anyhow!("Failed to create consolidations VariableList: {:?}", e)
-        })?,
+        deposits: bounded_list(deposits, "deposits")?,
+        withdrawals: bounded_list(withdrawals, "withdrawals")?,
+        consolidations: bounded_list(consolidations, "consolidations")?,
     })
 }

@@ -64,9 +64,6 @@ openvm-rv32im-guest = { git = "https://github.com/openvm-org//openvm.git", tag =
 openvm-sha2 = { git = "https://github.com/openvm-org//openvm.git", tag = "v1.4.2" }
 openvm-sha256-guest = { git = "https://github.com/openvm-org//openvm.git", tag = "v1.4.2" }
 
-[patch.crates-io]
-ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "08c88633b700d7447ef840d19ce7b369c44311de" }
-
 [profile.release]
 codegen-units = 1
 lto = "fat"

@@ -163,13 +163,13 @@ fn convert_v1_to_alloy(payload: ExecutionPayloadV1) -> AlloyExecutionPayloadV1 {
         gas_limit: payload.gas_limit,
         gas_used: payload.gas_used,
         timestamp: payload.timestamp,
-        extra_data: Bytes::from(Vec::from(payload.extra_data)),
+        extra_data: Bytes::from(payload.extra_data.into_inner()),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
         transactions: payload
             .transactions
             .into_iter()
-            .map(|tx| Bytes::from(Vec::from(tx)))
+            .map(|tx| Bytes::from(tx.into_inner()))
             .collect(),
     }
 }
@@ -188,13 +188,13 @@ fn convert_v2_to_alloy(
         gas_limit: payload.gas_limit,
         gas_used: payload.gas_used,
         timestamp: payload.timestamp,
-        extra_data: Bytes::from(Vec::from(payload.extra_data)),
+        extra_data: Bytes::from(payload.extra_data.into_inner()),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
         transactions: payload
             .transactions
             .into_iter()
-            .map(|tx| Bytes::from(Vec::from(tx)))
+            .map(|tx| Bytes::from(tx.into_inner()))
             .collect(),
     };
 
@@ -221,13 +221,13 @@ fn convert_v2_to_alloy_from_v3(
         gas_limit: payload.gas_limit,
         gas_used: payload.gas_used,
         timestamp: payload.timestamp,
-        extra_data: Bytes::from(Vec::from(payload.extra_data)),
+        extra_data: Bytes::from(payload.extra_data.into_inner()),
         base_fee_per_gas: U256::from_le_bytes(payload.base_fee_per_gas),
         block_hash: B256::from(payload.block_hash),
         transactions: payload
             .transactions
             .into_iter()
-            .map(|tx| Bytes::from(Vec::from(tx)))
+            .map(|tx| Bytes::from(tx.into_inner()))
             .collect(),
     };
 

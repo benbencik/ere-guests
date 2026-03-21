@@ -3,10 +3,10 @@
 use core::ops::Deref;
 
 use ere_io::serde::{IoSerde, bincode::BincodeLegacy};
+use libssz::SszEncode;
 use reth_ethereum_primitives::Block;
 use serde::{Deserialize, Serialize};
 use serde_with::serde_as;
-use ssz::Encode;
 
 #[rustfmt::skip]
 pub use guest::*;
@@ -74,7 +74,7 @@ impl Guest for BlockEncodingLengthGuest {
 
                 P::cycle_scope("block_encoding_length_calculation", || {
                     for _ in 0..input.loop_count {
-                        block.ssz_bytes_len();
+                        block.encoded_len();
                     }
                 });
             }

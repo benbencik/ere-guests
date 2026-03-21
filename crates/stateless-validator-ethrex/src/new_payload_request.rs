@@ -78,13 +78,13 @@ impl From<ExecutionPayloadV1> for ExecutionPayload {
             gas_limit: payload.gas_limit,
             gas_used: payload.gas_used,
             timestamp: payload.timestamp,
-            extra_data: Bytes::from(Vec::from(payload.extra_data)),
+            extra_data: Bytes::from(payload.extra_data.into_inner()),
             base_fee_per_gas: base_fee_to_u64(&payload.base_fee_per_gas),
             block_hash: H256::from(payload.block_hash),
             transactions: payload
                 .transactions
                 .into_iter()
-                .map(|t| EncodedTransaction(Bytes::from(Vec::from(t))))
+                .map(|t| EncodedTransaction(Bytes::from(t.into_inner())))
                 .collect(),
             withdrawals: None,
             blob_gas_used: None,
@@ -106,13 +106,13 @@ impl From<ExecutionPayloadV2> for ExecutionPayload {
             gas_limit: payload.gas_limit,
             gas_used: payload.gas_used,
             timestamp: payload.timestamp,
-            extra_data: Bytes::from(Vec::from(payload.extra_data)),
+            extra_data: Bytes::from(payload.extra_data.into_inner()),
             base_fee_per_gas: base_fee_to_u64(&payload.base_fee_per_gas),
             block_hash: H256::from(payload.block_hash),
             transactions: payload
                 .transactions
                 .into_iter()
-                .map(|t| EncodedTransaction(Bytes::from(Vec::from(t))))
+                .map(|t| EncodedTransaction(Bytes::from(t.into_inner())))
                 .collect(),
             withdrawals: Some(
                 payload
@@ -140,13 +140,13 @@ impl From<ExecutionPayloadV3> for ExecutionPayload {
             gas_limit: payload.gas_limit,
             gas_used: payload.gas_used,
             timestamp: payload.timestamp,
-            extra_data: Bytes::from(Vec::from(payload.extra_data)),
+            extra_data: Bytes::from(payload.extra_data.into_inner()),
             base_fee_per_gas: base_fee_to_u64(&payload.base_fee_per_gas),
             block_hash: H256::from(payload.block_hash),
             transactions: payload
                 .transactions
                 .into_iter()
-                .map(|t| EncodedTransaction(Bytes::from(Vec::from(t))))
+                .map(|t| EncodedTransaction(Bytes::from(t.into_inner())))
                 .collect(),
             withdrawals: Some(
                 payload

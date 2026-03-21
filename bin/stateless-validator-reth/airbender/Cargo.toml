@@ -23,7 +23,6 @@ stateless-validator-reth = { path = "../../../crates/stateless-validator-reth", 
 
 [patch.crates-io]
 radium = { git = "https://github.com/han0110/radium", branch = "feature/riscv32ima" }
-ethereum_hashing = { git = "https://github.com/jsign/ethereum_hashing", rev = "08c88633b700d7447ef840d19ce7b369c44311de" }
 
 [profile.release]
 codegen-units = 1
