@@ -32,9 +32,9 @@ impl core::error::Error for SszError {}
 /// On serialization, the inner slice is serialized as a Vec.
 /// On deserialization, the Vec is converted back to `SszList`.
 #[derive(Debug)]
-pub struct AsVariableList;
+pub struct AsSszList;
 
-impl<T, const N: usize> ArchiveWith<SszList<T, N>> for AsVariableList
+impl<T, const N: usize> ArchiveWith<SszList<T, N>> for AsSszList
 where
     T: Archive,
 {
@@ -46,7 +46,7 @@ where
     }
 }
 
-impl<T, const N: usize, S> SerializeWith<SszList<T, N>, S> for AsVariableList
+impl<T, const N: usize, S> SerializeWith<SszList<T, N>, S> for AsSszList
 where
     T: Serialize<S>,
     S: Fallible + Allocator + Writer + ?Sized,
@@ -59,8 +59,7 @@ where
     }
 }
 
-impl<T, const N: usize, D> DeserializeWith<ArchivedVec<T::Archived>, SszList<T, N>, D>
-    for AsVariableList
+impl<T, const N: usize, D> DeserializeWith<ArchivedVec<T::Archived>, SszList<T, N>, D> for AsSszList
 where
     T: Archive,
     T::Archived: Deserialize<T, D>,
@@ -83,10 +82,9 @@ where
 ///
 /// Serializes as `Vec<Vec<T>>` and reconstructs on deserialization.
 #[derive(Debug)]
-pub struct AsNestedVariableList;
+pub struct AsNestedSszList;
 
-impl<T, const M: usize, const N: usize> ArchiveWith<SszList<SszList<T, M>, N>>
-    for AsNestedVariableList
+impl<T, const M: usize, const N: usize> ArchiveWith<SszList<SszList<T, M>, N>> for AsNestedSszList
 where
     T: Archive,
 {
@@ -103,7 +101,7 @@ where
 }
 
 impl<T, const M: usize, const N: usize, S> SerializeWith<SszList<SszList<T, M>, N>, S>
-    for AsNestedVariableList
+    for AsNestedSszList
 where
     T: Serialize<S>,
     S: Fallible + Allocator + Writer + ?Sized,
@@ -139,7 +137,7 @@ impl<T: Serialize<S>, S: Fallible + Allocator + Writer + ?Sized> Serialize<S>
 
 impl<T, const M: usize, const N: usize, D>
     DeserializeWith<ArchivedVec<ArchivedVec<T::Archived>>, SszList<SszList<T, M>, N>, D>
-    for AsNestedVariableList
+    for AsNestedSszList
 where
     T: Archive,
     T::Archived: Deserialize<T, D>,
