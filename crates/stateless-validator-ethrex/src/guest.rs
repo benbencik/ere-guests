@@ -1,10 +1,11 @@
 //! Stateless validator guest program.
 
-use alloc::format;
+use alloc::{format, sync::Arc};
 use core::fmt::Debug;
 
 use ere_io::rkyv::IoRkyv;
-use ethrex_common::types::{block_execution_witness::ExecutionWitness, fee_config::FeeConfig};
+use ethrex_common::types::block_execution_witness::ExecutionWitness;
+use ethrex_crypto::Crypto;
 use ethrex_guest_program::{execution::execution_program, input::ProgramInput};
 use stateless_validator_common::new_payload_request::NewPayloadRequest;
 
@@ -16,6 +17,10 @@ pub use {
     stateless_validator_common::guest::StatelessValidatorOutput,
 };
 
+#[cfg(feature = "zisk")]
+#[rustfmt::skip]
+mod zisk;
+
 /// Input for the Ethrex stateless validator guest program.
 #[derive(rkyv::Serialize, rkyv::Deserialize, rkyv::Archive)]
 pub struct StatelessValidatorEthrexInput {
@@ -23,10 +28,6 @@ pub struct StatelessValidatorEthrexInput {
     pub new_payload_request: NewPayloadRequest,
     /// database containing all the data necessary to execute
     pub execution_witness: ExecutionWitness,
-    /// value used to calculate base fee
-    pub elasticity_multiplier: u64,
-    /// Configuration for L2 fees used for each block
-    pub fee_configs: Option<Vec<FeeConfig>>,
 }
 
 impl Clone for StatelessValidatorEthrexInput {
@@ -34,8 +35,6 @@ impl Clone for StatelessValidatorEthrexInput {
         Self {
             new_payload_request: self.new_payload_request.clone(),
             execution_witness: self.execution_witness.clone(),
-            elasticity_multiplier: self.elasticity_multiplier,
-            fee_configs: self.fee_configs.clone(),
         }
     }
 }
@@ -53,7 +52,6 @@ impl Debug for StatelessValidatorEthrexInput {
                     .field("chain_config", &self.0.chain_config)
                     .field("state_trie_root", &self.0.state_trie_root)
                     .field("storage_trie_roots", &self.0.storage_trie_roots)
-                    .field("keys", &self.0.keys)
                     .finish()
             }
         }
@@ -64,8 +62,6 @@ impl Debug for StatelessValidatorEthrexInput {
                 "execution_witness",
                 &DebugExecutionWitness(&self.execution_witness),
             )
-            .field("elasticity_multiplier", &self.elasticity_multiplier)
-            .field("fee_configs", &self.fee_configs)
             .finish()
     }
 }
@@ -129,14 +125,12 @@ impl StatelessValidatorEthrexGuest {
             let input = ProgramInput {
                 blocks: vec![block],
                 execution_witness: input.execution_witness,
-                elasticity_multiplier: input.elasticity_multiplier,
-                fee_configs: input.fee_configs,
             };
             let block_num = input.blocks[0].header.number;
             (input, block_num)
         });
 
-        let res = P::cycle_scope("stf", || execution_program(input));
+        let res = P::cycle_scope("stf", || execution_program(input, crypto()));
 
         match res {
             Ok(_) => StatelessValidatorOutput::new(new_payload_request_root, true),
@@ -146,6 +140,18 @@ impl StatelessValidatorEthrexGuest {
             }
         }
     }
+}
+
+#[allow(unreachable_code)]
+fn crypto() -> Arc<dyn Crypto> {
+    #[cfg(feature = "risc0")]
+    return Arc::new(ethrex_guest_program::crypto::risc0::Risc0Crypto);
+    #[cfg(feature = "sp1")]
+    return Arc::new(ethrex_guest_program::crypto::sp1::Sp1Crypto);
+    #[cfg(feature = "zisk")]
+    return Arc::new(zisk::ZiskCrypto::default());
+    #[cfg(not(any(feature = "risc0", feature = "sp1", feature = "zisk")))]
+    return Arc::new(ethrex_guest_program::crypto::NativeCrypto);
 }
 
 #[cfg(test)]
