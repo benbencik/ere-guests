@@ -2,6 +2,7 @@
 
 use anyhow::{Context, Result};
 use ethrex_common::{Address, Bloom, Bytes, H256, types::Block};
+use ethrex_crypto::Crypto;
 use libssz_merkle::Sha256Hasher;
 use stateless_validator_common::new_payload_request::{
     ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, NewPayloadRequest, Withdrawal,
@@ -17,6 +18,7 @@ use crate::execution_payload::{
 pub fn get_block_from_new_payload_request(
     req: NewPayloadRequest,
     hasher: &impl Sha256Hasher,
+    crypto: &dyn Crypto,
 ) -> Result<Block> {
     match req {
         NewPayloadRequest::Bellatrix(b) => {
@@ -24,7 +26,7 @@ pub fn get_block_from_new_payload_request(
             validate_execution_payload_v1(&payload).context("V1 payload validation failed")?;
             let block = payload
                 .clone()
-                .into_block(None, None)
+                .into_block(None, None, crypto)
                 .context("into_block failed")?;
             validate_block_payload_v1_v2(&payload, &block)
                 .context("Block/Payload validation failed")?;
@@ -35,7 +37,7 @@ pub fn get_block_from_new_payload_request(
             validate_execution_payload_v2(&payload).context("V2 payload validation failed")?;
             let block = payload
                 .clone()
-                .into_block(None, None)
+                .into_block(None, None, crypto)
                 .context("into_block failed")?;
             validate_block_payload_v1_v2(&payload, &block)
                 .context("Block/Payload validation failed")?;
@@ -47,7 +49,7 @@ pub fn get_block_from_new_payload_request(
             validate_execution_payload_v3(&payload).context("V3 payload validation failed")?;
             let block = payload
                 .clone()
-                .into_block(parent_beacon_block_root, None)
+                .into_block(parent_beacon_block_root, None, crypto)
                 .context("into_block failed")?;
             validate_block_payload_v3(&payload, &block, &d.versioned_hashes)
                 .context("Block/Payload validation failed")?;
@@ -63,7 +65,7 @@ pub fn get_block_from_new_payload_request(
             validate_execution_payload_v3(&payload).context("V3 payload validation failed")?;
             let block = payload
                 .clone()
-                .into_block(parent_beacon_block_root, requests_hash)
+                .into_block(parent_beacon_block_root, requests_hash, crypto)
                 .context("into_block failed")?;
             validate_block_payload_v3(&payload, &block, &e.versioned_hashes)
                 .context("Block/Payload validation failed")?;

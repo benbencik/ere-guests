@@ -9,6 +9,7 @@ use ethrex_common::{
         compute_withdrawals_root,
     },
 };
+use ethrex_crypto::Crypto;
 use ethrex_rlp::error::RLPDecodeError;
 
 #[derive(Clone, Debug)]
@@ -43,6 +44,7 @@ impl ExecutionPayload {
         self,
         parent_beacon_block_root: Option<H256>,
         requests_hash: Option<H256>,
+        crypto: &dyn Crypto,
     ) -> Result<Block, RLPDecodeError> {
         let body = BlockBody {
             transactions: self
@@ -58,7 +60,7 @@ impl ExecutionPayload {
             ommers_hash: *DEFAULT_OMMERS_HASH,
             coinbase: self.fee_recipient,
             state_root: self.state_root,
-            transactions_root: compute_transactions_root(&body.transactions),
+            transactions_root: compute_transactions_root(&body.transactions, crypto),
             receipts_root: self.receipts_root,
             logs_bloom: self.logs_bloom,
             difficulty: 0.into(),
@@ -73,7 +75,7 @@ impl ExecutionPayload {
             withdrawals_root: body
                 .withdrawals
                 .as_ref()
-                .map(|w| compute_withdrawals_root(w)),
+                .map(|w| compute_withdrawals_root(w, crypto)),
             blob_gas_used: self.blob_gas_used,
             excess_blob_gas: self.excess_blob_gas,
             parent_beacon_block_root,

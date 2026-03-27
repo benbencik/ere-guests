@@ -30,7 +30,11 @@ rust_2018_idioms = { level = "deny", priority = -1 }
 unnameable_types = "warn"
 unreachable_pub = "warn"
 unused_must_use = "deny"
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(zisk_hints)', 'cfg(zisk_hints_debug)', 'cfg(target_vendor, values("zisk"))'] }
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(zisk_hints)',
+    'cfg(zisk_hints_debug)',
+    'cfg(target_vendor, values("zisk"))',
+] }
 
 [workspace.lints.rustdoc]
 all = "warn"
@@ -79,19 +83,22 @@ stateless = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a519
 tries = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a51931e8589102f3139d48fdbb3bbe4c1f7", default-features = false }
 
 # ethrex
-# FIXME: Update to upstream when https://github.com/lambdaclass/ethrex/pull/6392 is resolved.
-ethrex-common = { git = "https://github.com/han0110/ethrex.git", rev = "b9d3ef6924633ade5cc5e8f41b83f8ff7b3ec192", default-features = false }
-ethrex-crypto = { git = "https://github.com/han0110/ethrex.git", rev = "b9d3ef6924633ade5cc5e8f41b83f8ff7b3ec192", default-features = false }
-ethrex-guest-program = { git = "https://github.com/han0110/ethrex.git", rev = "b9d3ef6924633ade5cc5e8f41b83f8ff7b3ec192", default-features = false }
-ethrex-rlp = { git = "https://github.com/han0110/ethrex.git", rev = "b9d3ef6924633ade5cc5e8f41b83f8ff7b3ec192", default-features = false }
-ethrex-rpc = { git = "https://github.com/han0110/ethrex.git", rev = "b9d3ef6924633ade5cc5e8f41b83f8ff7b3ec192", default-features = false }
-ethrex-vm = { git = "https://github.com/han0110/ethrex.git", rev = "b9d3ef6924633ade5cc5e8f41b83f8ff7b3ec192", default-features = false }
+ethrex-common = { git = "https://github.com/lambdaclass/ethrex.git", rev = "33695e2b3d5bb7ca50cf8b0bde31fd80bd59a5f6", default-features = false }
+ethrex-crypto = { git = "https://github.com/lambdaclass/ethrex.git", rev = "33695e2b3d5bb7ca50cf8b0bde31fd80bd59a5f6", default-features = false }
+ethrex-guest-program = { git = "https://github.com/lambdaclass/ethrex.git", rev = "33695e2b3d5bb7ca50cf8b0bde31fd80bd59a5f6", default-features = false }
+ethrex-rlp = { git = "https://github.com/lambdaclass/ethrex.git", rev = "33695e2b3d5bb7ca50cf8b0bde31fd80bd59a5f6", default-features = false }
+ethrex-rpc = { git = "https://github.com/lambdaclass/ethrex.git", rev = "33695e2b3d5bb7ca50cf8b0bde31fd80bd59a5f6", default-features = false }
+ethrex-vm = { git = "https://github.com/lambdaclass/ethrex.git", rev = "33695e2b3d5bb7ca50cf8b0bde31fd80bd59a5f6", default-features = false }
 
 # ssz
 libssz = { version = "0.2.1", default-features = false, features = ["alloc"] }
 libssz_derive = { package = "libssz-derive", version = "0.2.1" }
-libssz_merkle = { package = "libssz-merkle", version = "0.2.1", default-features = false, features = ["alloc"] }
-libssz_types = { package = "libssz-types", version = "0.2.1", default-features = false, features = ["alloc"] }
+libssz_merkle = { package = "libssz-merkle", version = "0.2.1", default-features = false, features = [
+    "alloc",
+] }
+libssz_types = { package = "libssz-types", version = "0.2.1", default-features = false, features = [
+    "alloc",
+] }
 
 # ere
 ere-dockerized = { git = "https://github.com/eth-act/ere", tag = "v0.6.0" }
