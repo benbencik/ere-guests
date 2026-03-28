@@ -132,7 +132,7 @@ impl StatelessValidatorEthrexGuest {
     ) -> GuestOutput<Self> {
         let block_res = P::cycle_scope("new_payload_request_to_block", || {
             let hasher = EthrexSha256Hasher::new(crypto.as_ref());
-            get_block_from_new_payload_request(input.new_payload_request, &hasher)
+            get_block_from_new_payload_request(input.new_payload_request, &hasher, crypto.as_ref())
         });
         let block = match block_res {
             Ok(block) => block,
