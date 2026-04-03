@@ -5,6 +5,7 @@ members = [
 
     # Guest libs
     "crates/block-encoding-length",
+    "crates/stateless-validator-debug",
     "crates/stateless-validator-common",
     "crates/stateless-validator-ethrex",
     "crates/stateless-validator-reth",
@@ -45,6 +46,7 @@ result_large_err = "allow"
 
 [workspace.dependencies]
 anyhow = { version = "1.0", default-features = false }
+clap = { version = "4.6.0", features = ["derive"] }
 once_cell = { version = "1.21", default-features = false }
 rkyv = { version = "0.8.10", default-features = false }
 serde = { version = "1.0", default-features = false }
