@@ -6384,6 +6384,8 @@ dependencies = [
  "stateless",
  "stateless-validator-ethrex",
  "stateless-validator-reth",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
