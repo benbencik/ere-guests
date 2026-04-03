@@ -17,6 +17,7 @@ use stateless_validator_ethrex::guest::{
 use stateless_validator_reth::guest::{
     StatelessValidatorOutput, StatelessValidatorRethGuest, StatelessValidatorRethInput,
 };
+use tracing_subscriber::EnvFilter;
 
 /// CLI options for the stateless validator debug runner.
 #[derive(Debug, Clone, PartialEq, Eq, Parser)]
@@ -30,6 +31,9 @@ pub struct Cli {
     /// Guest program to run.
     #[arg(long, value_enum)]
     pub guest: GuestKind,
+    /// Warn and continue when fixture success does not match guest output.
+    #[arg(long)]
+    pub allow_success_mismatch: bool,
     /// Path to a fixture file or directory.
     pub path: PathBuf,
 }
@@ -138,6 +142,7 @@ impl Platform for StdoutNoopPlatform {
 
 /// Entry point for the debug runner binary.
 pub fn main_entry() -> anyhow::Result<()> {
+    init_tracing();
     execute(Cli::parse(), |summary| println!("{summary}"))
 }
 
@@ -153,18 +158,47 @@ pub fn execute(cli: Cli, mut on_summary: impl FnMut(&RunSummary)) -> anyhow::Res
             .with_context(|| format!("failed to execute fixture {}", fixture_path.display()))?;
         on_summary(&summary);
 
-        if summary.actual_success != summary.expected_success {
-            bail!(
-                "fixture {} ({}) expected success={}, got success={}",
-                summary.fixture_name,
-                fixture_path.display(),
-                summary.expected_success,
-                summary.actual_success,
-            );
-        }
+        handle_success_mismatch(&summary, &fixture_path, cli.allow_success_mismatch)?;
     }
 
     Ok(())
+}
+
+fn init_tracing() {
+    let _ = tracing_subscriber::fmt()
+        .with_env_filter(
+            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("warn")),
+        )
+        .try_init();
+}
+
+fn handle_success_mismatch(
+    summary: &RunSummary,
+    fixture_path: &Path,
+    allow_success_mismatch: bool,
+) -> anyhow::Result<()> {
+    if summary.actual_success == summary.expected_success {
+        return Ok(());
+    }
+
+    if allow_success_mismatch {
+        tracing::warn!(
+            fixture_name = summary.fixture_name.as_str(),
+            fixture_path = %fixture_path.display(),
+            expected_success = summary.expected_success,
+            actual_success = summary.actual_success,
+            "fixture success mismatch",
+        );
+        return Ok(());
+    }
+
+    bail!(
+        "fixture {} ({}) expected success={}, got success={}",
+        summary.fixture_name,
+        fixture_path.display(),
+        summary.expected_success,
+        summary.actual_success,
+    );
 }
 
 /// Collects fixture file paths from a JSON file or a directory.
