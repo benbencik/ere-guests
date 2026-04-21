@@ -85,12 +85,12 @@ stateless = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a519
 tries = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a51931e8589102f3139d48fdbb3bbe4c1f7", default-features = false }
 
 # ethrex
-ethrex-common = { git = "https://github.com/lambdaclass/ethrex.git", rev = "1a2ec50ae6f99dd91046440f7e54e39cfcc01687", default-features = false }
-ethrex-crypto = { git = "https://github.com/lambdaclass/ethrex.git", rev = "1a2ec50ae6f99dd91046440f7e54e39cfcc01687", default-features = false }
-ethrex-guest-program = { git = "https://github.com/lambdaclass/ethrex.git", rev = "1a2ec50ae6f99dd91046440f7e54e39cfcc01687", default-features = false }
-ethrex-rlp = { git = "https://github.com/lambdaclass/ethrex.git", rev = "1a2ec50ae6f99dd91046440f7e54e39cfcc01687", default-features = false }
-ethrex-rpc = { git = "https://github.com/lambdaclass/ethrex.git", rev = "1a2ec50ae6f99dd91046440f7e54e39cfcc01687", default-features = false }
-ethrex-vm = { git = "https://github.com/lambdaclass/ethrex.git", rev = "1a2ec50ae6f99dd91046440f7e54e39cfcc01687", default-features = false }
+ethrex-common = { git = "https://github.com/jsign/ethrex.git", rev = "28ef2d47899d3f510a9c2d8c666ed1c152d73c51", default-features = false }
+ethrex-crypto = { git = "https://github.com/jsign/ethrex.git", rev = "28ef2d47899d3f510a9c2d8c666ed1c152d73c51", default-features = false }
+ethrex-guest-program = { git = "https://github.com/jsign/ethrex.git", rev = "28ef2d47899d3f510a9c2d8c666ed1c152d73c51", default-features = false }
+ethrex-rlp = { git = "https://github.com/jsign/ethrex.git", rev = "28ef2d47899d3f510a9c2d8c666ed1c152d73c51", default-features = false }
+ethrex-rpc = { git = "https://github.com/jsign/ethrex.git", rev = "28ef2d47899d3f510a9c2d8c666ed1c152d73c51", default-features = false }
+ethrex-vm = { git = "https://github.com/jsign/ethrex.git", rev = "28ef2d47899d3f510a9c2d8c666ed1c152d73c51", default-features = false }
 
 # ssz
 libssz = { version = "0.2.1", default-features = false, features = ["alloc"] }
