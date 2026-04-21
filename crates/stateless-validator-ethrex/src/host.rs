@@ -1,13 +1,13 @@
 //! Implementations for host environment.
 
 use alloy_eips::eip6110::MAINNET_DEPOSIT_CONTRACT_ADDRESS;
-use anyhow::{ensure, Context};
+use anyhow::{Context, ensure};
 use ethrex_common::{
-    types::{
-        block_execution_witness::{self, RpcExecutionWitness},
-        BlobSchedule, ChainConfig, ForkBlobSchedule,
-    },
     H160,
+    types::{
+        BlobSchedule, ChainConfig, ForkBlobSchedule,
+        block_execution_witness::{self, RpcExecutionWitness},
+    },
 };
 use stateless_validator_common::new_payload_request::{ForkName, NewPayloadRequest};
 use stateless_validator_reth::{guest::StatelessValidatorRethInput, host::determine_fork_name};
