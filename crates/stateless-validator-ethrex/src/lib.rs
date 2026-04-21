@@ -11,3 +11,4 @@ pub mod host;
 
 pub mod execution_payload;
 pub mod new_payload_request;
+pub mod wire;

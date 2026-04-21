@@ -921,9 +921,6 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 name = "ere-io"
 version = "0.6.0"
 source = "git+https://github.com/eth-act/ere?tag=v0.6.0#12d266ed44845bf092798fc70c08e69294ef8e7d"
-dependencies = [
- "rkyv",
-]
 
 [[package]]
 name = "ere-platform-risc0"
@@ -973,7 +970,7 @@ dependencies = [
 [[package]]
 name = "ethrex-common"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "bytes",
  "crc32fast",
@@ -1002,7 +999,7 @@ dependencies = [
 [[package]]
 name = "ethrex-crypto"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "ark-bn254",
  "ark-ec",
@@ -1025,7 +1022,7 @@ dependencies = [
 [[package]]
 name = "ethrex-guest-program"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -1046,7 +1043,7 @@ dependencies = [
 [[package]]
 name = "ethrex-l2-common"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -1065,7 +1062,7 @@ dependencies = [
 [[package]]
 name = "ethrex-levm"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "bytes",
  "derive_more 1.0.0",
@@ -1083,7 +1080,7 @@ dependencies = [
 [[package]]
 name = "ethrex-rlp"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -1093,7 +1090,7 @@ dependencies = [
 [[package]]
 name = "ethrex-trie"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "anyhow",
  "bytes",
@@ -1112,7 +1109,7 @@ dependencies = [
 [[package]]
 name = "ethrex-vm"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=28ef2d47899d3f510a9c2d8c666ed1c152d73c51#28ef2d47899d3f510a9c2d8c666ed1c152d73c51"
+source = "git+https://github.com/jsign/ethrex.git?rev=dfa9929e157c1c52e87268a22b159d8a0d86a94e#dfa9929e157c1c52e87268a22b159d8a0d86a94e"
 dependencies = [
  "bytes",
  "derive_more 1.0.0",
@@ -2668,7 +2665,6 @@ dependencies = [
  "libssz-derive",
  "libssz-merkle",
  "libssz-types",
- "rkyv",
  "serde",
  "serde_with",
  "sha2",
@@ -2680,13 +2676,13 @@ version = "0.8.0"
 dependencies = [
  "anyhow",
  "bytes",
- "ere-io",
  "ethrex-common",
  "ethrex-crypto",
  "ethrex-guest-program",
  "ethrex-rlp",
  "ethrex-vm",
  "guest",
+ "libssz",
  "libssz-merkle",
  "rkyv",
  "stateless-validator-common",

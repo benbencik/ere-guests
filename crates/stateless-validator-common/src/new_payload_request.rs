@@ -108,7 +108,7 @@ pub struct ConsolidationRequest {
     pub target_pubkey: Bytes48,
 }
 
-#[derive(Debug, Clone, Default, HashTreeRoot)]
+#[derive(Debug, Clone, Default, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",
@@ -135,7 +135,7 @@ pub enum ForkName {
     Fulu,
 }
 
-#[derive(Debug, Clone, HashTreeRoot)]
+#[derive(Debug, Clone, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",
@@ -166,7 +166,7 @@ pub struct ExecutionPayloadV1 {
     pub transactions: Transactions,
 }
 
-#[derive(Debug, Clone, HashTreeRoot)]
+#[derive(Debug, Clone, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",
@@ -200,7 +200,7 @@ pub struct ExecutionPayloadV2 {
     pub withdrawals: Withdrawals,
 }
 
-#[derive(Debug, Clone, HashTreeRoot)]
+#[derive(Debug, Clone, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",
@@ -236,7 +236,7 @@ pub struct ExecutionPayloadV3 {
     pub excess_blob_gas: u64,
 }
 
-#[derive(Debug, Clone, HashTreeRoot)]
+#[derive(Debug, Clone, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",
@@ -246,7 +246,7 @@ pub struct NewPayloadRequestBellatrix {
     pub execution_payload: ExecutionPayloadV1,
 }
 
-#[derive(Debug, Clone, HashTreeRoot)]
+#[derive(Debug, Clone, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",
@@ -256,7 +256,7 @@ pub struct NewPayloadRequestCapella {
     pub execution_payload: ExecutionPayloadV2,
 }
 
-#[derive(Debug, Clone, HashTreeRoot)]
+#[derive(Debug, Clone, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",
@@ -270,7 +270,7 @@ pub struct NewPayloadRequestDeneb {
     pub parent_beacon_block_root: Hash32,
 }
 
-#[derive(Debug, Clone, HashTreeRoot)]
+#[derive(Debug, Clone, HashTreeRoot, SszEncode, SszDecode)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(
     feature = "rkyv",

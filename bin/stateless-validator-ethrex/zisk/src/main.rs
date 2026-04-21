@@ -13,6 +13,7 @@ fn main() {
     export_cycle_scope_names!(
         read_input,
         deserialize_input,
+        decode_wire_input,
         new_payload_request_root_calculation,
         new_payload_request_to_block,
         misc_preparation,
