@@ -2,7 +2,7 @@
 
 #![no_main]
 
-use ere_platform_zisk::{ZiskPlatform, export_cycle_scope_names, ziskos};
+use ere_platform_zisk::{export_cycle_scope_names, ziskos, ZiskPlatform};
 use stateless_validator_ethrex::guest::{Guest, StatelessValidatorEthrexGuest};
 
 ziskos::entrypoint!(main);
@@ -15,8 +15,6 @@ fn main() {
         deserialize_input,
         decode_wire_input,
         new_payload_request_root_calculation,
-        new_payload_request_to_block,
-        misc_preparation,
         stf,
         serialize_output,
         sha256_output_bytes,

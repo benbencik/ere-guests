@@ -22,7 +22,7 @@ alloy-rlp = { workspace = true, optional = true }
 # ethrex
 ethrex-common.workspace = true
 ethrex-crypto.workspace = true
-ethrex-guest-program.workspace = true
+ethrex-guest-program = { workspace = true, features = ["eip-8025"] }
 ethrex-rlp.workspace = true
 ethrex-rpc = { workspace = true, optional = true }
 ethrex-vm.workspace = true

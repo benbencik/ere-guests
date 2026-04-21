@@ -65,7 +65,7 @@ mod tests {
         ExecutionPayloadV3, NewPayloadRequestElectraFulu,
     };
 
-    use super::{WireError, decode_eip8025, encode_eip8025};
+    use super::{decode_eip8025, encode_eip8025, WireError};
 
     fn sample_request() -> NewPayloadRequestElectraFulu {
         NewPayloadRequestElectraFulu {

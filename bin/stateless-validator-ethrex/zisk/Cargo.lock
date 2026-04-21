@@ -757,6 +757,10 @@ dependencies = [
  "indexmap 2.12.1",
  "lazy_static",
  "libc",
+ "libssz 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
+ "libssz-derive 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
+ "libssz-merkle 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
+ "libssz-types 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
  "lru",
  "once_cell",
  "rayon",
@@ -804,6 +808,8 @@ dependencies = [
  "ethrex-vm",
  "hex",
  "k256",
+ "libssz 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
+ "libssz-merkle 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
  "rkyv",
  "serde",
  "serde_with",
@@ -1285,10 +1291,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "libssz"
+version = "0.2.1"
+source = "git+https://github.com/lambdaclass/libssz?rev=7262a4f#7262a4f17f71fb9108166ba260659bcdd64feb4c"
+dependencies = [
+ "smallvec",
+]
+
+[[package]]
 name = "libssz-derive"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2bb6393ec2e9b660bbcb0d9d74aac7b3c351c7b4440dcc24e9d344e62cf4bf10"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "libssz-derive"
+version = "0.2.1"
+source = "git+https://github.com/lambdaclass/libssz?rev=7262a4f#7262a4f17f71fb9108166ba260659bcdd64feb4c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1301,7 +1325,16 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37acd26ea2fbecfd8af8121780a385284cfb6d6f4c2f77648a9798b5d95a87d8"
 dependencies = [
- "libssz",
+ "libssz 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sha2",
+]
+
+[[package]]
+name = "libssz-merkle"
+version = "0.2.1"
+source = "git+https://github.com/lambdaclass/libssz?rev=7262a4f#7262a4f17f71fb9108166ba260659bcdd64feb4c"
+dependencies = [
+ "libssz 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
  "sha2",
 ]
 
@@ -1311,8 +1344,18 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc4f9486929bd568731a599e9b4914aa44a0b4ecbd38c702151fe97210c323"
 dependencies = [
- "libssz",
- "libssz-merkle",
+ "libssz 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libssz-merkle 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "smallvec",
+]
+
+[[package]]
+name = "libssz-types"
+version = "0.2.1"
+source = "git+https://github.com/lambdaclass/libssz?rev=7262a4f#7262a4f17f71fb9108166ba260659bcdd64feb4c"
+dependencies = [
+ "libssz 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
+ "libssz-merkle 0.2.1 (git+https://github.com/lambdaclass/libssz?rev=7262a4f)",
  "smallvec",
 ]
 
@@ -2060,10 +2103,10 @@ name = "stateless-validator-common"
 version = "0.8.0"
 dependencies = [
  "anyhow",
- "libssz",
- "libssz-derive",
- "libssz-merkle",
- "libssz-types",
+ "libssz 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libssz-derive 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libssz-merkle 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libssz-types 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "serde_with",
  "sha2",
@@ -2081,8 +2124,8 @@ dependencies = [
  "ethrex-rlp",
  "ethrex-vm",
  "guest",
- "libssz",
- "libssz-merkle",
+ "libssz 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libssz-merkle 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rkyv",
  "stateless-validator-common",
 ]
