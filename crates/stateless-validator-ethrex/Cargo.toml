@@ -11,7 +11,6 @@ workspace = true
 [dependencies]
 anyhow.workspace = true
 rkyv.workspace = true
-bytes.workspace = true
 
 # alloy
 alloy-consensus = { workspace = true, optional = true }
@@ -23,9 +22,7 @@ alloy-rlp = { workspace = true, optional = true }
 ethrex-common.workspace = true
 ethrex-crypto.workspace = true
 ethrex-guest-program = { workspace = true, features = ["eip-8025"] }
-ethrex-rlp.workspace = true
 ethrex-rpc = { workspace = true, optional = true }
-ethrex-vm.workspace = true
 
 # ssz
 libssz.workspace = true

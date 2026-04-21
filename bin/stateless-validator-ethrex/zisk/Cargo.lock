@@ -2117,12 +2117,9 @@ name = "stateless-validator-ethrex"
 version = "0.8.0"
 dependencies = [
  "anyhow",
- "bytes",
  "ethrex-common",
  "ethrex-crypto",
  "ethrex-guest-program",
- "ethrex-rlp",
- "ethrex-vm",
  "guest",
  "libssz 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "libssz-merkle 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
