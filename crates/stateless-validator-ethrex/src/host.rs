@@ -160,8 +160,9 @@ fn get_blob_schedule(
         .blob_schedule
         .get(name)
         .map(|s| ForkBlobSchedule {
-            // Reth and Ethrex have some mismatched data type representations. Reth uses bigger ints.
-            // Downcasting should never cause an overflow, but let's be safe and panic if this ever happens.
+            // Reth and Ethrex have some mismatched data type representations. Reth uses bigger
+            // ints. Downcasting should never cause an overflow, but let's be safe and
+            // panic if this ever happens.
             base_fee_update_fraction: s.update_fraction.try_into().unwrap(),
             target: s.target_blob_count.try_into().unwrap(),
             max: s.max_blob_count.try_into().unwrap(),
