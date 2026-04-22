@@ -86,7 +86,7 @@ impl StatelessValidatorEthrexGuest {
         input_bytes: &[u8],
         crypto: Arc<dyn Crypto>,
     ) -> GuestOutput<Self> {
-        let output = P::cycle_scope("stf", || {
+        let output = P::cycle_scope("run_validation", || {
             execution_program_eip8025_bytes(input_bytes, crypto)
                 .unwrap_or_else(|err| panic!("invalid EIP-8025 input: {err}"))
         });
