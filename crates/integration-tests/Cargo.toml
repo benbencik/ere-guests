@@ -51,9 +51,6 @@ reth-evm-ethereum.workspace = true
 ere-dockerized.workspace = true
 
 # local
-block-encoding-length = { workspace = true, default-features = true, features = [
-    "host",
-] }
 stateless-validator-common = { workspace = true, default-features = true, features = [
     "host",
 ] }

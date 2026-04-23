@@ -21,7 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         guest:
-          - block-encoding-length
           - empty
           - panic
           - stateless-validator-ethrex
