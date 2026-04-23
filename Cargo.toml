@@ -85,13 +85,13 @@ reth-payload-validator = { git = "https://github.com/paradigmxyz/reth", tag = "v
 stateless = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a51931e8589102f3139d48fdbb3bbe4c1f7", default-features = false }
 tries = { git = "https://github.com/paradigmxyz/stateless", rev = "ed189a51931e8589102f3139d48fdbb3bbe4c1f7", default-features = false }
 
-# ethrex
-ethrex-common = { git = "https://github.com/jsign/ethrex.git", rev = "a485d9717e9ce5da6901361b9a04c8026d62fa68", default-features = false }
-ethrex-crypto = { git = "https://github.com/jsign/ethrex.git", rev = "a485d9717e9ce5da6901361b9a04c8026d62fa68", default-features = false }
-ethrex-guest-program = { git = "https://github.com/jsign/ethrex.git", rev = "a485d9717e9ce5da6901361b9a04c8026d62fa68", default-features = false }
-ethrex-rlp = { git = "https://github.com/jsign/ethrex.git", rev = "a485d9717e9ce5da6901361b9a04c8026d62fa68", default-features = false }
-ethrex-rpc = { git = "https://github.com/jsign/ethrex.git", rev = "a485d9717e9ce5da6901361b9a04c8026d62fa68", default-features = false }
-ethrex-vm = { git = "https://github.com/jsign/ethrex.git", rev = "a485d9717e9ce5da6901361b9a04c8026d62fa68", default-features = false }
+# ethrex (local checkout)
+ethrex-common = { path = "../ethrex/crates/common", default-features = false }
+ethrex-crypto = { path = "../ethrex/crates/common/crypto", default-features = false }
+ethrex-guest-program = { path = "../ethrex/crates/guest-program", default-features = false }
+ethrex-rlp = { path = "../ethrex/crates/common/rlp", default-features = false }
+ethrex-rpc = { path = "../ethrex/crates/networking/rpc", default-features = false }
+ethrex-vm = { path = "../ethrex/crates/vm", default-features = false }
 
 # ssz
 libssz = { version = "0.2.1", default-features = false, features = ["alloc"] }
@@ -104,6 +104,7 @@ libssz_types = { package = "libssz-types", version = "0.2.1", default-features =
 ] }
 
 # ere
+ere-platform-trait = { git = "https://github.com/eth-act/ere", tag = "v0.6.0" }
 ere-codec = { git = "https://github.com/eth-act/ere", tag = "v0.8.0" }
 ere-platform-core = { git = "https://github.com/eth-act/ere", tag = "v0.8.0" }
 ere-prover-core = { git = "https://github.com/eth-act/ere", tag = "v0.8.0" }

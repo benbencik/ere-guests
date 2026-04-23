@@ -40,13 +40,10 @@ pub fn build_eip8025_input(
 
     let execution_witness =
         from_reth_witness_to_ethrex_witness(stateless_input.block.number, stateless_input)?;
-    let witness_bytes = rkyv::to_bytes::<rkyv::rancor::Error>(&execution_witness)
-        .map_err(|err| anyhow::anyhow!("failed to rkyv-encode execution witness: {err}"))?;
 
-    Ok(crate::wire::encode_eip8025(
-        &new_payload_request,
-        witness_bytes.as_ref(),
-    ))
+    crate::wire::encode_eip8025(&new_payload_request, &execution_witness).map_err(|err| {
+        anyhow::anyhow!("failed to SSZ-encode EIP-8025 input: {err}")
+    })
 }
 
 fn from_reth_witness_to_ethrex_witness(
