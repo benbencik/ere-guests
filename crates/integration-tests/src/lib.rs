@@ -5,6 +5,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use alloy_consensus::{Block, BlockBody, Header};
+use alloy_eips::eip4895::Withdrawals;
+use alloy_genesis::ChainConfig;
 use ere_dockerized::{
     Compiler, CompilerKind, DockerizedCompiler, DockerizedzkVM, DockerizedzkVMConfig, Input,
     ProverResource, codec::Encode, zkVMKind,
@@ -12,7 +15,11 @@ use ere_dockerized::{
 use flate2::read::GzDecoder;
 use guest::{Guest, GuestInput, GuestOutput, Platform};
 use rayon::prelude::*;
+use reth_ethereum_primitives::TransactionSigned;
+use serde::Deserialize;
+use serde_with::serde_as;
 use sha2::{Digest, Sha256};
+use stateless::{ExecutionWitness, StatelessInput};
 use tar::Archive;
 use tracing::info;
 use tracing_subscriber::EnvFilter;
@@ -60,10 +67,92 @@ pub fn get_fixtures() -> Vec<StatelessValidatorFixture> {
         .unwrap()
         .map(|file| {
             let bytes = fs::read(file.unwrap().path()).unwrap();
-            let fixture: StatelessValidatorFixture = serde_json::from_slice(&bytes).unwrap();
+            let fixture: StatelessValidatorFixture =
+                deserialize_stateless_validator_fixture(&bytes).unwrap();
             fixture
         })
         .collect()
+}
+
+fn deserialize_stateless_validator_fixture(
+    bytes: &[u8],
+) -> serde_json::Result<StatelessValidatorFixture> {
+    serde_json::from_slice(bytes).or_else(|_| {
+        serde_json::from_slice::<CompatStatelessValidatorFixture>(bytes).map(Into::into)
+    })
+}
+
+#[derive(Debug, Deserialize)]
+struct CompatStatelessValidatorFixture {
+    name: String,
+    stateless_input: CompatStatelessInput,
+    success: bool,
+}
+
+impl From<CompatStatelessValidatorFixture> for StatelessValidatorFixture {
+    fn from(value: CompatStatelessValidatorFixture) -> Self {
+        Self {
+            name: value.name,
+            stateless_input: value.stateless_input.into(),
+            success: value.success,
+        }
+    }
+}
+
+#[serde_as]
+#[derive(Debug, Deserialize)]
+struct CompatStatelessInput {
+    block: CompatBlock,
+    witness: ExecutionWitness,
+    #[serde_as(as = "alloy_genesis::serde_bincode_compat::ChainConfig<'_>")]
+    chain_config: ChainConfig,
+}
+
+impl From<CompatStatelessInput> for StatelessInput {
+    fn from(value: CompatStatelessInput) -> Self {
+        Self {
+            block: value.block.into(),
+            witness: value.witness,
+            chain_config: value.chain_config,
+        }
+    }
+}
+
+#[serde_as]
+#[derive(Debug, Deserialize)]
+struct CompatBlock {
+    #[serde_as(as = "alloy_consensus::serde_bincode_compat::Header")]
+    header: Header,
+    body: CompatBlockBody,
+}
+
+impl From<CompatBlock> for Block<TransactionSigned> {
+    fn from(value: CompatBlock) -> Self {
+        Self {
+            header: value.header,
+            body: value.body.into(),
+        }
+    }
+}
+
+#[serde_as]
+#[derive(Debug, Deserialize)]
+struct CompatBlockBody {
+    #[serde_as(as = "Vec<alloy_consensus::serde_bincode_compat::EthereumTxEnvelope<'_>>")]
+    transactions: Vec<TransactionSigned>,
+    #[serde_as(as = "Vec<alloy_consensus::serde_bincode_compat::Header>")]
+    ommers: Vec<Header>,
+    withdrawals: Option<Withdrawals>,
+}
+
+impl From<CompatBlockBody> for BlockBody<TransactionSigned> {
+    fn from(value: CompatBlockBody) -> Self {
+        Self {
+            transactions: value.transactions,
+            ommers: value.ommers,
+            withdrawals: value.withdrawals,
+        }
+    }
 }
 
 /// Compiles guest program and initialize zkVM.

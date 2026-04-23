@@ -3412,6 +3412,9 @@ dependencies = [
 name = "integration-tests"
 version = "0.9.0"
 dependencies = [
+ "alloy-consensus",
+ "alloy-eips 2.0.1",
+ "alloy-genesis",
  "alloy-primitives",
  "block-encoding-length",
  "ere-dockerized",
@@ -3419,9 +3422,11 @@ dependencies = [
  "guest",
  "rayon",
  "reth-chainspec",
+ "reth-ethereum-primitives",
  "reth-evm-ethereum",
  "serde",
  "serde_json",
+ "serde_with",
  "sha2",
  "stateless",
  "stateless-validator-common",

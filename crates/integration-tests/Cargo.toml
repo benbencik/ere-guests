@@ -23,7 +23,17 @@ serde_json.workspace = true
 stateless.workspace = true
 
 # alloy
+alloy-consensus = { workspace = true, features = [
+    "serde",
+    "serde-bincode-compat",
+] }
+alloy-eips.workspace = true
+alloy-genesis.workspace = true
 alloy-primitives.workspace = true
+serde_with.workspace = true
+
+# reth
+reth-ethereum-primitives = { workspace = true, features = ["serde"] }
 
 # ere
 ere-dockerized.workspace = true
