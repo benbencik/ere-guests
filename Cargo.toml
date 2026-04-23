@@ -84,7 +84,7 @@ alloy-trie = { version = "0.9", default-features = false }
 reth-chainspec = { git = "https://github.com/paradigmxyz/reth", tag = "v2.1.0", default-features = false }
 reth-ethereum-payload-builder = { git = "https://github.com/paradigmxyz/reth", tag = "v2.1.0", default-features = false }
 reth-ethereum-primitives = { git = "https://github.com/paradigmxyz/reth", tag = "v2.1.0", default-features = false }
-reth-evm-ethereum = { git = "https://github.com/paradigmxyz/reth", tag = "v2.1.0" }
+reth-evm-ethereum = { git = "https://github.com/paradigmxyz/reth", tag = "v2.1.0", default-features = false }
 reth-primitives-traits = { version = "0.3.0", default-features = false }
 reth-payload-validator = { git = "https://github.com/paradigmxyz/reth", tag = "v2.1.0", default-features = false }
 stateless = { git = "https://github.com/paradigmxyz/stateless", rev = "e5480e71a8031641ff471cad9dc482a7a14b32d5", default-features = false }
