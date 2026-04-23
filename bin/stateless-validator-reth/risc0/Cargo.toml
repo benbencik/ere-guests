@@ -11,7 +11,7 @@ alloy-primitives = { version = "1.5.0", default-features = false, features = [
     "map-foldhash",
     "tiny-keccak",
 ] }
-revm = { version = "34.0.0", default-features = false, features = [
+revm = { version = "38.0.0", default-features = false, features = [
     "std",
     "c-kzg",
     "blst",
