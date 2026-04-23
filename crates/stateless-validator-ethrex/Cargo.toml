@@ -27,7 +27,9 @@ ethrex-rpc = { workspace = true, optional = true }
 
 # ssz
 libssz.workspace = true
+libssz_derive.workspace = true
 libssz_merkle.workspace = true
+libssz_types.workspace = true
 
 # reth
 stateless = { workspace = true, optional = true }
