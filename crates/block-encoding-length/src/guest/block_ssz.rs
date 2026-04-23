@@ -486,7 +486,7 @@ fn tx_kind_to_address(kind: TxKind) -> Address20 {
 mod tests {
     use libssz::{SszDecode, SszEncode};
 
-    use crate::guest::{BincodeBlock, block_ssz::Block};
+    use crate::guest::{RethBlock, block_ssz::Block};
 
     #[test]
     fn test_block_ssz_encode_decode() {
@@ -542,7 +542,7 @@ mod tests {
             }
         }"#;
 
-        let bincode_block: BincodeBlock =
+        let bincode_block: RethBlock =
             serde_json::from_str(block_json).expect("Failed to parse test block JSON");
         let ssz_block: Block = bincode_block.0.into();
 
@@ -604,7 +604,7 @@ mod tests {
             }
         }"#;
 
-        let bincode_block: BincodeBlock =
+        let bincode_block: RethBlock =
             serde_json::from_str(block_json).expect("Failed to parse test block JSON");
         let ssz_block: Block = bincode_block.0.into();
 

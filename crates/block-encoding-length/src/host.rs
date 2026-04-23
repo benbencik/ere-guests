@@ -3,7 +3,7 @@
 use ere_prover_core::{Input, codec::Encode};
 use reth_ethereum_primitives::Block;
 
-use crate::guest::{BincodeBlock, BlockEncodingFormat, BlockEncodingLengthInput};
+use crate::guest::{BlockEncodingFormat, BlockEncodingLengthInput, RethBlock};
 
 impl BlockEncodingLengthInput {
     /// Construct [`BlockEncodingLengthInput`] given block, loop count and the
@@ -14,7 +14,7 @@ impl BlockEncodingLengthInput {
         format: BlockEncodingFormat,
     ) -> anyhow::Result<Self> {
         Ok(Self {
-            block: BincodeBlock(block.clone()),
+            block: RethBlock(block.clone()),
             loop_count,
             format,
         })

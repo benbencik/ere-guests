@@ -18,9 +18,10 @@ serde_with.workspace = true
 alloy-consensus.workspace = true
 alloy-eips.workspace = true
 alloy-primitives.workspace = true
+alloy-rlp.workspace = true
 
 # reth
-reth-ethereum-primitives = { workspace = true, features = ["serde", "serde-bincode-compat"] }
+reth-ethereum-primitives = { workspace = true, features = ["serde"] }
 reth-primitives-traits.workspace = true
 
 # ssz
