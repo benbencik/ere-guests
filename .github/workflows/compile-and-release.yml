@@ -65,6 +65,7 @@ jobs:
       - name: Compile guest
         run: |
           docker run \
+            -e OPENVM_RUST_TOOLCHAIN=nightly-2025-10-30 \
             -e RUST_LOG=info \
             -v $PWD:/ere-guests \
             -v $PWD/output:/output \
