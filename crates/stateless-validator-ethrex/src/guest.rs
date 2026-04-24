@@ -3,7 +3,7 @@
 use alloc::{sync::Arc, vec::Vec};
 
 use ethrex_crypto::Crypto;
-use ethrex_guest_program::execution::execution_program_eip8025_bytes;
+use ethrex_guest_program::execution::execution_program;
 
 #[rustfmt::skip]
 pub use {
@@ -30,7 +30,7 @@ impl StatelessValidatorEthrexGuest {
         crypto: Arc<dyn Crypto>,
     ) -> GuestOutput<Self> {
         let output = P::cycle_scope("run_validation", || {
-            execution_program_eip8025_bytes(input_bytes, crypto)
+            execution_program(input_bytes, crypto)
                 .unwrap_or_else(|err| panic!("invalid EIP-8025 input: {err}"))
         });
 

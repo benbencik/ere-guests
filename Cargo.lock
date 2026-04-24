@@ -2111,7 +2111,7 @@ dependencies = [
 [[package]]
 name = "ethrex-blockchain"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "bytes",
  "crossbeam",
@@ -2133,7 +2133,7 @@ dependencies = [
 [[package]]
 name = "ethrex-common"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "bytes",
  "crc32fast",
@@ -2167,7 +2167,7 @@ dependencies = [
 [[package]]
 name = "ethrex-crypto"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "ark-bn254",
  "ark-ec",
@@ -2192,7 +2192,7 @@ dependencies = [
 [[package]]
 name = "ethrex-guest-program"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -2216,7 +2216,7 @@ dependencies = [
 [[package]]
 name = "ethrex-l2-common"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -2235,7 +2235,7 @@ dependencies = [
 [[package]]
 name = "ethrex-levm"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "bytes",
  "derive_more 1.0.0",
@@ -2253,7 +2253,7 @@ dependencies = [
 [[package]]
 name = "ethrex-metrics"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "axum",
  "ethrex-common",
@@ -2269,7 +2269,7 @@ dependencies = [
 [[package]]
 name = "ethrex-p2p"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "aes",
  "aes-gcm",
@@ -2311,7 +2311,7 @@ dependencies = [
 [[package]]
 name = "ethrex-rlp"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "bytes",
  "ethereum-types",
@@ -2321,7 +2321,7 @@ dependencies = [
 [[package]]
 name = "ethrex-rpc"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "axum",
  "axum-extra",
@@ -2360,7 +2360,7 @@ dependencies = [
 [[package]]
 name = "ethrex-storage"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "anyhow",
  "bytes",
@@ -2382,7 +2382,7 @@ dependencies = [
 [[package]]
 name = "ethrex-trie"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "anyhow",
  "bytes",
@@ -2401,7 +2401,7 @@ dependencies = [
 [[package]]
 name = "ethrex-vm"
 version = "9.0.0"
-source = "git+https://github.com/jsign/ethrex.git?rev=a485d9717e9ce5da6901361b9a04c8026d62fa68#a485d9717e9ce5da6901361b9a04c8026d62fa68"
+source = "git+https://github.com/jsign/ethrex.git?rev=0058d278302e4b44616cecaf2560a52bd5f3b5af#0058d278302e4b44616cecaf2560a52bd5f3b5af"
 dependencies = [
  "bytes",
  "derive_more 1.0.0",
