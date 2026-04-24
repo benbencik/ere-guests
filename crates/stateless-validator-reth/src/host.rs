@@ -290,7 +290,7 @@ fn get_requests(
     };
     let chain_spec: Arc<ChainSpec> = Arc::new(genesis.into());
     let evm_config = EthEvmConfig::new(chain_spec.clone());
-    let (_, out) = stateless_validation_with_trie::<SparseState, _, _>(
+    let out = stateless_validation_with_trie::<SparseState, _, _>(
         stateless_input.block.clone(),
         signers.to_owned(),
         stateless_input.witness.clone(),
@@ -302,5 +302,5 @@ fn get_requests(
     // This clone doesn't make much sense, but rust-analyzer can't figure out
     // why isn't required and mark it as error otherwise. Since this is only used
     // in the host side, we can afford the extra clone.
-    Ok(out.requests.clone())
+    Ok(out.execution_output.requests.clone())
 }
