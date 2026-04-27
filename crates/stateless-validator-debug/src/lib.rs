@@ -1,17 +1,22 @@
 //! Host-side debug runner for stateless validator guest fixtures.
 
+mod fixtures;
+
 use std::{
-    fs,
     io::{self, Write},
     path::{Path, PathBuf},
 };
 
 use anyhow::{Context, bail};
 use clap::{Parser, ValueEnum};
+pub use fixtures::{
+    CanonicalInput, FixtureInput, StatelessValidatorFixture, collect_fixture_paths, load_fixtures,
+};
 use guest::{Guest, Platform};
-use serde::Deserialize;
-use stateless::StatelessInput;
-use stateless_validator_ethrex::{guest::StatelessValidatorEthrexGuest, host::build_eip8025_input};
+use stateless_validator_ethrex::{
+    guest::StatelessValidatorEthrexGuest,
+    host::{Eip8025InputSource, build_eip8025_input},
+};
 use stateless_validator_reth::guest::{
     StatelessValidatorOutput, StatelessValidatorRethGuest, StatelessValidatorRethInput,
 };
@@ -48,13 +53,27 @@ pub enum GuestKind {
 impl GuestKind {
     fn run_fixture(self, fixture: &StatelessValidatorFixture) -> anyhow::Result<RunSummary> {
         let output: StatelessValidatorOutput = match self {
-            Self::Reth => {
-                let input =
-                    StatelessValidatorRethInput::new(&fixture.stateless_input, fixture.success)?;
-                StatelessValidatorRethGuest::compute::<StdoutNoopPlatform>(input)
-            }
+            Self::Reth => match &fixture.input {
+                FixtureInput::Legacy(stateless_input) => {
+                    let input = StatelessValidatorRethInput::new(stateless_input, fixture.success)?;
+                    StatelessValidatorRethGuest::compute::<StdoutNoopPlatform>(input)
+                }
+                FixtureInput::Canonical(_) => {
+                    bail!("reth guest does not yet accept EEST canonical SSZ input")
+                }
+            },
             Self::Ethrex => {
-                let input = build_eip8025_input(&fixture.stateless_input, fixture.success)?;
+                let source = match &fixture.input {
+                    FixtureInput::Legacy(stateless_input) => Eip8025InputSource::Legacy {
+                        stateless_input,
+                        valid_block: fixture.success,
+                    },
+                    FixtureInput::Canonical(canonical) => Eip8025InputSource::Canonical {
+                        ssz_input: &canonical.ssz_bytes,
+                        chain_config: &canonical.chain_config,
+                    },
+                };
+                let input = build_eip8025_input(source)?;
                 StatelessValidatorEthrexGuest::compute::<StdoutNoopPlatform>(input)
             }
         };
@@ -74,17 +93,6 @@ impl GuestKind {
             Self::Ethrex => "ethrex",
         }
     }
-}
-
-/// Deserialized JSON fixture supported by the debug runner.
-#[derive(Debug, Clone, Deserialize)]
-pub struct StatelessValidatorFixture {
-    /// Human-readable fixture identifier.
-    pub name: String,
-    /// Stateless input consumed by the host-side input builders.
-    pub stateless_input: StatelessInput,
-    /// Expected validation outcome.
-    pub success: bool,
 }
 
 /// Summary of one guest execution.
@@ -148,14 +156,16 @@ pub fn execute(cli: Cli, mut on_summary: impl FnMut(&RunSummary)) -> anyhow::Res
     let fixture_paths = collect_fixture_paths(&cli.path)?;
 
     for fixture_path in fixture_paths {
-        let fixture = load_fixture(&fixture_path)?;
-        let summary = cli
-            .guest
-            .run_fixture(&fixture)
-            .with_context(|| format!("failed to execute fixture {}", fixture_path.display()))?;
-        on_summary(&summary);
+        let fixtures = load_fixtures(&fixture_path)?;
+        for fixture in &fixtures {
+            let summary = cli
+                .guest
+                .run_fixture(fixture)
+                .with_context(|| format!("failed to execute fixture {}", fixture_path.display()))?;
+            on_summary(&summary);
 
-        handle_success_mismatch(&summary, &fixture_path, cli.allow_success_mismatch)?;
+            handle_success_mismatch(&summary, &fixture_path, cli.allow_success_mismatch)?;
+        }
     }
 
     Ok(())
@@ -196,54 +206,6 @@ fn handle_success_mismatch(
         summary.expected_success,
         summary.actual_success,
     );
-}
-
-/// Collects fixture file paths from a JSON file or a directory.
-pub fn collect_fixture_paths(path: &Path) -> anyhow::Result<Vec<PathBuf>> {
-    if path.is_file() {
-        if path.extension().and_then(|ext| ext.to_str()) != Some("json") {
-            bail!(
-                "fixture file {} must have a .json extension",
-                path.display()
-            );
-        }
-        return Ok(vec![path.to_path_buf()]);
-    }
-
-    if !path.exists() {
-        bail!("path {} does not exist", path.display());
-    }
-
-    if !path.is_dir() {
-        bail!("path {} must be a file or directory", path.display());
-    }
-
-    let mut paths = fs::read_dir(path)
-        .with_context(|| format!("failed to read fixture directory {}", path.display()))?
-        .filter_map(|entry| {
-            let entry = entry.ok()?;
-            let entry_path = entry.path();
-            let file_type = entry.file_type().ok()?;
-            (file_type.is_file()
-                && entry_path.extension().and_then(|ext| ext.to_str()) == Some("json"))
-            .then_some(entry_path)
-        })
-        .collect::<Vec<_>>();
-    paths.sort();
-
-    if paths.is_empty() {
-        bail!("no JSON fixtures found in {}", path.display());
-    }
-
-    Ok(paths)
-}
-
-/// Loads one JSON fixture from disk.
-pub fn load_fixture(path: &Path) -> anyhow::Result<StatelessValidatorFixture> {
-    let bytes =
-        fs::read(path).with_context(|| format!("failed to read fixture {}", path.display()))?;
-    serde_json::from_slice(&bytes)
-        .with_context(|| format!("failed to deserialize fixture {}", path.display()))
 }
 
 fn encode_hex(bytes: &[u8]) -> String {
