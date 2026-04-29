@@ -138,17 +138,8 @@ pub fn collect_fixture_paths(path: &Path) -> anyhow::Result<Vec<PathBuf>> {
         bail!("path {} must be a file or directory", path.display());
     }
 
-    let mut paths = fs::read_dir(path)
-        .with_context(|| format!("failed to read fixture directory {}", path.display()))?
-        .filter_map(|entry| {
-            let entry = entry.ok()?;
-            let entry_path = entry.path();
-            let file_type = entry.file_type().ok()?;
-            (file_type.is_file()
-                && entry_path.extension().and_then(|ext| ext.to_str()) == Some("json"))
-            .then_some(entry_path)
-        })
-        .collect::<Vec<_>>();
+    let mut paths = Vec::new();
+    collect_json_fixture_paths(path, &mut paths)?;
     paths.sort();
 
     if paths.is_empty() {
@@ -156,6 +147,29 @@ pub fn collect_fixture_paths(path: &Path) -> anyhow::Result<Vec<PathBuf>> {
     }
 
     Ok(paths)
+}
+
+fn collect_json_fixture_paths(path: &Path, paths: &mut Vec<PathBuf>) -> anyhow::Result<()> {
+    let entries = fs::read_dir(path)
+        .with_context(|| format!("failed to read fixture directory {}", path.display()))?;
+
+    for entry in entries {
+        let entry = entry.with_context(|| format!("failed to read entry in {}", path.display()))?;
+        let entry_path = entry.path();
+        let file_type = entry
+            .file_type()
+            .with_context(|| format!("failed to inspect path {}", entry_path.display()))?;
+
+        if file_type.is_dir() {
+            collect_json_fixture_paths(&entry_path, paths)?;
+        } else if file_type.is_file()
+            && entry_path.extension().and_then(|ext| ext.to_str()) == Some("json")
+        {
+            paths.push(entry_path);
+        }
+    }
+
+    Ok(())
 }
 
 /// Loads one or more fixtures from a JSON file. Supports two layouts:
