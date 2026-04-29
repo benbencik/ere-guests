@@ -23,6 +23,8 @@ pub struct StatelessValidatorFixture {
     pub input: FixtureInput,
     /// Expected validation outcome.
     pub success: bool,
+    /// Expected serialized guest output, when provided by canonical fixtures.
+    pub expected_output_bytes: Option<Vec<u8>>,
 }
 
 /// Either the legacy in-memory `StatelessInput` (existing JSON layout) or
@@ -115,6 +117,8 @@ struct EestStatelessBlock {
     #[serde(default)]
     stateless_input_bytes: Option<alloy_primitives::Bytes>,
     #[serde(default)]
+    stateless_output_bytes: Option<alloy_primitives::Bytes>,
+    #[serde(default)]
     expect_exception: Option<String>,
 }
 
@@ -191,6 +195,7 @@ pub fn load_fixtures(path: &Path) -> anyhow::Result<Vec<StatelessValidatorFixtur
             name: wire.name,
             input: FixtureInput::Legacy(wire.stateless_input),
             success: wire.success,
+            expected_output_bytes: None,
         }]);
     }
 
@@ -230,6 +235,10 @@ pub fn load_fixtures(path: &Path) -> anyhow::Result<Vec<StatelessValidatorFixtur
                     chain_config: chain_config.clone(),
                 }),
                 success: block.expect_exception.is_none(),
+                expected_output_bytes: block
+                    .stateless_output_bytes
+                    .as_ref()
+                    .map(|bytes| bytes.to_vec()),
             });
         }
     }

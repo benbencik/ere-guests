@@ -25,6 +25,7 @@ fn test_execution(zkvm_kind: zkVMKind) {
             get_stateless_validator_output(
                 fixture.stateless_input.block.hash_slow(),
                 fixture.success,
+                fixture.stateless_input.chain_config.chain_id,
             )
         };
         assert_eq!(output.successful_block_validation, fixture.success);

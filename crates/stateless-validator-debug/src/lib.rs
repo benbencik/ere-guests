@@ -34,9 +34,9 @@ pub struct Cli {
     /// Guest program to run.
     #[arg(long, value_enum)]
     pub guest: GuestKind,
-    /// Warn and continue when fixture success does not match guest output.
+    /// Warn and continue when fixture expectations do not match guest output.
     #[arg(long)]
-    pub allow_success_mismatch: bool,
+    pub allow_fixture_mismatch: bool,
     /// Path to a fixture file or directory.
     pub path: PathBuf,
 }
@@ -78,12 +78,16 @@ impl GuestKind {
             }
         };
 
+        let actual_output_bytes = output.serialize().to_vec();
+
         Ok(RunSummary {
             fixture_name: fixture.name.clone(),
             guest: self,
             expected_success: fixture.success,
             actual_success: output.successful_block_validation,
             new_payload_request_root: output.new_payload_request_root,
+            expected_output_bytes: fixture.expected_output_bytes.clone(),
+            actual_output_bytes,
         })
     }
 
@@ -108,6 +112,10 @@ pub struct RunSummary {
     pub actual_success: bool,
     /// The resulting new payload request root.
     pub new_payload_request_root: [u8; 32],
+    /// Expected serialized guest output from canonical fixtures, if available.
+    pub expected_output_bytes: Option<Vec<u8>>,
+    /// Actual serialized guest output.
+    pub actual_output_bytes: Vec<u8>,
 }
 
 impl std::fmt::Display for RunSummary {
@@ -164,7 +172,7 @@ pub fn execute(cli: Cli, mut on_summary: impl FnMut(&RunSummary)) -> anyhow::Res
                 .with_context(|| format!("failed to execute fixture {}", fixture_path.display()))?;
             on_summary(&summary);
 
-            handle_success_mismatch(&summary, &fixture_path, cli.allow_success_mismatch)?;
+            handle_fixture_mismatch(&summary, &fixture_path, cli.allow_fixture_mismatch)?;
         }
     }
 
@@ -179,16 +187,25 @@ fn init_tracing() {
         .try_init();
 }
 
-fn handle_success_mismatch(
+fn handle_fixture_mismatch(
     summary: &RunSummary,
     fixture_path: &Path,
-    allow_success_mismatch: bool,
+    allow_fixture_mismatch: bool,
 ) -> anyhow::Result<()> {
+    if let Some(expected_output_bytes) = &summary.expected_output_bytes {
+        return handle_output_mismatch(
+            summary,
+            fixture_path,
+            expected_output_bytes,
+            allow_fixture_mismatch,
+        );
+    }
+
     if summary.actual_success == summary.expected_success {
         return Ok(());
     }
 
-    if allow_success_mismatch {
+    if allow_fixture_mismatch {
         tracing::warn!(
             fixture_name = summary.fixture_name.as_str(),
             fixture_path = %fixture_path.display(),
@@ -205,6 +222,40 @@ fn handle_success_mismatch(
         fixture_path.display(),
         summary.expected_success,
         summary.actual_success,
+    );
+}
+
+fn handle_output_mismatch(
+    summary: &RunSummary,
+    fixture_path: &Path,
+    expected_output_bytes: &[u8],
+    allow_fixture_mismatch: bool,
+) -> anyhow::Result<()> {
+    if summary.actual_output_bytes == expected_output_bytes {
+        return Ok(());
+    }
+
+    if allow_fixture_mismatch {
+        tracing::warn!(
+            fixture_name = summary.fixture_name.as_str(),
+            fixture_path = %fixture_path.display(),
+            expected_len = expected_output_bytes.len(),
+            actual_len = summary.actual_output_bytes.len(),
+            expected_output = %format!("0x{}", encode_hex(expected_output_bytes)),
+            actual_output = %format!("0x{}", encode_hex(&summary.actual_output_bytes)),
+            "fixture output mismatch",
+        );
+        return Ok(());
+    }
+
+    bail!(
+        "fixture {} ({}) expected output bytes 0x{} (len={}), got 0x{} (len={})",
+        summary.fixture_name,
+        fixture_path.display(),
+        encode_hex(expected_output_bytes),
+        expected_output_bytes.len(),
+        encode_hex(&summary.actual_output_bytes),
+        summary.actual_output_bytes.len(),
     );
 }
 
