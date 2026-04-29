@@ -216,12 +216,6 @@ pub fn load_fixtures(path: &Path) -> anyhow::Result<Vec<StatelessValidatorFixtur
                 case.network,
             )
         })?;
-        // EEST puts `expectException` on the last block when the test is
-        // expected to fail — mirrors `eest_generator::gen_fixture`.
-        let success = case
-            .blocks
-            .last()
-            .is_some_and(|b| b.expect_exception.is_none());
         for (idx, block) in case.blocks.iter().enumerate() {
             let Some(bytes) = &block.stateless_input_bytes else {
                 continue;
@@ -235,7 +229,7 @@ pub fn load_fixtures(path: &Path) -> anyhow::Result<Vec<StatelessValidatorFixtur
                     ssz_bytes: bytes.to_vec(),
                     chain_config: chain_config.clone(),
                 }),
-                success,
+                success: block.expect_exception.is_none(),
             });
         }
     }
