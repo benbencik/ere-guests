@@ -2093,7 +2093,7 @@ dependencies = [
 
 [[package]]
 name = "downloader"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "anyhow",
  "reqwest",
@@ -2258,8 +2258,8 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "ere-catalog"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "ere-util-build",
  "serde",
@@ -2268,21 +2268,21 @@ dependencies = [
 
 [[package]]
 name = "ere-codec"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 
 [[package]]
 name = "ere-compiler-core"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "ere-dockerized"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "anyhow",
  "ere-catalog",
@@ -2298,13 +2298,13 @@ dependencies = [
 
 [[package]]
 name = "ere-platform-core"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 
 [[package]]
 name = "ere-prover-core"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "anyhow",
  "auto_impl",
@@ -2320,8 +2320,8 @@ dependencies = [
 
 [[package]]
 name = "ere-server-api"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "prost",
  "serde",
@@ -2330,8 +2330,8 @@ dependencies = [
 
 [[package]]
 name = "ere-server-client"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "bincode 2.0.1",
  "ere-prover-core",
@@ -2342,24 +2342,24 @@ dependencies = [
 
 [[package]]
 name = "ere-util-build"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "cargo_metadata",
 ]
 
 [[package]]
 name = "ere-util-tokio"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "tokio",
 ]
 
 [[package]]
 name = "ere-verifier-core"
-version = "0.8.0"
-source = "git+https://github.com/eth-act/ere?tag=v0.8.0#54b00745fa5fabe008b037f61f6864305c41af80"
+version = "0.9.1"
+source = "git+https://github.com/eth-act/ere?tag=v0.9.1#a0ff5701d6328bb55126a59d7091b1777944c8b0"
 dependencies = [
  "auto_impl",
  "ere-codec",
@@ -3123,7 +3123,7 @@ dependencies = [
 
 [[package]]
 name = "guest"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "ere-codec",
  "ere-platform-core",
@@ -3688,7 +3688,7 @@ dependencies = [
 
 [[package]]
 name = "integration-tests"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "alloy-primitives",
  "ere-dockerized",
@@ -7817,7 +7817,7 @@ dependencies = [
 
 [[package]]
 name = "stateless-validator-common"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "alloy-eips 2.0.1",
  "alloy-primitives",
@@ -7836,7 +7836,7 @@ dependencies = [
 
 [[package]]
 name = "stateless-validator-debug"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "alloy-eips 2.0.1",
  "alloy-genesis",
@@ -7857,7 +7857,7 @@ dependencies = [
 
 [[package]]
 name = "stateless-validator-ethrex"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "alloy-consensus",
  "alloy-eips 2.0.1",
@@ -7879,7 +7879,7 @@ dependencies = [
 
 [[package]]
 name = "stateless-validator-reth"
-version = "0.9.0"
+version = "0.10.0"
 dependencies = [
  "alloy-consensus",
  "alloy-eips 2.0.1",
