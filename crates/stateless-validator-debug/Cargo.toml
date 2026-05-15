@@ -16,8 +16,15 @@ serde_json.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 
+# alloy
+alloy-eips.workspace = true
+alloy-genesis.workspace = true
+alloy-primitives.workspace = true
+
 # reth
+reth-chainspec.workspace = true
 stateless.workspace = true
+ef-tests = { workspace = true, features = ["ef-tests"] }
 
 # local
 guest.workspace = true

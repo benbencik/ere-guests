@@ -34,7 +34,11 @@ impl StatelessValidatorEthrexGuest {
                 .unwrap_or_else(|err| panic!("invalid EIP-8025 input: {err}"))
         });
 
-        StatelessValidatorOutput::new(output.new_payload_request_root, output.valid)
+        StatelessValidatorOutput::new(
+            output.new_payload_request_root,
+            output.valid,
+            output.chain_id,
+        )
     }
 }
 

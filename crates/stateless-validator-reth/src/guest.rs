@@ -51,6 +51,7 @@ impl Guest for StatelessValidatorRethGuest {
     type Output = StatelessValidatorOutput;
 
     fn compute<P: Platform>(input: Self::Input) -> Self::Output {
+        let chain_id = input.chain_config.chain_id;
         let new_payload_request_root =
             P::cycle_scope("new_payload_request_root_calculation", || {
                 input.new_payload_request.tree_hash_root(&sha256_hasher())
@@ -66,7 +67,7 @@ impl Guest for StatelessValidatorRethGuest {
                 Ok(output) => output,
                 Err(_) => {
                     P::print("Panic occurred during validation\n");
-                    StatelessValidatorOutput::new(new_payload_request_root, false)
+                    StatelessValidatorOutput::new(new_payload_request_root, false, chain_id)
                 }
             }
         }
@@ -83,6 +84,7 @@ impl StatelessValidatorRethGuest {
         input: GuestInput<Self>,
         new_payload_request_root: [u8; 32],
     ) -> GuestOutput<Self> {
+        let chain_id = input.chain_config.chain_id;
         let (chain_spec, evm_config) = P::cycle_scope("misc_preparation", || {
             let genesis = Genesis {
                 config: input.chain_config.clone(),
@@ -107,7 +109,7 @@ impl StatelessValidatorRethGuest {
             Ok(block) => block,
             Err(err) => {
                 P::print(&format!("Failed to convert to reth block: {err}\n"));
-                return StatelessValidatorOutput::new(new_payload_request_root, false);
+                return StatelessValidatorOutput::new(new_payload_request_root, false, chain_id);
             }
         };
 
@@ -122,10 +124,10 @@ impl StatelessValidatorRethGuest {
         });
 
         match res {
-            Ok(_) => StatelessValidatorOutput::new(new_payload_request_root, true),
+            Ok(_) => StatelessValidatorOutput::new(new_payload_request_root, true, chain_id),
             Err(err) => {
                 P::print(&format!("Block validation failed: {err}\n"));
-                StatelessValidatorOutput::new(new_payload_request_root, false)
+                StatelessValidatorOutput::new(new_payload_request_root, false, chain_id)
             }
         }
     }

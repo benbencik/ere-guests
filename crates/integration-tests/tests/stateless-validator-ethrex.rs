@@ -6,7 +6,10 @@ use integration_tests::{
     NoopPlatform, TestCase, get_fixtures, stateless_validator::get_stateless_validator_output,
 };
 use stateless_validator_common::new_payload_request::ForkName;
-use stateless_validator_ethrex::{guest::StatelessValidatorEthrexGuest, host::build_eip8025_input};
+use stateless_validator_ethrex::{
+    guest::StatelessValidatorEthrexGuest,
+    host::{Eip8025InputSource, build_eip8025_input},
+};
 use stateless_validator_reth::{
     guest::{StatelessValidatorRethGuest, StatelessValidatorRethInput},
     host::determine_fork_name,
@@ -37,11 +40,16 @@ fn test_execution(zkvm_kind: zkVMKind) {
             get_stateless_validator_output(
                 fixture.stateless_input.block.hash_slow(),
                 fixture.success,
+                fixture.stateless_input.chain_config.chain_id,
             )
         };
         assert_eq!(output.successful_block_validation, fixture.success);
 
-        let input = build_eip8025_input(&fixture.stateless_input, fixture.success).unwrap();
+        let input = build_eip8025_input(Eip8025InputSource::Legacy {
+            stateless_input: &fixture.stateless_input,
+            valid_block: fixture.success,
+        })
+        .unwrap();
         Some(
             TestCase::new::<StatelessValidatorEthrexGuest>(fixture.name, input, output)
                 .output_sha256(),
