@@ -1,0 +1,2 @@
+error: toolchain 'nightly-2025-10-30-x86_64-unknown-linux-gnu' is not installed
+help: run `rustup toolchain install nightly-2025-10-30-x86_64-unknown-linux-gnu` to install it

@@ -1,0 +1,6 @@
+Error: Failed to parse compiler args: error: unexpected argument '-v' found
+
+Usage: ere-util-compile [OPTIONS]
+
+For more information, try '--help'.
+

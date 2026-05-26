@@ -1,0 +1,166 @@
+   Compiling cfg-if v1.0.4
+   Compiling generic-array v0.14.9
+   Compiling subtle v2.6.1
+   Compiling zeroize v1.8.2
+   Compiling typenum v1.20.0
+   Compiling getrandom v0.2.17
+   Compiling const-oid v0.9.6
+   Compiling libm v0.2.16
+   Compiling rand_core v0.6.4
+   Compiling zerocopy v0.8.48
+   Compiling serde_core v1.0.228
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.6
+   Compiling serde v1.0.228
+   Compiling num-traits v0.2.19
+   Compiling digest v0.10.7
+   Compiling radium v0.7.0
+   Compiling tap v1.0.1
+   Compiling either v1.15.0
+   Compiling allocator-api2 v0.2.21
+   Compiling wyz v0.5.1
+   Compiling num-integer v0.1.46
+   Compiling funty v2.0.0
+   Compiling num-bigint v0.4.6
+   Compiling bitvec v1.0.1
+   Compiling der v0.7.10
+   Compiling ppv-lite86 v0.2.21
+   Compiling rand_chacha v0.3.1
+   Compiling rand v0.8.6
+   Compiling foldhash v0.1.5
+   Compiling crossbeam-utils v0.8.21
+   Compiling crunchy v0.2.4
+   Compiling sha2 v0.10.9
+   Compiling hashbrown v0.15.5
+   Compiling ff v0.13.1
+   Compiling group v0.13.0
+   Compiling rustc-hex v2.1.0
+   Compiling once_cell v1.21.4
+   Compiling spki v0.7.3
+   Compiling bytes v1.11.1
+   Compiling static_assertions v1.1.0
+   Compiling byteorder v1.5.0
+   Compiling base16ct v0.2.0
+   Compiling sec1 v0.7.3
+   Compiling pkcs8 v0.10.2
+   Compiling ark-std v0.5.0
+   Compiling crypto-bigint v0.5.5
+   Compiling rlp v0.6.1
+   Compiling arrayvec v0.7.6
+   Compiling smallvec v1.15.1
+   Compiling ark-serialize v0.5.0
+   Compiling tiny-keccak v2.0.2
+   Compiling ahash v0.8.12
+   Compiling impl-rlp v0.4.0
+   Compiling fixed-hash v0.8.0
+   Compiling impl-serde v0.5.0
+   Compiling itertools v0.13.0
+   Compiling hmac v0.12.1
+   Compiling hex v0.4.3
+   Compiling rfc6979 v0.4.0
+   Compiling ptr_meta v0.3.1
+   Compiling uint v0.10.0
+   Compiling crossbeam-epoch v0.9.18
+   Compiling elliptic-curve v0.13.8
+   Compiling signature v2.2.0
+   Compiling equivalent v1.0.2
+   Compiling thiserror v2.0.18
+   Compiling crossbeam-deque v0.8.6
+   Compiling ecdsa v0.16.9
+   Compiling ethbloom v0.14.1
+   Compiling ark-ff v0.5.0
+   Compiling primitive-types v0.13.1
+   Compiling rancor v0.1.1
+   Compiling ripemd v0.1.3
+   Compiling simdutf8 v0.1.5
+   Compiling foldhash v0.2.0
+   Compiling rayon-core v1.13.0
+   Compiling hashbrown v0.16.1
+   Compiling ethereum-types v0.15.1
+   Compiling bytecheck v0.8.2
+   Compiling anyhow v1.0.102
+   Compiling primeorder v0.13.6
+   Compiling pairing v0.23.0
+   Compiling bytemuck v1.25.0
+   Compiling zmij v1.0.21
+   Compiling munge v0.4.7
+   Compiling safe_arch v0.7.4
+   Compiling libssz-merkle v0.2.1 (https://github.com/lambdaclass/libssz?rev=7262a4f#7262a4f1)
+   Compiling bls12_381 v0.8.0 (https://github.com/lambdaclass/bls12_381?branch=expose-affine-constructors#78cad037)
+   Compiling p256 v0.13.2
+   Compiling rend v0.5.3
+   Compiling k256 v0.13.4
+   Compiling libssz v0.2.1 (https://github.com/lambdaclass/libssz?rev=7262a4f#7262a4f1)
+   Compiling crossbeam-queue v0.3.12
+   Compiling crossbeam-channel v0.5.15
+   Compiling itertools v0.14.0
+   Compiling ryu v1.0.23
+   Compiling hex-literal v0.4.1
+   Compiling crc32fast v1.5.0
+   Compiling libc v0.2.185
+   Compiling malachite-nz v0.6.1
+   Compiling serde_json v1.0.149
+   Compiling crossbeam v0.8.4
+   Compiling rayon v1.12.0
+   Compiling rkyv v0.8.15
+   Compiling malachite-base v0.6.1
+   Compiling ark-poly v0.5.0
+   Compiling wide v0.7.33
+   Compiling ethrex-rlp v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling ark-ec v0.5.0
+   Compiling tracing-core v0.1.36
+   Compiling memchr v2.8.0
+   Compiling outref v0.5.2
+   Compiling vsimd v0.8.0
+   Compiling itoa v1.0.18
+   Compiling log v0.4.29
+   Compiling hashbrown v0.17.0
+   Compiling pin-project-lite v0.2.17
+   Compiling rustc-hash v2.1.2
+   Compiling lazy_static v1.5.0
+   Compiling tracing v0.1.44
+   Compiling ark-bn254 v0.5.0
+   Compiling hex-simd v0.8.0
+   Compiling indexmap v2.14.0
+   Compiling ethrex-crypto v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling ethrex-trie v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling libssz-types v0.2.1 (https://github.com/lambdaclass/libssz?rev=7262a4f#7262a4f1)
+   Compiling lru v0.16.4
+   Compiling ethrex-common v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling keccak v0.1.6
+   Compiling sha3 v0.10.9
+   Compiling libssz-merkle v0.2.1
+   Compiling zkvm-interface v0.18.0 (https://github.com/0xPolygonHermez/zisk.git?tag=v0.18.0#790f9e28)
+   Compiling serde_with v3.18.0
+   Compiling derive_more v1.0.0
+   Compiling strum v0.27.2
+   Compiling libssz v0.2.1
+   Compiling lambdaworks-math v0.13.0
+   Compiling malachite-q v0.6.1
+   Compiling malachite v0.6.1
+   Compiling fields v0.18.0 (https://github.com/0xPolygonHermez/pil2-proofman.git?tag=v0.18.0#42ad4d02)
+   Compiling ere-platform-core v0.11.0 (https://github.com/eth-act/ere?tag=v0.11.0#e1d345c5)
+   Compiling scopeguard v1.2.0
+   Compiling lock_api v0.4.14
+   Compiling lib-c v0.18.0 (https://github.com/0xPolygonHermez/zisk.git?tag=v0.18.0#790f9e28)
+   Compiling proofman-verifier v0.18.0 (https://github.com/0xPolygonHermez/pil2-proofman.git?tag=v0.18.0#42ad4d02)
+   Compiling ethrex-levm v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling lambdaworks-crypto v0.13.0
+   Compiling unty v0.0.4
+   Compiling ere-codec v0.11.0 (https://github.com/eth-act/ere?tag=v0.11.0#e1d345c5)
+   Compiling dyn-clone v1.0.20
+   Compiling ethrex-vm v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling bincode v2.0.1
+   Compiling libssz-types v0.2.1
+   Compiling ethrex-l2-common v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling zisk-verifier v0.18.0 (https://github.com/0xPolygonHermez/zisk.git?tag=v0.18.0#790f9e28)
+   Compiling ethrex-guest-program v12.0.0 (https://github.com/lambdaclass/ethrex.git?rev=b112f94748a222e78b642406155674df9e180ee4#b112f947)
+   Compiling spin v0.9.8
+   Compiling zisk-definitions v0.18.0 (https://github.com/0xPolygonHermez/zisk.git?tag=v0.18.0#790f9e28)
+   Compiling ziskos v0.18.0 (https://github.com/0xPolygonHermez/zisk.git?tag=v0.18.0#790f9e28)
+   Compiling stateless-validator-common v0.11.0 (/ere-guests/crates/stateless-validator-common)
+   Compiling guest v0.11.0 (/ere-guests/crates/guest)
+   Compiling ere-platform-zisk v0.11.0 (https://github.com/eth-act/ere?tag=v0.11.0#e1d345c5)
+   Compiling stateless-validator-ethrex v0.11.0 (/ere-guests/crates/stateless-validator-ethrex)
+   Compiling stateless-validator-ethrex-zisk v0.1.0 (/ere-guests/bin/stateless-validator-ethrex/zisk)
+    Finished `release` profile [optimized] target(s) in 1m 59s

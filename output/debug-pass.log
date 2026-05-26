@@ -1,0 +1,18 @@
+Error: `cargo metadata` in /ere-guests/bin/stateless-validator-ethrex/zisk failed: `cargo metadata` exited with an error: error: failed to run `rustc` to learn about target-specific information
+
+Caused by:
+  process didn't exit successfully: `/tmp/rustc-wrapper.sh /usr/local/rustup/toolchains/1.88.0-x86_64-unknown-linux-gnu/bin/rustc - --crate-name ___ --print=file-names -Cllvm-args=-debug-pass-manager --crate-type bin --crate-type rlib --crate-type dylib --crate-type cdylib --crate-type staticlib --crate-type proc-macro --print=sysroot --print=split-debuginfo --print=crate-name --print=cfg -Wwarnings` (exit status: 1)
+  --- stderr
+  rustc -Cllvm-args="..." with: Unknown command line argument '-debug-pass-manager'.  Try: 'rustc -Cllvm-args="..." with --help'
+  rustc -Cllvm-args="..." with: Did you mean '--debug-pass'?
+
+
+Caused by:
+    `cargo metadata` exited with an error: error: failed to run `rustc` to learn about target-specific information
+    
+    Caused by:
+      process didn't exit successfully: `/tmp/rustc-wrapper.sh /usr/local/rustup/toolchains/1.88.0-x86_64-unknown-linux-gnu/bin/rustc - --crate-name ___ --print=file-names -Cllvm-args=-debug-pass-manager --crate-type bin --crate-type rlib --crate-type dylib --crate-type cdylib --crate-type staticlib --crate-type proc-macro --print=sysroot --print=split-debuginfo --print=crate-name --print=cfg -Wwarnings` (exit status: 1)
+      --- stderr
+      rustc -Cllvm-args="..." with: Unknown command line argument '-debug-pass-manager'.  Try: 'rustc -Cllvm-args="..." with --help'
+      rustc -Cllvm-args="..." with: Did you mean '--debug-pass'?
+    
